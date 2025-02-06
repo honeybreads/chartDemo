@@ -1,0 +1,38 @@
+/* @layer */
+@layer base {
+  :root {
+    // base color
+    --background: #fff;
+    --foreground: #222;
+    --card: #f4f4f4;
+    --border: #eee;
+    --ring: #ddd;
+    // add Color
+    --primary: #3AC6E1;
+    --secondary: #0077b0;
+    --normal: #1ddb16;
+    --critical: #ff0000;
+    --major: #ffbb00;
+    --minor: #ffe400;
+    --warning: #00d8ff;
+    // size
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    // base color
+    --background: #222;
+    --foreground: #eee;
+    --card: #333;
+    --border: #333;
+    --ring: #444;
+  }
+
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+    @apply md:text-base text-sm;
+  }
+}
