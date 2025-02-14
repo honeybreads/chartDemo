@@ -43,8 +43,8 @@ export default function DragginDonutChart() {
   useLayoutEffect(() => {
     // Root 객체 생성 및 테마 불러오기
     const root = am5.Root.new(id);
-    const { primary } = themes[colorTheme];
-    const colorList = ["#fff",...primary];
+    const { colorSet } = themes[colorTheme];
+    const colorList = ["#fff",...colorSet(data.length)];
     const myTheme = themes.myThemeRule(root, colorList, theme);
 
     // 반응형 정의

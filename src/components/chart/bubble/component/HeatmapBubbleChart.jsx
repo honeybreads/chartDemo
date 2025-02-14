@@ -5,7 +5,7 @@ import { useLayoutEffect } from "react";
 import * as themes from "@/assets/chartTheme";
 import { useTheme } from "@/components/Theme";
 
-// 샘플 데이터 
+// 샘플 데이터
 const data = [
   {
     hour: "12pm",
@@ -849,21 +849,25 @@ const data = [
   },
 ];
 
-export default function BasicHeatMapChart() {
-  const id = "basic-heatmap";
-  const { theme } = useTheme();
+const createCategory = (name) =>
+  [...new Set(data.map((item) => item[name]))].map((value) => ({
+    [name]: value,
+  }));
+
+const xAxisData = createCategory("hour");
+const yAxisData = createCategory("weekday");
+
+export default function HeatmapBubbleChart() {
+  const id = "heatmap-bubble";
+  const { theme, colorTheme } = useTheme();
 
   useLayoutEffect(() => {
     // Root 객체 생성 및 테마 불러오기
     const root = am5.Root.new(id);
-    const colorList = ["#FBF77B", "#F32D28"];
+    const { colorSet } = themes[colorTheme];
+    const colorList = colorSet(1);
     const myTheme = themes.myThemeRule(root, colorList, theme);
     root.setThemes([am5themes_Animated.new(root), myTheme]);
-
-    // 값 가져오기
-    const [categoryFieldX, categoryFieldY, valueField] = Object.keys(data[0]);
-    const minColor = am5.color(colorList[0]);
-    const maxColor = am5.color(colorList[1]);
 
     // XYChart 생성
     const chart = root.container.children.push(
@@ -872,111 +876,100 @@ export default function BasicHeatMapChart() {
         panY: false,
         wheelX: "none",
         wheelY: "none",
-        paddingLeft: 0,
+        paddingLeft:0,
         layout: root.verticalLayout,
       })
     );
+    chart.plotContainer.get("background").setAll({ stroke: 0 });
 
-    // 축(Axis) 생성 함수
-    const createRenderer = (type, categoryField) => {
-      const isXAxis = type === "x";
-      const axisType = isXAxis ? chart.xAxes : chart.yAxes;
-      const rendererType = isXAxis ? am5xy.AxisRendererX : am5xy.AxisRendererY;
-
-      const renderer = rendererType.new(root, {
-        visible: false,
-        inversed: true,
-        minGridDistance: 20,
-        minorGridEnabled: true,
-      });
-      renderer.grid.template.set("visible", false);
-
-      const axis = axisType.push(
-        am5xy.CategoryAxis.new(root, {
-          renderer,
-          categoryField,
-          maxDeviation: 0,
-        })
-      );
-
-      return axis;
-    };
-
-    // 축 데이터 설정 함수
-    const axisDateSet = (category, axis) => {
-      const uniqueCategories = Array.from(
-        new Set(data.map((item) => item[category]))
-      );
-      axis.data.setAll(uniqueCategories.map((item) => ({ [category]: item })));
-    };
-
-    // X축 및 Y축 생성 및 데이터 설정
-    const xAxis = createRenderer("x", categoryFieldX);
-    const yAxis = createRenderer("y", categoryFieldY);
-    axisDateSet(categoryFieldX, xAxis);
-    axisDateSet(categoryFieldY, yAxis);
-
-    // HeatMap 시리즈 생성
-    const series = chart.series.push(
-      am5xy.ColumnSeries.new(root, {
-        xAxis: xAxis,
-        yAxis: yAxis,
-        clustered: false,
-        calculateAggregates: true,
-        valueField,
-        categoryXField: categoryFieldX,
-        categoryYField: categoryFieldY,
+    // X,Y축 생성
+    const yAxis = chart.yAxes.push(
+      am5xy.CategoryAxis.new(root, {
+        maxDeviation: 0,
+        categoryField: "weekday",
+        renderer: am5xy.AxisRendererY.new(root, {
+          visible: false,
+          minGridDistance: 20,
+          inversed: true,
+        }),
       })
     );
 
-    series.columns.template.setAll({
-      strokeWidth: 1,
-      strokeOpacity: 1,
-      tooltipText: "{value}",
-      width: am5.percent(100),
-      height: am5.percent(100),
-      stroke: am5.color(0xffffff),
-      cornerRadiusTL: 0,
-      cornerRadiusTR: 0,
+    const xAxis = chart.xAxes.push(
+      am5xy.CategoryAxis.new(root, {
+        categoryField: "hour",
+        renderer: am5xy.AxisRendererX.new(root, {
+          visible: false,
+          minGridDistance: 20,
+          opposite: true,
+        }),
+      })
+    );
+
+    xAxis.get("renderer").grid.template.set("visible", false);
+
+    // series 생성
+    const series = chart.series.push(
+      am5xy.ColumnSeries.new(root, {
+        xAxis,
+        yAxis,
+        clustered: false,
+        valueField: "value",
+        categoryXField: "hour",
+        categoryYField: "weekday",
+        calculateAggregates: true,
+        stroke: am5.color(0xffffff),
+      })
+    );
+
+    series.columns.template.setAll({ forceHidden: true });
+    const circleTemplate = am5.Template.new({ radius: 5 });
+
+    // bullet 생성
+    series.bullets.push(() => {
+      const graphics = am5.Circle.new(
+        root,
+        {
+          fill: series.get("fill"),
+          stroke: series.get("stroke"),
+        },
+        circleTemplate
+      );
+      return am5.Bullet.new(root, { sprite: graphics });
     });
 
     series.set("heatRules", [
       {
-        key: "fill",
-        min: minColor,
-        max: maxColor,
+        min: 5,
+        max: 25,
+        key: "radius",
         dataField: "value",
-        target: series.columns.template,
+        target: circleTemplate,
       },
     ]);
 
-    // HeatLegend 생성
-    const heatLegend = chart.bottomAxesContainer.children.push(
-      am5.HeatLegend.new(root, {
-        endColor: minColor,
-        startColor: maxColor,
-        orientation: "horizontal",
-      })
-    );
-
-    // HeatLegend 값 표시 이벤트
-    series.columns.template.events.on("pointerover", function (event) {
-      var di = event.target.dataItem;
-      di && heatLegend.showValue(di.get("value", 0));
-    });
-
-    // 데이터 유효성 검증 후 HeatLegend 값 설정
-    series.events.on("datavalidated", function () {
-      heatLegend.set("startValue", series.getPrivate("valueHigh"));
-      heatLegend.set("endValue", series.getPrivate("valueLow"));
-    });
-
-    // 데이터 적용
+    // data 적용
     series.data.setAll(data);
+    yAxis.data.setAll(yAxisData);
+    xAxis.data.setAll(xAxisData);
+
+    // 애니메이션 적용
+    chart.appear(1000, 100);
+    setInterval(() => {
+      let i = 0;
+      series.data.each(function (d) {
+        let n = {
+          value: d.value + d.value * Math.random() * 0.5,
+          hour: d.hour,
+          weekday: d.weekday,
+        };
+        series.data.setIndex(i, n);
+        i++;
+      });
+    }, 1000);
 
     return () => root.dispose();
-  }, [theme]);
+  }, [theme, colorTheme]);
 
-  return <div id={id} style={{ width: "100%", height: 340 }} />;
+  return <div id={id} style={{ width: "100%", height: 420 }} />;
 }
-

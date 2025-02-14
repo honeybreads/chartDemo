@@ -109,8 +109,20 @@ const createThemeColor = (count, primary) => {
 };
 
 // 기본 테마
+const colorRange = 8;
 export const basicTheme = (() => {
   const primary = [
+    "#78DFD7",
+    "#3AC6E1",
+    "#279CDB",
+    "#2073CF",
+    "#2230BD",
+    "#0F158F",
+    "#2230BD",
+    "#0F158F",
+  ];
+
+  const primaryRange = [
     [
       [120, 223, 215],
       [15, 21, 143],
@@ -118,19 +130,30 @@ export const basicTheme = (() => {
   ];
 
   return {
-    primary: ["#78DFD7", "#3AC6E1", "#279CDB", "#2073CF", "#2230BD", "#0F158F"],
+    primary,
     lineColors: {
       bulletFill: "#fff",
-      lineStroke: ["#33BCFF", "#000"],
+      lineStroke: [primary[1], primary[3], primary[5]],
     },
     colorSet(count) {
-      return createThemeColor(count, primary);
+      if (count <= colorRange) return primary;
+      else return createThemeColor(count, primaryRange);
     },
   };
 })();
 
 export const purpleTheme = (() => {
   const primary = [
+    "#9688E5",
+    "#A16EDD",
+    "#C86ED6",
+    "#DD6EC1",
+    "#CB5EA3",
+    "#A23A7C",
+    "#CB5EA3",
+    "#A23A7C",
+  ];
+  const primaryRange = [
     [
       [150, 136, 229],
       [162, 58, 124],
@@ -138,13 +161,14 @@ export const purpleTheme = (() => {
   ];
 
   return {
-    primary: ["#9688E5", "#A16EDD", "#C86ED6", "#DD6EC1", "#CB5EA3", "#A23A7C"],
+    primary,
     lineColors: {
       bulletFill: "#fff",
-      lineStroke: ["#33BCFF", "#000"],
+      lineStroke: [primary[1], primary[3], primary[5]],
     },
     colorSet(count) {
-      return createThemeColor(count, primary);
+      if (count <= colorRange) return primary;
+      else return createThemeColor(count, primaryRange);
     },
   };
 })();
@@ -152,6 +176,16 @@ export const purpleTheme = (() => {
 // 다중 컬러 테스트 테마
 export const grayBlueTheme = (() => {
   const primary = [
+    "#5F5D6B",
+    "#B1B8B6",
+    "#84B6B8",
+    "#02B8C8",
+    "#026FB0",
+    "#00387E",
+    "#026FB0",
+    "#00387E",
+  ];
+  const primaryRange = [
     [
       [95, 93, 107],
       [132, 182, 184],
@@ -163,19 +197,30 @@ export const grayBlueTheme = (() => {
   ];
 
   return {
-    primary: ["#5F5D6B", "#B1B8B6", "#84B6B8", "#02B8C8", "#026FB0", "#00387E"],
+    primary,
     lineColors: {
       bulletFill: "#fff",
-      lineStroke: ["#33BCFF", "#000"],
+      lineStroke: [primary[1], primary[3], primary[5]],
     },
     colorSet(count) {
-      return createThemeColor(count, primary);
+      if (count <= colorRange) return primary;
+      else return createThemeColor(count, primaryRange);
     },
   };
 })();
 
 export const colorfullTheme = (() => {
   const primary = [
+    "#F4BF83",
+    "#EEAD9C",
+    "#E1A3CE",
+    "#9DB6D7",
+    "#8ECFCD",
+    "#BFDCB1",
+    "#8ECFCD",
+    "#BFDCB1",
+  ];
+  const primaryRange = [
     [
       [244, 191, 131],
       [238, 173, 156],
@@ -195,13 +240,14 @@ export const colorfullTheme = (() => {
   ];
 
   return {
-    primary: ["#F4BF83", "#EEAD9C", "#E1A3CE", "#9DB6D7", "#8ECFCD", "#BFDCB1"],
+    primary,
     lineColors: {
       bulletFill: "#fff",
-      lineStroke: ["#BFDCB1", "#000"],
+      lineStroke: [primary[1], primary[3], primary[5]],
     },
     colorSet(count) {
-      return createThemeColor(count, primary);
+      if (count <= colorRange) return primary;
+      else return createThemeColor(count, primaryRange);
     },
   };
 })();
@@ -211,14 +257,14 @@ export const modeColor = {
   light: {
     base: "#222",
     line: "#fff",
-    grid: "#A9A9A9",
+    grid: "#D1DBE1",
     bg: "#FFF",
     shadow: "#ccc",
   },
   dark: {
     base: "#ccc",
     line: "#333",
-    grid: "#A9A9A9",
+    grid: "#666",
     bg: "#222",
     shadow: "#222",
   },
@@ -299,7 +345,7 @@ export const myThemeRule = (root, colorList, theme) => {
   myTheme.rule("XYChart").setup = (chart) => {
     const plotContainer = chart.plotContainer.get("background");
     plotContainer?.setAll({
-      layer:9,
+      layer: 9,
       strokeWidth: 1,
       stroke: modeColor[theme].grid,
     });
@@ -311,7 +357,7 @@ export const myThemeRule = (root, colorList, theme) => {
       stroke: modeColor[theme].grid,
     });
   };
-  
+
   myTheme.rule("AxisRendererY").setup = (yRenderer) => {
     yRenderer.labels.template.setAll({
       maxWidth: "auto",
@@ -343,7 +389,7 @@ export const myThemeRule = (root, colorList, theme) => {
 };
 
 // 범용 불렛 스프라이트
-export const createBulletSpriet = (root, fill, stroke) => {
+export const createBulletSpriet = (root, fill, stroke, options) => {
   const bullet = am5.Bullet.new(root, {
     locationY: 1,
     sprite: am5.Circle.new(root, {
@@ -351,6 +397,7 @@ export const createBulletSpriet = (root, fill, stroke) => {
       stroke,
       radius: 5,
       strokeWidth: 2,
+      ...options,
     }),
   });
   return bullet;

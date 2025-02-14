@@ -3,7 +3,7 @@
 export default function Intro() {
   return (
     <>
-      <h2>인트로 필요할려나</h2>
+      <h2>설명을 작성할 예정..</h2>
     </>
   );
 }

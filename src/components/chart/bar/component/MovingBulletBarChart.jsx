@@ -58,8 +58,8 @@ export default function MovingBulletBarChart() {
   useLayoutEffect(() => {
     // Root 객체 생성 및 테마 불러오기
     const root = am5.Root.new(id);
-    const { primary } = themes[colorTheme];
-    const colorList = primary;
+    const { colorSet } = themes[colorTheme];
+    const colorList = colorSet(data.length);
     const myTheme = themes.myThemeRule(root, colorList, theme);
     root.setThemes([am5themes_Animated.new(root), myTheme]);
 
@@ -143,7 +143,7 @@ export default function MovingBulletBarChart() {
 
       const bulletContainer = am5.Container.new(root, {});
       bulletContainer.children.push(
-        am5.Circle.new(root, { radius: 34, fill: colorList[index] })
+        am5.Circle.new(root, { layer: 99, radius: 34, fill: colorList[index] })
       );
 
       const maskCircle = bulletContainer.children.push(
@@ -156,6 +156,7 @@ export default function MovingBulletBarChart() {
 
       imageContainer.children.push(
         am5.Picture.new(root, {
+          layer: 99,
           width: 60,
           height: 60,
           centerX: am5.p50,

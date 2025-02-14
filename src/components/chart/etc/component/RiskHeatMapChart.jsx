@@ -208,7 +208,7 @@ export default function RiskHeatMapChart() {
         categoryYField: "y",
         valueField: "value",
         calculateAggregates: true,
-        stroke: am5.color(0xffffff),
+        stroke: themes.modeColor[theme].line,
       })
     );
 

@@ -30,7 +30,7 @@ export default function Header({ navToggle, setNavToggle }) {
         로고
       </h1>
       <div className="header-group">
-        <select onChange={colorChange}>
+        <select onChange={colorChange} value={colorTheme}>
           {colorThemeList.map((item, index) => (
             <option key={index} value={item + "Theme"}>
               {item}

@@ -5,7 +5,7 @@ import { useLayoutEffect } from "react";
 import * as themes from "@/assets/chartTheme";
 import { useTheme } from "@/components/Theme";
 
-// 샘플 데이터 
+// 샘플 데이터
 const data = [
   {
     name: "cat #01",
@@ -58,12 +58,12 @@ export default function MovingBulletColumnChart() {
   useLayoutEffect(() => {
     // Root 객체 생성 및 테마 불러오기
     const root = am5.Root.new(id);
-    const { primary } = themes[colorTheme];
-    const colorList = primary;
+    const { colorSet } = themes[colorTheme];
+    const colorList = colorSet(data.length);
     const myTheme = themes.myThemeRule(root, colorList, theme);
     root.setThemes([am5themes_Animated.new(root), myTheme]);
 
-    // 카테고리, 값 필드 
+    // 카테고리, 값 필드
     const categoryField = Object.keys(data[0])[0];
     const valueField = Object.keys(data[0])[1];
 
@@ -78,7 +78,7 @@ export default function MovingBulletColumnChart() {
       })
     );
 
-    chart.plotContainer.get("background").set("strokeOpacity",0);
+    chart.plotContainer.get("background").set("strokeOpacity", 0);
 
     // x,y축 생성
     const xRenderer = am5xy.AxisRendererX.new(root, {});
@@ -139,7 +139,7 @@ export default function MovingBulletColumnChart() {
 
       const bulletContainer = am5.Container.new(root, {});
       bulletContainer.children.push(
-        am5.Circle.new(root, { radius: 34, fill: colorList[index] })
+        am5.Circle.new(root, { layer: 99, radius: 34, fill: colorList[index] })
       );
 
       const maskCircle = bulletContainer.children.push(
@@ -152,6 +152,7 @@ export default function MovingBulletColumnChart() {
 
       imageContainer.children.push(
         am5.Picture.new(root, {
+          layer: 99,
           width: 60,
           height: 60,
           centerX: am5.p50,
@@ -221,5 +222,5 @@ export default function MovingBulletColumnChart() {
     return () => root.dispose();
   }, [theme, colorTheme]);
 
-  return <div id={id} style={{ width: "100%", height: 340, minWidth:640 }} />;
+  return <div id={id} style={{ width: "100%", height: 340, minWidth: 640 }} />;
 }

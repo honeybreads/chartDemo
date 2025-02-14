@@ -92,8 +92,8 @@ export default function GroupedStacksColumnChart() {
   useLayoutEffect(() => {
     // Root 객체 생성 및 테마 불러오기
     const root = am5.Root.new(id);
-    const { primary } = themes[colorTheme];
-    const colorList = primary;
+    const { colorSet } = themes[colorTheme];
+    const colorList = colorSet(data.grouped.length);
     const myTheme = themes.myThemeRule(root, colorList, theme);
     root.setThemes([am5themes_Animated.new(root), myTheme]);
 
@@ -123,10 +123,12 @@ export default function GroupedStacksColumnChart() {
     const xAxis = chart.xAxes.push(
       am5xy.CategoryAxis.new(root, {
         categoryField,
+        
         renderer: am5xy.AxisRendererX.new(root, {
           cellStartLocation: 0.1,
           cellEndLocation: 0.9,
           minGridDistance: 10,
+          
         }),
         tooltip: am5.Tooltip.new(root, {}),
       })
@@ -153,6 +155,7 @@ export default function GroupedStacksColumnChart() {
     const makeSeries = (name) => {
       const series = chart.series.push(
         am5xy.ColumnSeries.new(root, {
+ 
           name: name,
           xAxis: xAxis,
           yAxis: yAxis,

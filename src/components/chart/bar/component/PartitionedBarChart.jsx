@@ -209,12 +209,7 @@ const data = [
   },
 ];
 
-const createCategory = () => {
-  const categorySet = new Set(data.map((item) => item.region));
-  const categoryList = [...categorySet];
-  return categoryList;
-};
-const category = createCategory();
+const category = [...new Set(data.map((item) => item.region))];
 
 export default function PartitionedBarChart() {
   const id = "partitione-bar";
@@ -223,8 +218,8 @@ export default function PartitionedBarChart() {
   useLayoutEffect(() => {
     // Root 객체 생성 및 테마 불러오기
     const root = am5.Root.new(id);
-    const { primary } = themes[colorTheme];
-    const colorList = primary;
+    const { colorSet } = themes[colorTheme];
+    const colorList = colorSet(category.length);
     const myTheme = themes.myThemeRule(root, colorList, theme);
     root.setThemes([am5themes_Animated.new(root), myTheme]);
 

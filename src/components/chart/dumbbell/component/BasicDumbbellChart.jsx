@@ -6,7 +6,7 @@ import * as themes from "@/assets/chartTheme";
 import { useTheme } from "@/components/Theme";
 
 // 샘플 데이터
-var data = [
+const data = [
   { category: "Raina", open: 101, close: 112 },
   { category: "Demarcus", open: 96, close: 105 },
   { category: "Carlo", open: 95, close: 102 },
@@ -28,8 +28,8 @@ export default function BasicDumbbellChart() {
   useLayoutEffect(() => {
     // Root 객체 생성 및 테마 불러오기
     const root = am5.Root.new(id);
-    const { primary } = themes[colorTheme];
-    const colorList = primary;
+    const { colorSet } = themes[colorTheme];
+    const colorList = colorSet(2);
     const myTheme = themes.myThemeRule(root, colorList, theme);
     root.setThemes([am5themes_Animated.new(root), myTheme]);
 
@@ -50,23 +50,15 @@ export default function BasicDumbbellChart() {
     cursor.lineY.set("visible", false);
 
     // X,Y축 생성
-    const xRenderer = am5xy.AxisRendererX.new(root, {
-      minGridDistance: 20,
-      minorGridEnabled: true,
-    });
-
-    xRenderer.labels.template.setAll({
-      centerX: 0,
-      centerY: am5.p50,
-      rotation: -90,
-    });
-
     const xAxis = chart.xAxes.push(
       am5xy.CategoryAxis.new(root, {
         maxDeviation: 0.3,
-        renderer: xRenderer,
         categoryField: "category",
         tooltip: am5.Tooltip.new(root, {}),
+        renderer: am5xy.AxisRendererX.new(root, {
+          minGridDistance: 20,
+          minorGridEnabled: true,
+        }),
       })
     );
 
@@ -77,12 +69,20 @@ export default function BasicDumbbellChart() {
       })
     );
 
+    xAxis.get("renderer").labels.template.setAll({
+      centerX: 0,
+      rotation: -90,
+      centerY: am5.p50,
+    });
+
+    yAxis.get("renderer").grid.template.setAll({ visible: false });
+
     // series 생성
     const series = chart.series.push(
       am5xy.ColumnSeries.new(root, {
+        xAxis,
+        yAxis,
         name: "Series 1",
-        xAxis: xAxis,
-        yAxis: yAxis,
         valueYField: "close",
         openValueYField: "open",
         categoryXField: "category",
@@ -91,7 +91,20 @@ export default function BasicDumbbellChart() {
         }),
       })
     );
-    series.columns.template.setAll({ width: 1 });
+
+    series.columns.template.setAll({
+      fillGradient: am5.LinearGradient.new(root, {
+        stops: [
+          {
+            color: chart.get("colors").getIndex(1),
+          },
+          {
+            color: chart.get("colors").getIndex(0),
+          },
+        ],
+      }),
+      width: 2,
+    });
 
     // series bullets 생성
     [...Array(2)].map((_, index) => {
@@ -105,10 +118,14 @@ export default function BasicDumbbellChart() {
         });
       });
     });
-    
+
     //데이터 적용
     xAxis.data.setAll(data);
     series.data.setAll(data);
+
+    // 애니메이션 적용
+    series.appear(1000);
+    chart.appear(1000, 100);
 
     return () => root.dispose();
   }, [theme, colorTheme]);

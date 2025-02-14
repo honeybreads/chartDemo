@@ -1,6 +1,14 @@
 import { memo } from "react";
 // 차트 컴포넌트
-import { BasicDumbbellChart } from "@/components/chart/dumbbell/DumbbellChart";
+import {
+  BasicDumbbellChart,
+  HorizontalDumbbellChart,
+} from "@/components/chart/dumbbell/DumbbellChart";
+import {
+  BasicLollipopChart,
+  HorizontalLollipopChart,
+} from "@/components/chart/dumbbell/LollipopChart";
+
 const Dumbbell = memo(function Dumbbell() {
   return (
     <>
@@ -11,6 +19,27 @@ const Dumbbell = memo(function Dumbbell() {
           <p className="chart-layout-title">Basic Dumbbell Chart</p>
           <div className="chart-con">
             <BasicDumbbellChart />
+          </div>
+        </div>
+        {/* 가로형 덤벨 차트 */}
+        <div className="chart-layout-box">
+          <p className="chart-layout-title">Horizontal Dumbbell Chart</p>
+          <div className="chart-con">
+            <HorizontalDumbbellChart />
+          </div>
+        </div>
+        {/* 기본 롤리팝 차트 */}
+        <div className="chart-layout-box">
+          <p className="chart-layout-title">Basic Lollipop Chart</p>
+          <div className="chart-con">
+            <BasicLollipopChart />
+          </div>
+        </div>
+        {/* 가로형 롤리팝 차트 */}
+        <div className="chart-layout-box">
+          <p className="chart-layout-title">Horizontal Lollipop Chart</p>
+          <div className="chart-con">
+            <HorizontalLollipopChart />
           </div>
         </div>
       </div>
