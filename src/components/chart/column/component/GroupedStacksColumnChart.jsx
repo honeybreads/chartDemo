@@ -192,5 +192,5 @@ export default function GroupedStacksColumnChart() {
     return () => root.dispose();
   }, [theme, colorTheme]);
 
-  return <div id={id} style={{ width: "100%", height: 340, minWidth: 520 }} />;
+  return <div id={id} style={{ width: "100%", height: "100%", minWidth: 520 }} />;
 }

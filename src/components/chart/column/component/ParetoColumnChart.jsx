@@ -38,19 +38,7 @@ const data = [
   {
     category: "Spain",
     value: 711,
-  },
-  {
-    category: "Netherlands",
-    value: 665,
-  },
-  {
-    category: "South Korea",
-    value: 443,
-  },
-  {
-    category: "Canada",
-    value: 441,
-  },
+  }
 ];
 
 export default function ParetoColumnChart() {
@@ -95,13 +83,13 @@ export default function ParetoColumnChart() {
 
     // x,y축 생성
     const xRenderer = am5xy.AxisRendererX.new(root, {});
+    xRenderer.grid.template.setAll({ location: 1 });
     const xAxis = chart.xAxes.push(
       am5xy.CategoryAxis.new(root, {
         categoryField,
         renderer: xRenderer,
       })
     );
-    xRenderer.grid.template.setAll({ location: 1 });
 
     const yAxis = chart.yAxes.push(
       am5xy.ValueAxis.new(root, {
@@ -179,5 +167,5 @@ export default function ParetoColumnChart() {
     return () => root.dispose();
   }, [theme, colorTheme]);
 
-  return <div id={id} style={{ width: "100%", height: 340 }} />;
+  return <div id={id} style={{ width: "100%", height: "100%" }} />;
 }

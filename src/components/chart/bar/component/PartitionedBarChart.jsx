@@ -367,5 +367,5 @@ export default function PartitionedBarChart() {
     return () => root.dispose();
   }, [theme, colorTheme]);
 
-  return <div id={id} style={{ width: "100%", height: 620 }} />;
+  return <div id={id} style={{ width: "100%", height: "100%" }} />;
 }

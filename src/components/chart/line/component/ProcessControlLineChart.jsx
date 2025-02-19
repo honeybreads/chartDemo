@@ -129,7 +129,7 @@ export default function ProcessControlLineChart() {
         range.get("label").setAll({
           text: label,
           location: 1,
-          fontSize: 16,
+          fontSize: 14,
           inside: true,
           centerX: am5.p0,
           centerY: am5.p100,
@@ -161,5 +161,5 @@ export default function ProcessControlLineChart() {
     return () => root.dispose();
   }, [theme, colorTheme]);
 
-  return <div id={id} style={{ width: "100%", height: 340 }} />;
+  return <div id={id} style={{ width: "100%", height: "100%" }} />;
 }

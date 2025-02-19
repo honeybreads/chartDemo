@@ -36,16 +36,17 @@ const data = [
 
 export default function DragginDonutChart() {
   const id = "draggin-donut";
-  const height = 340;
-  const { theme, colorTheme } = useTheme()
-  const [responsiveHeight, setResponsiveHeight] = useState(height);
+  const { theme, colorTheme } = useTheme();
+  const [height, setHeight] = useState();
 
   useLayoutEffect(() => {
     // Root 객체 생성 및 테마 불러오기
     const root = am5.Root.new(id);
     const { colorSet } = themes[colorTheme];
-    const colorList = ["#fff",...colorSet(data.length)];
+    const colorList = ["#fff", ...colorSet(data.length)];
     const myTheme = themes.myThemeRule(root, colorList, theme);
+    const baseHeight = root.dom.clientHeight;
+    setHeight(baseHeight);
 
     // 반응형 정의
     let mobileCheck = false;
@@ -54,19 +55,19 @@ export default function DragginDonutChart() {
       relevant: am5themes_Responsive.widthL,
       applying: () => {
         mobileCheck = true;
-        setResponsiveHeight(height * 2.2);
+        setHeight(baseHeight * 2.2);
         label.setAll({ rotation: 0 });
         line.setAll({ width: am5.percent(60), height: 0 });
-        container.setAll({ layout: root.verticalLayout, width: height });
+        container.setAll({ layout: root.verticalLayout, width: baseHeight });
       },
       removing: () => {
         mobileCheck = false;
-        setResponsiveHeight(height);
+        setHeight(baseHeight);
         label.setAll({ rotation: -90 });
         line.setAll({ width: 0, height: am5.percent(60) });
         container.setAll({
           layout: root.horizontalLayout,
-          width: height * 2.2,
+          width: baseHeight * 2.2,
         });
       },
     });
@@ -97,7 +98,7 @@ export default function DragginDonutChart() {
     // container 생성
     let container = root.container.children.push(
       am5.Container.new(root, {
-        width: height * 2.2,
+        width: baseHeight * 2.2,
         height: am5.p100,
         x: am5.percent(50),
         centerX: am5.percent(50),
@@ -118,8 +119,8 @@ export default function DragginDonutChart() {
     const createPieSeries = (chart) => {
       const series = chart.series.push(
         am5percent.PieSeries.new(root, {
-          valueField:"value",
-          categoryField:"category",
+          valueField: "value",
+          categoryField: "category",
           alignLabels: false,
         })
       );
@@ -258,6 +259,5 @@ export default function DragginDonutChart() {
     return () => root.dispose();
   }, [theme, colorTheme]);
 
-  return <div id={id} style={{width:"100%", height: responsiveHeight }} />;
+  return <div id={id} style={{ width: "100%", minHeight: "100%", height }} />;
 }
-

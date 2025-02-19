@@ -1170,27 +1170,27 @@ export default function PopulationPyramidChart() {
     const femaleSeries = createXySeries("FeMales", yAxis2, "femalePercent");
 
     // labels 생성
-    const createLabels = (text, labelPos, fill) => {
-      chart.plotContainer.children.push(
-        am5.Label.new(root, {
-          ...labelPos,
-          text,
-          fontSize: 20,
-          fill: fill.get("fill"),
-          background: am5.RoundedRectangle.new(root, {
-            fillOpacity: 0.3,
-            fill: am5.color(0xffffff),
-          }),
-        })
-      );
-    };
+    // const createLabels = (text, labelPos, fill) => {
+    //   chart.plotContainer.children.push(
+    //     am5.Label.new(root, {
+    //       ...labelPos,
+    //       text,
+    //       fontSize: 20,
+    //       fill: fill.get("fill"),
+    //       background: am5.RoundedRectangle.new(root, {
+    //         fillOpacity: 0.3,
+    //         fill: am5.color(0xffffff),
+    //       }),
+    //     })
+    //   );
+    // };
 
-    createLabels("Males", { y: 7, x: 14 }, maleSeries);
-    createLabels(
-      "Females",
-      { y: 7, x: am5.p100, centerX: am5.p100, dx: -14 },
-      femaleSeries
-    );
+    // createLabels("Males", { y: 7, x: 14 }, maleSeries);
+    // createLabels(
+    //   "Females",
+    //   { y: 7, x: am5.p100, centerX: am5.p100, dx: -14 },
+    //   femaleSeries
+    // );
 
     // map Chart 생성
     const map = container.children.push(
@@ -1198,7 +1198,8 @@ export default function PopulationPyramidChart() {
         panX: "none",
         panY: "none",
         wheelY: "none",
-        width: am5.percent(30),
+        minWidth: 280,
+        width:am5.percent(30),
         projection: am5map.geoMercator(),
       })
     );
@@ -1216,11 +1217,11 @@ export default function PopulationPyramidChart() {
 
     // map series size 설정
     map.seriesContainer.setAll({
-      scale: 0.6,
-      x: am5.percent(20),
-      y: am5.percent(25),
-      centerX: am5.percent(20),
-      centerY: am5.percent(25),
+      scale: 0.8,
+      x: am5.percent(10),
+      y: am5.percent(15),
+      centerX: am5.percent(10),
+      centerY: am5.percent(15),
     });
 
     // map Series 생성
@@ -1273,5 +1274,5 @@ export default function PopulationPyramidChart() {
     return () => root.dispose();
   }, [theme, colorTheme]);
 
-  return <div id={id} style={{ width: "100%", height: 620 }} />;
+  return <div id={id} style={{ width: "100%", height: "100%" ,minWidth:720}} />;
 }

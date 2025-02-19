@@ -1,8 +1,7 @@
 import * as am5 from "@amcharts/amcharts5";
 import * as am5percent from "@amcharts/amcharts5/percent";
 import am5themes_Animated from "@amcharts/amcharts5/themes/Animated";
-import am5themes_Responsive from "@amcharts/amcharts5/themes/Responsive";
-import { useLayoutEffect, useState } from "react";
+import { useLayoutEffect } from "react";
 import * as themes from "@/assets/chartTheme";
 import { useTheme } from "@/components/Theme";
 
@@ -43,7 +42,7 @@ const data = [
   },
   {
     category: "Australia",
-    value: 140,
+    value: 180,
     subData: [
       { category: "A", value: 90 },
       { category: "B", value: 40 },
@@ -52,7 +51,7 @@ const data = [
   },
   {
     category: "Austria",
-    value: 120,
+    value: 150,
     subData: [
       { category: "A", value: 60 },
       { category: "B", value: 30 },
@@ -63,9 +62,7 @@ const data = [
 
 export default function ExplodingPieChart() {
   const id = "exploding-pie";
-  const height = 340;
   const { theme, colorTheme } = useTheme();
-  const [responsiveHeight, setResponsiveHeight] = useState(height);
 
   useLayoutEffect(() => {
     // 서브데이터 생성
@@ -81,23 +78,8 @@ export default function ExplodingPieChart() {
     const colorList = colorSet(data.length);
     const myTheme = themes.myThemeRule(root, colorList, theme);
 
-    // 반응형
-    const responsive = am5themes_Responsive.newEmpty(root);
-    responsive.addRule({
-      relevant: am5themes_Responsive.widthL,
-      applying: () => {
-        setResponsiveHeight(height * 2.2);
-        subSeries.setAll({ rotation: 90 });
-        subSeries.labels.template.setAll({ textType: "circular", radius: 4 });
-        container.setAll({ layout: root.verticalLayout });
-      },
-      removing: () => {
-        setResponsiveHeight(height);
-      },
-    });
-
     // 테마 및 반응형 적용
-    root.setThemes([am5themes_Animated.new(root), myTheme, responsive]);
+    root.setThemes([am5themes_Animated.new(root), myTheme]);
 
     // container 생성
     const container = root.container.children.push(
@@ -128,7 +110,7 @@ export default function ExplodingPieChart() {
 
     // PieSeries(대) 스타일 적용
     series.ticks.template.set("visible", false);
-    series.labels.template.setAll({ textType: "circular", radius: 4 });
+    series.labels.template.setAll({ textType: "circular", radius: 4, });
 
     // PieChart(소) 생성
     const subChart = container.children.push(
@@ -210,10 +192,7 @@ export default function ExplodingPieChart() {
           }
         });
       }
-      const middleAngle =
-        slice.get("startAngle") +
-        slice.get("arc") / 2 -
-        (responsiveHeight === height ? 0 : 90);
+      const middleAngle = slice.get("startAngle") + slice.get("arc") / 2 ;
       const firstAngle = series.dataItems[0].get("slice").get("startAngle");
 
       series.animate({
@@ -248,7 +227,7 @@ export default function ExplodingPieChart() {
     container.appear(1000, 10);
 
     return () => root.dispose();
-  }, [theme, colorTheme, responsiveHeight]);
+  }, [theme, colorTheme]);
 
-  return <div id={id} style={{ width: "100%", height: responsiveHeight }} />;
+  return <div id={id} style={{ width: "100%", height: "100%", minWidth:600 }} />;
 }

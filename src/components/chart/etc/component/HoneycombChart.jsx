@@ -499,5 +499,14 @@ export default function HoneycombChart() {
     return () => root.dispose();
   }, [theme, colorTheme]);
 
-  return <div id={id} style={{ width: 1000, height: 680, margin: "0 auto" }} />;
+  return (
+    <div
+      id={id}
+      style={{
+        width: 1000,
+        height: 660,
+        margin: "0 auto",
+      }}
+    />
+  );
 }

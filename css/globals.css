@@ -1,0 +1,315 @@
+/* http://meyerweb.com/eric/tools/css/reset/ 
+   v2.0 | 20110126
+   License: none (public domain)
+*/
+html,
+body,
+div,
+span,
+applet,
+object,
+iframe,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+blockquote,
+pre,
+a,
+abbr,
+acronym,
+address,
+big,
+cite,
+code,
+del,
+dfn,
+em,
+img,
+ins,
+kbd,
+q,
+s,
+samp,
+small,
+strike,
+strong,
+sub,
+sup,
+tt,
+var,
+b,
+u,
+i,
+center,
+dl,
+dt,
+dd,
+ol,
+ul,
+li,
+fieldset,
+form,
+label,
+legend,
+table,
+caption,
+tbody,
+tfoot,
+thead,
+tr,
+th,
+td,
+article,
+aside,
+canvas,
+details,
+embed,
+figure,
+figcaption,
+footer,
+header,
+hgroup,
+menu,
+nav,
+output,
+ruby,
+section,
+summary,
+time,
+mark,
+audio,
+video {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  font: inherit;
+  vertical-align: baseline;
+  box-sizing: border-box;
+}
+
+/* HTML5 display-role reset for older browsers */
+article,
+aside,
+details,
+figcaption,
+figure,
+footer,
+header,
+hgroup,
+menu,
+nav,
+section {
+  display: block;
+}
+
+body {
+  line-height: 1;
+}
+
+ol,
+ul {
+  list-style: none;
+}
+
+blockquote,
+q {
+  quotes: none;
+}
+
+blockquote:before,
+blockquote:after,
+q:before,
+q:after {
+  content: "";
+  content: none;
+}
+
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+a,
+button {
+  color: inherit;
+  text-decoration: none;
+}
+
+@font-face {
+  font-family: "Pretendard-Regular";
+  src: url("https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff") format("woff");
+  font-weight: 300;
+  font-style: normal;
+}
+body {
+  font-family: "Pretendard-Regular", sans-serif;
+}
+
+/* @layer */
+@layer base {
+  :root {
+    --background: #fff;
+    --foreground: #222;
+    --card: #f4f4f4;
+    --border: #eee;
+    --ring: #ddd;
+    --primary: #3AC6E1;
+    --secondary: #0077b0;
+    --normal: #1ddb16;
+    --critical: #ff0000;
+    --major: #ffbb00;
+    --minor: #ffe400;
+    --warning: #00d8ff;
+    --radius: 0.5rem;
+  }
+  .dark {
+    --background: #222;
+    --foreground: #eee;
+    --card: #333;
+    --border: #333;
+    --ring: #444;
+  }
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+    @apply md:text-base text-sm;
+  }
+}
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+#root,
+body,
+html {
+  @apply w-full h-full;
+}
+
+#root {
+  display: flex;
+  flex-direction: column;
+}
+
+/* header */
+.header {
+  @apply py-3 px-4;
+  @apply bg-primary;
+  @apply text-white;
+  @apply flex flex-none items-center justify-between;
+}
+.header-logo {
+  @apply cursor-pointer;
+  @apply text-2xl font-bold;
+}
+.header-group {
+  @apply flex gap-2;
+}
+.header-group > button {
+  @apply p-1.5;
+  @apply rounded-md;
+  @apply duration-300;
+  @apply border border-white;
+}
+.header-group > button:hover {
+  @apply bg-white;
+  @apply text-primary;
+}
+.header-group select {
+  @apply rounded-sm;
+  @apply outline-none;
+  @apply px-0.5 py-1.5;
+  @apply bg-transparent;
+  @apply text-sm capitalize;
+  @apply border border-white;
+}
+.header-group select option {
+  @apply bg-black;
+}
+.header-toggle {
+  @apply lg:hidden;
+}
+.header-toggle.active {
+  @apply bg-white;
+  @apply text-primary;
+}
+
+/* main */
+.main {
+  @apply h-full;
+  @apply relative;
+  @apply flex flex-1;
+  @apply overflow-hidden;
+}
+
+/* nav */
+.nav {
+  @apply p-4;
+  @apply z-[99];
+  @apply duration-300;
+  @apply bg-background;
+  @apply w-[240px] h-full;
+  @apply absolute left-[-240px];
+  @apply border-r border-solid border-border;
+  @apply lg:static;
+  transition: 0.3s left;
+}
+.nav.active {
+  @apply left-0;
+}
+.nav-list__title {
+  @apply text-lg font-semibold uppercase;
+}
+.nav-sub-list {
+  @apply pl-1 ml-2;
+  @apply border-l border-border border-solid;
+}
+.nav-sub-list__item {
+  @apply px-2 mt-1;
+  @apply rounded-sm;
+  @apply capitalize;
+}
+.nav-sub-list__item:hover, .nav-sub-list__item.active {
+  @apply text-primary;
+}
+
+/* content section */
+.section {
+  @apply p-4;
+  @apply flex-1;
+  @apply overflow-auto;
+}
+
+/* chart layout */
+.chart-layout {
+  @apply gap-4;
+  @apply grid grid-cols-12;
+}
+.chart-layout-box {
+  @apply relative;
+  @apply col-span-12;
+  @apply overflow-hidden;
+}
+.chart-layout-title {
+  @apply mb-2;
+  @apply text-sm font-bold;
+}
+
+.chart-title {
+  @apply mb-4;
+  @apply text-xl font-bold;
+}
+
+.chart-con {
+  @apply rounded-md;
+  @apply bg-card p-4;
+  @apply overflow-auto;
+}
+.chart-con > div {
+  @apply min-w-[360px];
+}/*# sourceMappingURL=globals.css.map */

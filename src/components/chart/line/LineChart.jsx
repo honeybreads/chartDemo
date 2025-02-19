@@ -9,6 +9,7 @@ import BasicFillLineChart from "./component/BasicFillLineChart";
 import RangeAreaLineChart from "./component/RangeAreaLineChart";
 import NoGapDateLineChart from "./component/NoGapDateLineChart";
 import AddingDataLineChart from "./component/AddingDataLineChart";
+import ThemeRiverLineChart from "./component/ThemeRiverLineChart";
 import RangeSliderLineChart from "./component/RangeSliderLineChart";
 import StackedAreaLineChart from "./component/StackedAreaLineChart";
 import LegendHoverLineChart from "./component/LegendHoverLineChart";
@@ -18,6 +19,7 @@ import DifferentFillLineChart from "./component/DifferentFillLineChart";
 import LiveOrderBookLineChart from "./component/LiveOrderBookLineChart";
 import DrawingSeriesLineChart from "./component/DrawingSeriesLineChart";
 import DurationValueLineChart from "./component/DurationValueLineChart";
+import ChartWithGapsLineChart from "./component/ChartWithGapsLineChart";
 import DraggableRangeLineChart from "./component/DraggableRangeLineChart";
 import ProcessControlLineChart from "./component/ProcessControlLineChart";
 import SmoothedStackedLineChart from "./component/SmoothedStackedLineChart";
@@ -31,6 +33,9 @@ import PercentageChangeLineChart from "./component/PercentageChangeLineChart";
 import EvenlySpacedAxesLineChart from "./component/EvenlySpacedAxesLineChart";
 import MultipleValueAxesLineChart from "./component/MultipleValueAxesLineChart";
 import DifferentNegativeLineChart from "./component/DifferentNegativeLineChart";
+import DateLabelsNearGridLineChart from "./component/DateLabelsNearGridLineChart";
+import ComparingDiffrentDateLineChart from "./component/ComparingDiffrentDateLineChart";
+import EndSeriesAnimatedBulletLineChart from "./component/EndSeriesAnimatedBulletLineChart";
 
 export {
   StepLineChart,
@@ -44,6 +49,7 @@ export {
   RangeAreaLineChart,
   NoGapDateLineChart,
   AddingDataLineChart,
+  ThemeRiverLineChart,
   RangeSliderLineChart,
   StackedAreaLineChart,
   LegendHoverLineChart,
@@ -53,6 +59,7 @@ export {
   LiveOrderBookLineChart,
   DrawingSeriesLineChart,
   DurationValueLineChart,
+  ChartWithGapsLineChart,
   DraggableRangeLineChart,
   ProcessControlLineChart,
   DifferentStrokeLineChart,
@@ -66,4 +73,7 @@ export {
   EvenlySpacedAxesLineChart,
   MultipleValueAxesLineChart,
   DifferentNegativeLineChart,
+  DateLabelsNearGridLineChart,
+  ComparingDiffrentDateLineChart,
+  EndSeriesAnimatedBulletLineChart,
 };

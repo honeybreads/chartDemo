@@ -48,9 +48,8 @@ const data = {
 
 export default function LinkedDonutChart() {
   const id = "linked-donut";
-  const height = 340;
   const { theme, colorTheme } = useTheme();
-  const [responsiveHeight, setResponsiveHeight] = useState(height);
+  const [height, setHeight] = useState();
 
   useLayoutEffect(() => {
     // Root 객체 생성 및 테마 불러오기
@@ -58,22 +57,24 @@ export default function LinkedDonutChart() {
     const { colorSet } = themes[colorTheme];
     const colorList = colorSet(data.data1.length);
     const myTheme = themes.myThemeRule(root, colorList, theme);
+    const baseHeight = root.dom.clientHeight;
+    setHeight(baseHeight);
 
     // 반응형 정의
     const responsive = am5themes_Responsive.newEmpty(root);
     responsive.addRule({
       relevant: am5themes_Responsive.widthL,
       applying: () => {
-        setResponsiveHeight(height * 2);
+        setHeight(baseHeight * 2);
         chartContainer.setAll({
-          width: height,
+          width: baseHeight,
           layout: root.verticalLayout,
         });
       },
       removing: () => {
-        setResponsiveHeight(height);
+        setHeight(baseHeight);
         chartContainer.setAll({
-          width: height * 2,
+          width: baseHeight * 2,
           layout: root.horizontalLayout,
         });
       },
@@ -89,7 +90,7 @@ export default function LinkedDonutChart() {
     const chartContainer = root.container.children.push(
       am5.Container.new(root, {
         layout: root.horizontalLayout,
-        width: height * 2,
+        width: baseHeight * 2,
         height: am5.percent(100),
         x: am5.percent(50),
         centerX: am5.percent(50),
@@ -217,5 +218,5 @@ export default function LinkedDonutChart() {
     return () => root.dispose();
   }, [theme, colorTheme]);
 
-  return <div id={id} style={{ width: "100%", height: responsiveHeight }} />;
+  return <div id={id} style={{ width: "100%", minHeight: "100%", height }} />;
 }

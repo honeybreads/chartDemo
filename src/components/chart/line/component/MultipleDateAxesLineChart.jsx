@@ -8,15 +8,15 @@ import { useTheme } from "@/components/Theme";
 // 샘플 데이터 생성
 const data0 = [];
 const data1 = [];
-const createData = (data, priceValue) => {
+const createData = (data, priceValue, date) => {
   let price = priceValue;
   for (var i = 0; i < 90; i++) {
     price += Math.round((Math.random() < 0.5 ? 1 : -1) * Math.random() * 100);
-    data.push({ date: new Date(2015, 0, i).getTime(), price: price });
+    data.push({ date: new Date(2024, date, i).getTime(), price: price });
   }
 };
-createData(data0, 1000);
-createData(data1, 1200);
+createData(data0, 1000, 0);
+createData(data1, 1000, 1);
 
 // MultipleDateAxesLineChart
 export default function MultipleDateAxesLineChart() {
@@ -144,5 +144,5 @@ export default function MultipleDateAxesLineChart() {
     return () => root.dispose();
   }, [theme, colorTheme]);
 
-  return <div id={id} style={{ width: "100%", height: 340 }} />;
+  return <div id={id} style={{ width: "100%", height: "100%" }} />;
 }

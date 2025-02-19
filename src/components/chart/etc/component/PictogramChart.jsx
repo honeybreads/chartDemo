@@ -156,7 +156,6 @@ export default function PictogramChart() {
 
       series.data.setAll(data);
       series.appear();
-
       return series;
     };
 
@@ -172,5 +171,5 @@ export default function PictogramChart() {
     return () => root.dispose();
   }, [theme, colorTheme]);
 
-  return <div id={id} style={{ width: "100%", height: 420 }} />;
+  return <div id={id} style={{ width: "100%", height: "100%", minWidth:640 }} />;
 }

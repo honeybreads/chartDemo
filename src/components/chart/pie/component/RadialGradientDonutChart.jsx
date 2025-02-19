@@ -57,9 +57,8 @@ const data = [
 
 export default function RadialGradientDonutChart() {
   const id = "radialgradient-donut";
-  const height = 340;
   const { theme, colorTheme } = useTheme();
-  const [responsiveHeight, setResponsiveHeight] = useState(height);
+  const [height, setHeight] = useState();
 
   useLayoutEffect(() => {
     // Root 객체 생성 및 테마 불러오기
@@ -67,14 +66,16 @@ export default function RadialGradientDonutChart() {
     const { colorSet } = themes[colorTheme];
     const colorList = colorSet(data.length);
     const myTheme = themes.myThemeRule(root, colorList, theme);
+    const baseHeight = root.dom.clientHeight;
+    setHeight(baseHeight);
 
     // 반응형 설정
     const responsive = am5themes_Responsive.newEmpty(root);
     responsive.addRule({
       relevant: am5themes_Responsive.widthL,
       applying: () => {
-        setResponsiveHeight(height * 1.8);
-        chart.setAll({ layout: root.verticalLayout, width: height });
+        setHeight(baseHeight * 2);
+        chart.setAll({ layout: root.verticalLayout, width: baseHeight });
         legend.setAll({
           x: am5.percent(50),
           y: undefined,
@@ -83,9 +84,9 @@ export default function RadialGradientDonutChart() {
         });
       },
       removing: () => {
-        setResponsiveHeight(height);
+        setHeight(baseHeight);
         chart.setAll({
-          width: height * 1.8,
+          width: baseHeight * 1.8,
           layout: root.horizontalLayout,
         });
         legend.setAll({
@@ -104,7 +105,7 @@ export default function RadialGradientDonutChart() {
     const chart = root.container.children.push(
       am5percent.PieChart.new(root, {
         x: am5.percent(50),
-        width: height * 1.8,
+        width: baseHeight * 1.8,
         radius: am5.percent(90),
         centerX: am5.percent(50),
         innerRadius: am5.percent(50),
@@ -177,5 +178,5 @@ export default function RadialGradientDonutChart() {
     return () => root.dispose();
   }, [theme, colorTheme]);
 
-  return <div id={id} style={{ width: "100%", height: responsiveHeight }} />;
+  return <div id={id} style={{ width: "100%", minHeight: "100%", height }} />;
 }

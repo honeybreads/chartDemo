@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 import { useLayoutEffect } from "react";
 import * as themes from "@/assets/chartTheme";
 
-const colorThemeList = ["basic", "purple", "grayBlue", "colorfull"];
+const colorThemeList = ["basic", "purple", "colorfull"];
 
 export default function Header({ navToggle, setNavToggle }) {
   const { setTheme, setColorTheme, colorTheme } = useTheme();

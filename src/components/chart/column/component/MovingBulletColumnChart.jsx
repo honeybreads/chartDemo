@@ -222,5 +222,7 @@ export default function MovingBulletColumnChart() {
     return () => root.dispose();
   }, [theme, colorTheme]);
 
-  return <div id={id} style={{ width: "100%", height: 340, minWidth: 640 }} />;
+  return (
+    <div id={id} style={{ width: "100%", height: "100%", minWidth: 640 }} />
+  );
 }

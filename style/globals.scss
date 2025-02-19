@@ -114,6 +114,7 @@ html {
   }
 }
 
+// maxw 설정?
 /* content section */
 .section {
   @apply p-4;
@@ -130,6 +131,10 @@ html {
     @apply relative;
     @apply col-span-12;
     @apply overflow-hidden;
+    @media (min-width: 1920px) {
+      @apply col-span-6;
+      @apply flex flex-col;
+    }
   }
 
   &-title {
@@ -147,8 +152,36 @@ html {
   @apply rounded-md;
   @apply bg-card p-4;
   @apply overflow-auto;
+  @media (min-width: 1920px) {
+    @apply flex-auto;
+  }
 
   & > div {
     @apply min-w-[360px];
+  }
+}
+
+// intro
+.intro {
+  @apply text-base;
+
+  &-title {
+    @apply text-2xl font-semibold mb-4;
+  }
+
+  &-article {
+    @apply mt-8;
+  }
+
+  &-subtitle {
+    @apply text-lg font-semibold mb-2 border-b border-solid border-border;
+  }
+
+  .cm-theme+p{
+    @apply mt-8;
+  }
+
+  .cm-content {
+    @apply leading-6;
   }
 }

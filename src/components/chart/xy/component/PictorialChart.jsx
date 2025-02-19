@@ -91,7 +91,7 @@ export default function PictorialChart() {
                 color: am5.color(colorList[0]),
               },
             ],
-            rotation:0
+            rotation: 0,
           }),
         }),
       })
@@ -169,7 +169,7 @@ export default function PictorialChart() {
           centerY: am5.p100,
           text: "{height} metres",
           populateText: true,
-          fill:am5.color("#fff")
+          fill: am5.color("#fff"),
         }),
       });
     });
@@ -185,5 +185,5 @@ export default function PictorialChart() {
     return () => root.dispose();
   }, [theme, colorTheme]);
 
-  return <div id={id} style={{ width: "100%", height: 420 }} />;
+  return <div id={id} style={{ width: "100%", height: "100%" }} />;
 }

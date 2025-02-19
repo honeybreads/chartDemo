@@ -68,8 +68,8 @@ export default function AnimatedGaugeChart() {
     const clockHand = am5radar.ClockHand.new(root, {
       topWidth: 0,
       bottomWidth: 0,
-      pinRadius: 40,
-      innerRadius: 40,
+      pinRadius: 32,
+      innerRadius: 32,
       radius: am5.percent(100),
     });
 
@@ -103,7 +103,7 @@ export default function AnimatedGaugeChart() {
     // 중앙 라벨 생성
     const label = chart.radarContainer.children.push(
       am5.Label.new(root, {
-        fontSize: 26,
+        fontSize: 21,
         textAlign: "center",
         centerX: am5.percent(50),
         centerY: am5.percent(50),
@@ -160,6 +160,6 @@ export default function AnimatedGaugeChart() {
     return () => root.dispose();
   }, [theme, colorTheme]);
 
-  return <div id={id} style={{ width: "100%", height: 340 }} />;
+  return <div id={id} style={{ width: "100%", height: "100%" }} />;
 }
 

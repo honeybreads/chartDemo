@@ -12,6 +12,9 @@
   "dependencies": {
     "@amcharts/amcharts5": "^5.10.10",
     "@amcharts/amcharts5-geodata": "^5.1.4",
+    "@uiw/codemirror-extensions-langs": "^4.23.8",
+    "@uiw/codemirror-themes-all": "^4.23.8",
+    "@uiw/react-codemirror": "^4.23.8",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "cmdk": "^1.0.0",

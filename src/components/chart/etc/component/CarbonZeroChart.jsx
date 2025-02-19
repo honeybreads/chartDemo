@@ -268,5 +268,5 @@ export default function CarbonZeroChart() {
     return () => root.dispose();
   }, [theme]);
 
-  return <div id={id} style={{ width: "100%", height: 240, minWidth:460 }} />;
+  return <div id={id} style={{ width: "100%", height: "100%", minWidth:460 }} />;
 }

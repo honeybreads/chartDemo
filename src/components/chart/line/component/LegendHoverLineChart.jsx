@@ -77,7 +77,7 @@ export default function LegendHoverLineChart() {
     xAxis.get("renderer").labels.template.setAll({ maxWidth: "auto" });
 
     // series 생성
-    for (let i = 0; i < 4; i++) {
+    for (let i = 0; i < 6; i++) {
       const series = chart.series.push(
         am5xy.LineSeries.new(root, {
           name: "Series " + i,
@@ -158,5 +158,5 @@ export default function LegendHoverLineChart() {
     return () => root.dispose();
   }, [theme, colorTheme]);
 
-  return <div id={id} style={{ width: "100%", height: 340 }} />;
+  return <div id={id} style={{ width: "100%", height: "100%" }} />;
 }

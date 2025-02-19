@@ -39,18 +39,6 @@ const data = [
     category: "Spain",
     value: 711,
   },
-  {
-    category: "Netherlands",
-    value: 665,
-  },
-  {
-    category: "South Korea",
-    value: 443,
-  },
-  {
-    category: "Canada",
-    value: 441,
-  },
 ];
 
 export default function CurvedColumnChart() {
@@ -147,5 +135,5 @@ export default function CurvedColumnChart() {
     return () => root.dispose();
   }, [theme, colorTheme]);
 
-  return <div id={id} style={{ width: "100%", height: 340 }} />;
+  return <div id={id} style={{ width: "100%", height: "100%" }} />;
 }

@@ -40,12 +40,14 @@ export default function MultipleValueAxesLineChart() {
     // XYChart 생성
     const chart = root.container.children.push(
       am5xy.XYChart.new(root, {
-        focusable: true,
         panX: true,
         panY: true,
         wheelX: "panX",
         wheelY: "zoomX",
+        focusable: true,
         pinchZoomX: true,
+        paddingLeft:0,
+        paddingRight:0,
       })
     );
 
@@ -116,5 +118,5 @@ export default function MultipleValueAxesLineChart() {
     return () => root.dispose();
   }, [theme, colorTheme]);
 
-  return <div id={id} style={{ width: "100%", height: 340 }} />;
+  return <div id={id} style={{ width: "100%", height: "100%" }} />;
 }
