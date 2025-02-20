@@ -13,11 +13,12 @@ import {
   DataSortingColumnChart,
   GrainyGradientColumnChart,
 } from "@/components/chart/column/ColumnChart";
+import { BarChart3 } from "lucide-react";
 
 const Column1 = memo(function Column1() {
   return (
     <>
-      <h2 className="chart-title">컬럼 차트1</h2>
+      <h2 className="chart-title"><BarChart3/>컬럼 차트1</h2>
       <div className="chart-layout">
         {/* 기본 컬럼 차트 */}
         <div className="chart-layout-box">

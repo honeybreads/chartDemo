@@ -12,11 +12,12 @@ import {
   ChartWithGapsLineChart,
 } from "@/components/chart/line/LineChart";
 import AreaWithTimeBasedLineChart from "@/components/chart/line/component/AreaWithTimeBasedLineChart";
+import { AreaChart } from "lucide-react";
 
 const Line2 = memo(function Line2() {
   return (
     <>
-      <h2 className="chart-title">채움 라인 차트</h2>
+      <h2 className="chart-title"><AreaChart/>채움 라인 차트</h2>
       <div className="chart-layout">
         {/* 기본 채움 라인 차트 */}
         <div className="chart-layout-box">

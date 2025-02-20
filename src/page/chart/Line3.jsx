@@ -7,11 +7,12 @@ import {
   NoRisersStepLineChart,
   SmoothedStackedLineChart,
 } from "@/components/chart/line/LineChart";
+import { LineChart } from "lucide-react";
 
 const Line3 = memo(function Line3() {
   return (
     <>
-      <h2 className="chart-title">매끄러운 / 각진 라인 차트</h2>
+      <h2 className="chart-title"><LineChart/>매끄러운 / 각진 라인 차트</h2>
       <div className="chart-layout">
         {/* 매끄러운 라인 차트 */}
         <div className="chart-layout-box">

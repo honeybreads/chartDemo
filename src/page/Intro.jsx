@@ -1,100 +1,140 @@
 import CodeMirror from "@uiw/react-codemirror";
-import { atomone } from "@uiw/codemirror-themes-all";
+import { vscodeDark } from "@uiw/codemirror-themes-all";
 import { javascript } from "@codemirror/lang-javascript";
+import { EditorState } from "@codemirror/state";
+import { useRef } from "react";
+import { ExternalLink } from "lucide-react";
 
 export default function Intro() {
+  const createCodeMirrorConfig = (value) => ({
+    value,
+    theme: vscodeDark,
+    extensions: [javascript({ jsx: true }), EditorState.readOnly.of(true)],
+  });
+
+  const articleRef = useRef({ install: null, custom: null, chart: null });
+
+  const scrollToSection = (section) => {
+    articleRef.current[section]?.scrollIntoView({ behavior: "smooth" });
+  };
+
   return (
     <div className="intro">
-      <h2 className="intro-title">amCharts 5 커스텀 데모</h2>
-      <p>
-        본 페이지는 <strong>amCharts 5</strong> 버전을 기반으로 한{" "}
-        <strong>커스텀 차트 데모</strong>입니다.
-        <br />
-        amCharts 5의 다양한 기능을 활용하여 프로젝트에서 차트를 효과적으로
-        구현하는 방법을 소개합니다.
-      </p>
-      <p>자세한 공식 문서는 아래 링크에서 확인할 수 있습니다.</p>
-      <a href="https://www.amcharts.com/" target="_blank">
-        amCharts 공식 문서
-      </a>
+      <div className="intro-content">
+        <h2 className="intro-title">
+          amCharts 5 커스텀 데모{" "}
+          <a className="btn" href="https://www.amcharts.com/" target="_blank">
+            <ExternalLink size={14} />
+          </a>
+        </h2>
+        <p>
+          본 데모 페이지는 <strong>amCharts 5</strong>를 기반으로 다양한 차트를
+          각각 프로젝트 디자인에 맞춰 빠르고 일관성 있게 구현하기 위하여 만들어졌습니다.<br/>   
+          <code>amCharts</code>에 대해 자세한 내용은 공식 문서를 참고 부탁드립니다.
+        </p>
 
-      <article className="intro-article">
-        <h3 className="intro-subtitle">amCharts 5 설치</h3>
-        <p>amCharts 5 라이브러리를 프로젝트에 설치합니다.</p>
-        <CodeMirror
-          value={"npm install @amcharts/amcharts5"}
-          theme={atomone}
-          extensions={[javascript({ jsx: true })]}
-        />
-        <small>* 일부 차트는 추가로 다른 라이브러리 설치가 필요합니다.</small>
-      </article>
+        {/* amCharts 5 설치 */}
+        <article
+          className="intro-article"
+          ref={(el) => (articleRef.current.install = el)}
+        >
+          <h3 className="intro-subtitle">1. amCharts 5 설치</h3>
+          <p>아래 명령어로 amCharts 5를 프로젝트에 설치합니다.</p>
+          <small>* 일부 차트는 추가 라이브러리 설치가 필요할 수 있습니다.</small>
+          <CodeMirror {...createCodeMirrorConfig("npm install @amcharts/amcharts5")} />
+        </article>
 
-      <article className="intro-article">
-        <h3 className="intro-subtitle">커스텀 테마 적용</h3>
-        <p>
-          본 데모에서는 amCharts 5의 디자인을 일관성 있게 유지하기 위해
-          <code>chartTheme.js</code> 파일을 활용합니다. 해당 파일을 프로젝트에
-          복사하여 사용하세요.
-        </p>
-        <CodeMirror
-          value={"// 해당 파일 경로\nsrc/assets/chartTheme.js"}
-          theme={atomone}
-          extensions={[javascript({ jsx: true })]}
-        />
-      </article>
+        {/* 커스텀 테마 설정 */}
+        <article
+          className="intro-article"
+          ref={(el) => (articleRef.current.custom = el)}
+        >
+          <h3 className="intro-subtitle">2. 커스텀 테마 적용</h3>
+          <p>
+            amCharts 5의 스타일을 통일하기 위해 <code>chartTheme.js</code>에서
+            공통 설정을 관리합니다. 데모 프로젝트의 아래 경로 파일을 복사합니다.
+          </p>
+          <CodeMirror {...createCodeMirrorConfig("src/assets/chartTheme.js // 데모 파일 경로")} />
 
-      <article className="intro-article">
-        <h3 className="intro-subtitle">차트 적용 방법</h3>
-        <p>
-          본 데모 페이지에서 원하는 차트를 선택하여 복사한 후, 프로젝트에 맞게
-          수정하여 적용할 수 있습니다.
-        </p>
-        <p>
-          복사한 코드에서 <strong>차트 테마</strong>와{" "}
-          <strong>모드 테마</strong>를 가져오는 경로를 프로젝트 환경에 맞게
-          조정해야 합니다.
-        </p>
-        <p>
-          데모에서는 <code>useTheme</code> 훅을 사용하여 테마 설정을 가져옵니다.
-          <code>theme</code>는 라이트/다크 모드를,
-          <code>colorTheme</code>는 차트의 색상 테마를 담당합니다. 프로젝트의
-          테마 관리 방식에 맞게 해당 부분을 수정하세요.
-        </p>
-        <CodeMirror
-          value={`...
+          <p>이후 폰트 스타일을 적용하기 위해 아래 설정을 수정합니다.</p>
+          <p>
+            파일 내부 <code>Label</code> 공통 설정의{" "}
+            <code>fontFamily, fontWeight</code>를{" "}
+            <strong>
+              <code>CSS</code>에서 사용하는 것과 동일하게
+            </strong>{" "}
+            수정합니다.
+          </p>
+          <CodeMirror
+            {...createCodeMirrorConfig(`...
+export const myThemeRule = (root, colorList, theme) => {
+...
+  // Label 공통 스타일
+  myTheme.rule("Label").setAll({
+    fontSize: 11,
+    fontWeight: "300",
+    fontFamily: "Pretendard-Regular",
+    fill: modeColor[theme].base,
+  });
+...
+}`)}
+          />
+        </article>
+
+        {/* 차트 적용 */}
+        <article
+          className="intro-article"
+          ref={(el) => (articleRef.current.chart = el)}
+        >
+          <h3 className="intro-subtitle">3. 차트 사용</h3>
+          <p>
+            본 페이지에서 원하는 차트의 코드를 복사한 후 일부 항목을 수정합니다.
+          </p>
+          <p>
+            <strong>차트 테마</strong> 및 <strong>컬러/모드 테마</strong>를
+            가져오는 경로를 프로젝트 환경에 맞게 수정해야 합니다.
+          </p>
+          <p className="my-3">
+            데모에서는 <code>useTheme</code> 훅을 활용하여 테마 설정을 관리합니다.
+            <br />
+            <strong><code>theme</code></strong>: 라이트/다크 모드  
+            <strong><code>colorTheme</code></strong>: 차트 색상 테마
+          </p>
+          <CodeMirror
+            {...createCodeMirrorConfig(`...
 import * as themes from '@/assets/chartTheme'
 import { useTheme } from '@/components/Theme'
 ...
-
 function Chart() {
   const { theme, colorTheme } = useTheme();
   ...
-}`}
-          theme={atomone}
-          extensions={[javascript({ jsx: true })]}
-        />
-        <p>
-          테마를 동적으로 관리하지 않고 특정 값으로 고정하려면 아래와 같이
-          수정하면 됩니다.
-        </p>
-        <CodeMirror
-          value={`...
-// const { theme, colorTheme } = useTheme();
-const theme = "light";
-const colorTheme = "basicTheme";
-...`}
-          theme={atomone}
-          extensions={[javascript({ jsx: true })]}
-        />
-        <p>
-          <strong>📌 테마 설정</strong>
-          <br />- <code>theme</code>: <code>light</code> | <code>dark</code>
-          <br />- <code>colorTheme</code>: <code>basicTheme</code> |{" "}
-          <code>purpleTheme</code> | <code>colorfullTheme</code>
-          <br />
-          <small>* 추가적인 색상 테마는 프로젝트별로 확장 가능합니다.</small>
-        </p>
-      </article>
+}`)}
+          />
+
+          <p>
+            프로젝트에서 동적 테마 관리가 필요하지 않다면, 아래와 같이 특정 값으로 고정할 수 있습니다.
+          </p>
+          <CodeMirror
+            {...createCodeMirrorConfig(`...
+function Chart() {
+  // const { theme, colorTheme } = useTheme();
+  const theme = "light"; // light | dark
+  const colorTheme = "basicTheme"; // basicTheme | purpleTheme | colorfullTheme
+  ...
+}`)}
+          />
+        </article>
+      </div>
+
+      {/* 목차 네비게이션 */}
+      <div className="intro-guide">
+        <p className="intro-guide-title">목차</p>
+        {["install", "custom", "chart"].map((item, index) => (
+          <button onClick={() => scrollToSection(item)} key={index}>
+            {item}
+          </button>
+        ))}
+      </div>
     </div>
   );
 }

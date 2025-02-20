@@ -8,11 +8,12 @@ import {
   BasicLollipopChart,
   HorizontalLollipopChart,
 } from "@/components/chart/dumbbell/LollipopChart";
+import { DumbbellIcon } from "lucide-react";
 
 const Dumbbell = memo(function Dumbbell() {
   return (
     <>
-      <h2 className="chart-title">덤벨 & 롤리팝 차트</h2>
+      <h2 className="chart-title"><DumbbellIcon/>덤벨 & 롤리팝 차트</h2>
       <div className="chart-layout">
         {/* 기본 덤벨 차트 */}
         <div className="chart-layout-box">

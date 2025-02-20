@@ -10,12 +10,12 @@ import {
   GrainyGradientDonutChart,
   RadialGradientDonutChart,
 } from "@/components/chart/pie/DonutChart";
-// 차트 데모 데이터
+import { DonutIcon } from "lucide-react";
 
 const Donut = memo(function Donut() {
   return (
     <>
-      <h2 className="chart-title"> 도넛 차트</h2>
+      <h2 className="chart-title"> <DonutIcon/>도넛 차트</h2>
       <div className="chart-layout">
         {/* 기본 도넛 차트 */}
         <div className="chart-layout-box">

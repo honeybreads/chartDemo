@@ -10,11 +10,12 @@ import {
   BasicHeatMapChart,
   BasicWordCloudChart,
 } from "@/components/chart/etc/EtcChart";
+import { Guitar } from "lucide-react";
 
 const Etc = memo(function Etc() {
   return (
     <>
-      <h2 className="chart-title">기타 차트</h2>
+      <h2 className="chart-title"><Guitar/>기타 차트</h2>
       <div className="chart-layout">
         {/* 기본 히트맵 차트 */}
         <div className="chart-layout-box">

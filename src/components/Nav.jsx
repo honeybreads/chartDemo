@@ -12,27 +12,29 @@ export default function Nav({ navToggle, setNavToggle }) {
       {page.map((item, index) => {
         return (
           <ul className="nav-list" key={index}>
-            <li className="nav-list__title">{item.title}</li>
-            <ul className="nav-sub-list">
-              {item.children.map((sub, index) => {
-                const path = `/${item.href}/${sub.href}`;
-                return (
-                  <li
-                    key={index}
-                    className={`nav-sub-list__item ${
-                      segment.pathname === path ? "active" : ""
-                    }`}
-                  >
-                    <Link
-                      to={path}
-                      onClick={() => setNavToggle((prev) => !prev)}
+            <li>
+              <ul className="nav-sub-list">
+                {item.children.map((sub, index) => {
+                  const path = `/${item.href}/${sub.href}`;
+                  return (
+                    <li
+                      key={index}
+                      className={`nav-sub-list__item ${
+                        segment.pathname === path ? "active" : ""
+                      }`}
                     >
-                      {sub.href}
-                    </Link>
-                  </li>
-                );
-              })}
-            </ul>
+                      <Link
+                        to={path}
+                        onClick={() => setNavToggle((prev) => !prev)}
+                      >
+                        {sub.icon && <sub.icon size={18} />}
+                        {sub.href}
+                      </Link>
+                    </li>
+                  );
+                })}
+              </ul>
+            </li>
           </ul>
         );
       })}

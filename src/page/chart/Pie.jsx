@@ -7,11 +7,12 @@ import {
   TwoLevelPieChart,
   ExplodingPieChart,
 } from "@/components/chart/pie/PieChart";
+import { PieChart } from "lucide-react";
 
 const Pie = memo(function Pie() {
   return (
     <>
-      <h2 className="chart-title">파이 차트</h2>
+      <h2 className="chart-title"><PieChart/>파이 차트</h2>
       <div className="chart-layout">
         {/* 기본 파이 차트 */}
         <div className="chart-layout-box">

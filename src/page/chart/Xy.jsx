@@ -8,11 +8,12 @@ import {
   PopulationPyramidChart,
   IrregularInterverChart,
 } from "@/components/chart/xy/XyChart";
+import { LucideScatterChart } from "lucide-react";
 
 const Xy = memo(function Xy() {
   return (
     <>
-      <h2 className="chart-title">XY 차트</h2>
+      <h2 className="chart-title"><LucideScatterChart/>XY 차트</h2>
       <div className="chart-layout">
         {/* 기본 메코(?) 차트 */}
         <div className="chart-layout-box">

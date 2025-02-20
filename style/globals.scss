@@ -18,14 +18,23 @@ html {
 
 /* header */
 .header {
-  @apply py-3 px-4;
   @apply bg-primary;
   @apply text-white;
-  @apply flex flex-none items-center justify-between;
+  @apply flex flex-none;
+
+  &-con {
+    @apply mx-auto py-3 px-4;
+    @apply w-full max-w-screen-2xl;
+    @apply flex flex-none items-center justify-between;
+  }
 
   &-logo {
     @apply cursor-pointer;
     @apply text-2xl font-bold;
+    @apply flex items-center gap-2;
+    &>span{
+      @apply hidden sm:inline-block;
+    }
   }
 
   &-group {
@@ -35,7 +44,7 @@ html {
       @apply p-1.5;
       @apply rounded-md;
       @apply duration-300;
-      @apply border border-white;
+      @apply border border-white/50;
 
       &:hover {
         @apply bg-white;
@@ -44,12 +53,13 @@ html {
     }
 
     select {
-      @apply rounded-sm;
+      @apply min-w-[150px];
+      @apply rounded-md;
       @apply outline-none;
       @apply px-0.5 py-1.5;
       @apply bg-transparent;
       @apply text-sm capitalize;
-      @apply border border-white;
+      @apply border border-white/50;
 
       option {
         @apply bg-black;
@@ -69,10 +79,12 @@ html {
 
 /* main */
 .main {
-  @apply h-full;
+  @apply w-full h-full;
   @apply relative;
+  @apply mx-auto;
   @apply flex flex-1;
   @apply overflow-hidden;
+  @apply max-w-screen-2xl;
 }
 
 /* nav */
@@ -91,30 +103,32 @@ html {
     @apply left-0;
   }
 
-  &-list {
-    &__title {
-      @apply text-lg font-semibold uppercase;
-    }
-  }
-
   &-sub-list {
-    @apply pl-1 ml-2;
-    @apply border-l border-border border-solid;
+    @apply text-gray-700 dark:text-gray-300;
 
     &__item {
-      @apply px-2 mt-1;
+      @apply mt-1;
       @apply rounded-sm;
       @apply capitalize;
+
+      & > a {
+        @apply flex items-center gap-1.5;
+        & > svg {
+          @apply bg-gray-500 text-white rounded-sm p-0.5;
+        }
+      }
 
       &:hover,
       &.active {
         @apply text-primary;
+        & > a > svg {
+          @apply bg-primary;
+        }
       }
     }
   }
 }
 
-// maxw 설정?
 /* content section */
 .section {
   @apply p-4;
@@ -131,10 +145,6 @@ html {
     @apply relative;
     @apply col-span-12;
     @apply overflow-hidden;
-    @media (min-width: 1920px) {
-      @apply col-span-6;
-      @apply flex flex-col;
-    }
   }
 
   &-title {
@@ -146,15 +156,13 @@ html {
 .chart-title {
   @apply mb-4;
   @apply text-xl font-bold;
+  @apply flex items-center gap-2;
 }
 
 .chart-con {
   @apply rounded-md;
   @apply bg-card p-4;
   @apply overflow-auto;
-  @media (min-width: 1920px) {
-    @apply flex-auto;
-  }
 
   & > div {
     @apply min-w-[360px];
@@ -162,26 +170,85 @@ html {
 }
 
 // intro
+.section:has(.intro) {
+  @apply p-0;
+}
 .intro {
-  @apply text-base;
+  @apply flex items-start;
+  @apply text-sm lg:text-base break-keep;
+  @apply text-gray-700 dark:text-gray-300;
+
+  &-content {
+    @apply p-4;
+    @apply flex-none;
+    @apply w-full lg:w-[calc(100%-200px)] max-w-[1020px];
+  }
+
+  &-guide {
+    @apply p-4;
+    @apply flex-1;
+    @apply sticky top-0;
+    @apply lg:inline-flex flex-col items-start hidden;
+
+    &-title {
+      @apply text-lg font-bold;
+      @apply text-gray-950 dark:text-gray-100;
+    }
+
+    button {
+      @apply px-2 py-0.5;
+      @apply capitalize text-sm;
+      @apply border-l border-border;
+      &:hover {
+        @apply text-primary;
+      }
+    }
+  }
 
   &-title {
+    @apply flex items-center gap-2;
     @apply text-2xl font-semibold mb-4;
+    @apply text-gray-950 dark:text-gray-100;
+
+    .btn {
+      @apply p-1;
+      @apply rounded;
+      @apply bg-primary;
+      @apply text-white;
+      @apply inline-block;
+
+      &:hover {
+        @apply brightness-110;
+      }
+    }
   }
 
   &-article {
-    @apply mt-8;
+    @apply mt-10;
   }
 
   &-subtitle {
+    @apply text-gray-900 dark:text-gray-200;
     @apply text-lg font-semibold mb-2 border-b border-solid border-border;
   }
 
-  .cm-theme+p{
-    @apply mt-8;
+  strong {
+    @apply text-primary;
+  }
+
+  .cm-theme {
+    @apply my-3;
+    @apply rounded-sm;
+    @apply overflow-hidden;
+    @apply border border-solid border-border;
   }
 
   .cm-content {
-    @apply leading-6;
+    @apply text-sm;
+  }
+
+  .cm-activeLine,
+  .cm-activeLineGutter {
+    @apply bg-transparent;
   }
 }

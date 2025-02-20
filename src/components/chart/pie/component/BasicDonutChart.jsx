@@ -51,7 +51,7 @@ export default function BasicDonutChart() {
       centerY: 0,
       textType: "circular",
     });
-
+    
     // legend 생성
     const legend = chart.children.push(
       am5.Legend.new(root, {

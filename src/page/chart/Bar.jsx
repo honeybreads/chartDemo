@@ -13,11 +13,12 @@ import {
   MovingBulletBarChart,
   PartitionedBarChart,
 } from "@/components/chart/bar/BarChart";
+import { BarChartHorizontal } from "lucide-react";
 
 const Bar = memo(function Bar() {
   return (
     <>
-      <h2 className="chart-title">바 차트</h2>
+      <h2 className="chart-title"><BarChartHorizontal/> 바 차트</h2>
       <div className="chart-layout">
         {/* 기본 바 차트 */}
         <div className="chart-layout-box">

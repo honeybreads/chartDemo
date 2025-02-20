@@ -12,11 +12,12 @@ import {
   DateLabelsNearGridLineChart,
   ComparingDiffrentDateLineChart,
 } from "@/components/chart/line/LineChart";
+import { LineChart } from "lucide-react";
 
 const Line1 = memo(function Line1() {
   return (
     <>
-      <h2 className="chart-title">라인 차트</h2>
+      <h2 className="chart-title"><LineChart/>라인 차트</h2>
       <div className="chart-layout">
         {/* 기본 라인 차트 */}
         <div className="chart-layout-box">

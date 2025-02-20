@@ -8,11 +8,12 @@ import {
   GradientGaugeChart,
   AnimatedGaugeChart,
 } from "@/components/chart/radar/GaugeChart";
+import { GaugeCircle } from "lucide-react";
 
 const Gauge = memo(function Gauge() {
   return (
     <>
-      <h2 className="chart-title">게이지 차트</h2>
+      <h2 className="chart-title"><GaugeCircle/>게이지 차트</h2>
       <div className="chart-layout">
         {/* 기본 게이지 차트 */}
         <div className="chart-layout-box">

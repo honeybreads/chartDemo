@@ -11,11 +11,12 @@ import {
   ValueLineBubbleChart,
   DateBasedBubbleChart,
 } from "@/components/chart/bubble/BubbleChart";
+import { Shell } from "lucide-react";
 
 const Bubble = memo(function Bubble() {
   return (
     <>
-      <h2 className="chart-title">버블 차트</h2>
+      <h2 className="chart-title"><Shell/>버블 차트</h2>
       <div className="chart-layout">
         {/* 기본본 버블 차트 */}
         <div className="chart-layout-box">

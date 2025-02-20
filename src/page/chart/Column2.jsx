@@ -9,11 +9,12 @@ import {
   StackedWaterfallColumnChart,
   CombineMultipleColumnChart,
 } from "@/components/chart/column/ColumnChart";
+import { BarChart3 } from "lucide-react";
 
 const Column2 = memo(function Column2() {
   return (
     <>
-      <h2 className="chart-title">컬럼 차트2</h2>
+      <h2 className="chart-title"><BarChart3/>컬럼 차트2</h2>
       <div className="chart-layout">
         {/* 움직이는 불렛 컬럼 차트 */}
         <div className="chart-layout-box">
