@@ -17,7 +17,7 @@ const createData = (count) => {
     return value;
   };
 
-  for (var i = 0; i < count; ++i) {
+  for (let i = 0; i < count; ++i) {
     am5.time.add(date, "day", 1);
     data.push({ date: date.getTime(), value: randomValue() });
   }
@@ -34,8 +34,8 @@ export default function DrawingSeriesLineChart() {
   useLayoutEffect(() => {
     // Root 객체 생성 및 테마 불러오기
     const root = am5.Root.new(id);
-    const { lineColors } = themes[colorTheme];
-    const colorList = lineColors.lineStroke;
+    const { primary } = themes[colorTheme];
+    const colorList = primary;
     const myTheme = themes.myThemeRule(root, colorList, theme);
     root.setThemes([am5themes_Animated.new(root), myTheme]);
 
@@ -82,8 +82,8 @@ export default function DrawingSeriesLineChart() {
         xAxis,
         yAxis,
         name: "Series",
-        valueYField: "value",
         valueXField: "date",
+        valueYField: "value",
         tooltip: am5.Tooltip.new(root, {
           labelText: "{valueY}",
         }),
@@ -108,8 +108,8 @@ export default function DrawingSeriesLineChart() {
       const value = yAxis.positionToValue(yAxis.coordinateToPosition(point.y));
       e.target.dataItem.setAll({
         valueX: date,
-        valueXWorking: date,
         valueY: value,
+        valueXWorking: date,
         valueYWorking: value,
       });
     };
@@ -143,7 +143,7 @@ export default function DrawingSeriesLineChart() {
     };
 
     // 차트 클릭시 생성 이벤트
-    chart.plotContainer.get("background").events.on("click", function (e) {
+    chart.plotContainer.get("background").events.on("click", (e) => {
       const point = chart.plotContainer.toLocal(e.point);
       const date = xAxis.positionToValue(xAxis.coordinateToPosition(point.x));
       const value = yAxis.positionToValue(yAxis.coordinateToPosition(point.y));
@@ -157,7 +157,8 @@ export default function DrawingSeriesLineChart() {
       am5.Label.new(root, {
         x: 2,
         y: 2,
-        text: "Click on plot area to draw a series",
+        layer:9,
+        text: "플롯 영역을 클릭하여 Series를 그릴 수 있습니다.",
       })
     );
 

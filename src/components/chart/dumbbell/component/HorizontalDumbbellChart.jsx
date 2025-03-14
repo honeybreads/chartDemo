@@ -28,8 +28,8 @@ export default function HorizontalDumbbellChart() {
   useLayoutEffect(() => {
     // Root 객체 생성 및 테마 불러오기
     const root = am5.Root.new(id);
-    const { colorSet } = themes[colorTheme];
-    const colorList = colorSet(2);
+    const { primary } = themes[colorTheme];
+    const colorList = primary;
     const myTheme = themes.myThemeRule(root, colorList, theme);
     root.setThemes([am5themes_Animated.new(root), myTheme]);
 
@@ -40,6 +40,7 @@ export default function HorizontalDumbbellChart() {
         panY: true,
         wheelX: "panX",
         wheelY: "zoomX",
+        paddingTop:20,
         paddingLeft: 0,
         pinchZoomX: true,
       })
@@ -47,13 +48,13 @@ export default function HorizontalDumbbellChart() {
 
     // 커서 추가
     const cursor = chart.set("cursor", am5xy.XYCursor.new(root, {}));
-    cursor.lineY.set("visible", false);
+    cursor.lineX.set("visible", false);
+    cursor.lineY.set("stroke",themes.chartVariables[theme].base);
 
     // X,Y축 생성
     const xAxis = chart.xAxes.push(
       am5xy.ValueAxis.new(root, {
         maxDeviation: 0.3,
-        tooltip: am5.Tooltip.new(root, {}),
         renderer: am5xy.AxisRendererX.new(root, {
           minGridDistance: 60,
           minorGridEnabled: true,

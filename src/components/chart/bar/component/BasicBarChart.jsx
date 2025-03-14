@@ -8,28 +8,29 @@ import { useTheme } from "@/components/Theme";
 // 샘플 데이터
 const data = [
   { date: new Date(2024, 11, 1).getTime(), value: 10 },
-  { date: new Date(2024, 11, 2).getTime(), value: 100 },
+  { date: new Date(2024, 11, 2).getTime(), value: 20 },
   { date: new Date(2024, 11, 3).getTime(), value: 32 },
-  { date: new Date(2024, 11, 4).getTime(), value: 24 },
+  { date: new Date(2024, 11, 4).getTime(), value: 44 },
   { date: new Date(2024, 11, 5).getTime(), value: 55 },
-  { date: new Date(2024, 11, 6).getTime(), value: 56 },
-  { date: new Date(2024, 11, 7).getTime(), value: 31 },
-  { date: new Date(2024, 11, 8).getTime(), value: 13 },
-  { date: new Date(2024, 11, 9).getTime(), value: 44 },
-  { date: new Date(2024, 11, 10).getTime(), value: 78 },
-  { date: new Date(2024, 11, 11).getTime(), value: 10 },
-  { date: new Date(2024, 11, 12).getTime(), value: 100 },
+  { date: new Date(2024, 11, 6).getTime(), value: 62 },
+  { date: new Date(2024, 11, 7).getTime(), value: 77 },
+  { date: new Date(2024, 11, 8).getTime(), value: 89 },
+  { date: new Date(2024, 11, 9).getTime(), value: 95 },
+  { date: new Date(2024, 11, 10).getTime(), value: 100 },
 ];
 
+// BasicBarChart
 export default function BasicBarChart() {
   const id = "basic-bar";
   const { theme, colorTheme } = useTheme();
+  // const theme="light";
+  // const colorTheme = "basicTheme";
 
   useLayoutEffect(() => {
     // Root 객체 생성 및 테마 불러오기
     const root = am5.Root.new(id);
-    const { colorSet } = themes[colorTheme];
-    const colorList = colorSet(data.length);
+    const { primary } = themes[colorTheme];
+    const colorList = primary;
     const myTheme = themes.myThemeRule(root, colorList, theme);
     root.setThemes([am5themes_Animated.new(root), myTheme]);
 
@@ -40,23 +41,16 @@ export default function BasicBarChart() {
         panY: false,
         wheelX: false,
         wheelY: false,
+        paddingLeft:0,
       })
     );
 
-    // 커서 추가
-    const cursor = chart.set(
-      "cursor",
-      am5xy.XYCursor.new(root, { behavior: "zoomX" })
-    );
-    cursor.lineY.set("visible", false);
-
     // X,Y축 생성
-
     const yAxis = chart.yAxes.push(
       am5xy.DateAxis.new(root, {
         baseInterval: { timeUnit: "day", count: 1 },
         renderer: am5xy.AxisRendererY.new(root, {
-          minGridDistance: 20,
+          minGridDistance: 0,
         }),
       })
     );
@@ -75,21 +69,21 @@ export default function BasicBarChart() {
         xAxis,
         valueYField: "date",
         valueXField: "value",
-        tooltip: am5.Tooltip.new(root, {
-          labelText: "{valueX}",
-        }),
       })
     );
 
     series.columns.template.setAll({
       cornerRadiusBL: 0,
       cornerRadiusTL: 0,
-      cornerRadiusTR: 2,
-      cornerRadiusBR: 2,
+      cornerRadiusTR: themes.chartVariables.default.barRadius,
+      cornerRadiusBR: themes.chartVariables.default.barRadius,
+      tooltipX: am5.p100,
+      tooltipText: "{valueX}",
     });
-    series.columns.template.adapters.add("fill", function (_, target) {
-      return chart.get("colors").getIndex(series.columns.indexOf(target));
-    });
+
+    series.columns.template.adapters.add("fill", (_, target) =>
+      chart.get("colors").getIndex(series.columns.indexOf(target))
+    );
 
     // 데이터 적용
     series.data.setAll(data);

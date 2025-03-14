@@ -5,6 +5,7 @@ import { useLayoutEffect } from "react";
 import * as themes from "@/assets/chartTheme";
 import { useTheme } from "@/components/Theme";
 
+// IrregularInterverChart
 export default function IrregularInterverChart() {
   const id = "irregular-xy";
   const { theme, colorTheme } = useTheme();
@@ -12,8 +13,8 @@ export default function IrregularInterverChart() {
   useLayoutEffect(() => {
     // Root 객체 생성 및 테마 불러오기
     const root = am5.Root.new(id);
-    const { colorSet } = themes[colorTheme];
-    const colorList = colorSet(4);
+    const { primary } = themes[colorTheme];
+    const colorList = primary;
     const myTheme = themes.myThemeRule(root, colorList, theme);
     root.setThemes([am5themes_Animated.new(root), myTheme]);
 
@@ -84,8 +85,8 @@ export default function IrregularInterverChart() {
         panY: false,
         wheelX: "panX",
         wheelY: "zoomX",
+        paddingBottom:8,
         layout: root.verticalLayout,
-        paddingLeft:0
       })
     );
 
@@ -126,6 +127,13 @@ export default function IrregularInterverChart() {
       })
     );
 
+    series
+      .get("tooltip")
+      .label.adapters.add("fill", () => themes.chartVariables[theme].line);
+    series
+      .get("tooltip")
+      .get("background")
+      .adapters.add("fill", () => themes.chartVariables[theme].base);
     series.strokes.template.setAll({ visible: false });
     series.fills.template.setAll({
       visible: true,
@@ -133,8 +141,8 @@ export default function IrregularInterverChart() {
       templateField: "fillSettings",
     });
 
-    // x axis range 간격 적용
-    for (var i = 0; i < data.length; i++) {
+    // x axis 간격별 그리드, 라벨 생성
+    for (let i = 0; i < data.length; i++) {
       const value = data[i].x;
       const rangeDataItem = xAxis.makeDataItem({ value: value });
       xAxis.createAxisRange(rangeDataItem);

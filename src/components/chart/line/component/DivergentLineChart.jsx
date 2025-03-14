@@ -81,13 +81,13 @@ export default function DivergentLineChart() {
   useLayoutEffect(() => {
     // Root 객체 생성 및 테마 불러오기
     const root = am5.Root.new(id);
-    const { lineColors } = themes[colorTheme];
-    const colorList = lineColors.lineStroke;
+    const { primary } = themes[colorTheme];
+    const colorList = primary;
     const myTheme = themes.myThemeRule(root, colorList, theme);
     root.setThemes([am5themes_Animated.new(root), myTheme]);
     root.dateFormatter.setAll({
-      dateFormat: "yyyy-MM-dd",
       dateFields: ["valueX"],
+      dateFormat: "yyyy-MM-dd",
     });
 
     // XYChart 생성
@@ -155,7 +155,7 @@ export default function DivergentLineChart() {
       dashed && series.strokes.template.set("strokeDasharray", [5, 3]);
       series.data.setAll(data);
       series.appear(1000);
-      
+
       return series;
     };
 

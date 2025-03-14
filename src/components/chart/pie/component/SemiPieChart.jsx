@@ -17,15 +17,15 @@ const data = [
   { numbers: "Seven", value: 1 },
 ];
 
+// SemiPieChart
 export default function SemiPieChart() {
   const id = "semi-pie";
   const { theme, colorTheme } = useTheme();
 
-
   useLayoutEffect(() => {
     const root = am5.Root.new(id);
-    const { colorSet } = themes[colorTheme];
-    const colorList = colorSet(data.length);
+    const { primary } = themes[colorTheme];
+    const colorList = primary;
     const myTheme = themes.myThemeRule(root, colorList, theme);
 
     // 반응형 정의
@@ -33,11 +33,17 @@ export default function SemiPieChart() {
     responsive.addRule({
       relevant: am5themes_Responsive.widthL,
       applying: () => {
-        series.labels.template.setAll({ forceHidden: true });
+        series.labels.template.setAll({
+          textType: "circular",
+          oversizedBehavior: "truncate",
+        });
         series.ticks.template.setAll({ forceHidden: true });
       },
       removing: () => {
-        series.labels.template.setAll({ forceHidden: false });
+        series.labels.template.setAll({
+          textType: "adjusted",
+          oversizedBehavior: "none",
+        });
         series.ticks.template.setAll({ forceHidden: false });
       },
     });
@@ -73,6 +79,9 @@ export default function SemiPieChart() {
     series.slices.template.states.create("hover", { scale: 1 });
     series.slices.template.setAll({ cornerRadius: 4 });
     series.states.create("hidden", { endAngle: 180, startAngle: 180 });
+    series.labels.template.adapters.add("width", (_, target) => {
+      return themes.seriesSetMaxWidth(root, target);
+    });
 
     // 데이터 적용
     series.data.setAll(data);

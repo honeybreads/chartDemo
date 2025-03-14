@@ -124,8 +124,8 @@ export default function LiveOrderBookLineChart() {
   useLayoutEffect(() => {
     // Root 객체 생성 및 테마 불러오기
     const root = am5.Root.new(id);
-    const { lineColors } = themes[colorTheme];
-    const colorList = lineColors.lineStroke;
+    const { state } = themes[colorTheme];
+    const colorList = [state.positive, state.negative];
     const myTheme = themes.myThemeRule(root, colorList, theme);
     root.setThemes([am5themes_Animated.new(root), myTheme]);
 
@@ -137,16 +137,17 @@ export default function LiveOrderBookLineChart() {
         wheelX: "none",
         wheelY: "none",
         focusable: true,
+        paddingLeft:0,
       })
     );
 
     chart.plotContainer.children.push(
       am5.Label.new(root, {
-        text: "Price (BTC/ETH)",
-        fontSize: 20,
-        fontWeight: "400",
         x: am5.p50,
         centerX: am5.p50,
+        fontSize: 20,
+        fontWeight: "400",
+        text: "Price (BTC/ETH)",
       })
     );
 
@@ -204,7 +205,7 @@ export default function LiveOrderBookLineChart() {
       return series;
     };
 
-    // volume series 생성 함수수
+    // volume series 생성 함수
     const createVolumeSeries = (valueYField) => {
       const volumeSeries = chart.series.push(
         am5xy.ColumnSeries.new(root, {
@@ -213,7 +214,7 @@ export default function LiveOrderBookLineChart() {
           valueYField,
           minBulletDistance: 10,
           categoryXField: "value",
-          fill: themes.modeColor[theme].base,
+          fill: themes.chartVariables[theme].base,
         })
       );
 
@@ -271,7 +272,7 @@ export default function LiveOrderBookLineChart() {
     // 데이터 파싱 함수
     const parseData = (data) => {
       let res = [];
-      processData(data.bids, "bids", true, res); // 매수 
+      processData(data.bids, "bids", true, res); // 매수
       processData(data.asks, "asks", false, res); // 매도
 
       //결과 데이터를 차트에 반영

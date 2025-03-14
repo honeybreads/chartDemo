@@ -88,7 +88,7 @@ const Line1 = memo(function Line1() {
         {/* 범례 호거 액션 라인 차트 */}
         <div className="chart-layout-box">
           <p className="chart-layout-title">Legend Hover Line Chart</p>
-          <div className="chart-con" style={{ width: "100%", height: 340 }}>
+          <div className="chart-con" style={{ width: "100%", height: 500 }}>
             <LegendHoverLineChart />
           </div>
         </div>

@@ -5,6 +5,7 @@ import { useLayoutEffect } from "react";
 import * as themes from "@/assets/chartTheme";
 import { useTheme } from "@/components/Theme";
 
+// HoneycombChart
 export default function HoneycombChart() {
   const id = "honeycomb-chart";
   const { theme, colorTheme } = useTheme();
@@ -12,114 +13,10 @@ export default function HoneycombChart() {
   useLayoutEffect(() => {
     // Root 객체 생성 및 테마 불러오기
     const root = am5.Root.new(id);
-    const { colorSet } = themes[colorTheme];
-    const colorList = colorSet(2);
+    const { primary } = themes[colorTheme];
+    const colorList = primary;
     const myTheme = themes.myThemeRule(root, colorList, theme);
     root.setThemes([am5themes_Animated.new(root), myTheme]);
-
-    // XYChart 생성
-    const chart = root.container.children.push(am5xy.XYChart.new(root, {}));
-    chart.gridContainer.set("opacity", 0);
-    chart.plotContainer.get("background").set("opacity", 0);
-
-    // x,y축 생성
-    const axisOption = (min, max) => {
-      return {
-        min,
-        max,
-        opacity: 0,
-        strictMinMax: true,
-      };
-    };
-
-    const xAxis = chart.xAxes.push(
-      am5xy.ValueAxis.new(root, {
-        ...axisOption(0, 12),
-        renderer: am5xy.AxisRendererX.new(root, {
-          inside: true,
-          minGridDistance: 50,
-        }),
-      })
-    );
-
-    const yAxis = chart.yAxes.push(
-      am5xy.ValueAxis.new(root, {
-        ...axisOption(-1, 7),
-        renderer: am5xy.AxisRendererY.new(root, {
-          inside: true,
-          inversed: true,
-        }),
-      })
-    );
-
-    // series 생성
-    const series = chart.series.push(
-      am5xy.LineSeries.new(root, {
-        xAxis,
-        yAxis,
-        valueYField: "y",
-        valueXField: "x",
-        valueField: "value",
-        calculateAggregates: true,
-      })
-    );
-    series.strokes.template.set("strokeOpacity", 0);
-
-    // bullets(벌집) 생성
-    const template = am5.Template.new({});
-    series.bullets.push(() => {
-      const graphics = am5.Line.new(
-        root,
-        {
-          strokeWidth: 2,
-          tooltipY: -am5.p50,
-          strokeDasharray: [0, 0],
-          tooltipText: "{name} {value}",
-          stroke: themes.modeColor[theme].line,
-        },
-        template
-      );
-
-      graphics.adapters.add("x", (x, target) => {
-        const w = Math.abs(xAxis.getX(0, 1, 0) - xAxis.getX(1, 1, 0)) / 2;
-        const h = Math.abs(yAxis.getY(0, 1, 0) - yAxis.getY(1, 1, 0)) / 2;
-        const p0 = { x: 0, y: -h };
-        const p1 = { x: w, y: -h / 2 };
-        const p2 = { x: w, y: h / 2 };
-        const p3 = { x: 0, y: h };
-        const p4 = { x: -w, y: h / 2 };
-        const p5 = { x: -w, y: -h / 2 };
-        const p6 = { x: 0, y: -h };
-
-        target.set("segments", [[[p0, p1, p2, p3, p4, p5, p6]]]);
-        return x;
-      });
-
-      return am5.Bullet.new(root, { sprite: graphics });
-    });
-
-    // bullet(텍스트 라벨) 생성
-    series.bullets.push(function () {
-      const label = am5.Label.new(root, {
-        text: "{short}",
-        centerX: am5.p50,
-        centerY: am5.p50,
-        populateText: true,
-        fill: am5.color("#fff"),
-      });
-
-      return am5.Bullet.new(root, { sprite: label });
-    });
-
-    series.set("heatRules", [
-      {
-        key: "fill",
-        target: template,
-        dataField: "value",
-        min: am5.color(colorList[1]),
-        max: am5.color(colorList[5]),
-      },
-    ]);
 
     // 샘플 데이터
     const data = [
@@ -482,6 +379,114 @@ export default function HoneycombChart() {
       },
     ];
 
+    // XYChart 생성
+    const chart = root.container.children.push(am5xy.XYChart.new(root, {}));
+    chart.gridContainer.set("opacity", 0);
+    chart.plotContainer.get("background").set("opacity", 0);
+
+    // x,y축 생성
+    const axisOption = (min, max) => {
+      return {
+        min,
+        max,
+        opacity: 0,
+        strictMinMax: true,
+      };
+    };
+
+    const xAxis = chart.xAxes.push(
+      am5xy.ValueAxis.new(root, {
+        ...axisOption(0, 12),
+        renderer: am5xy.AxisRendererX.new(root, {
+          inside: true,
+          minGridDistance: 50,
+        }),
+      })
+    );
+
+    xAxis.get("renderer").adapters.add("width", () => {
+      root.dom.style.height = root.width() * 0.7 + "px";
+    });
+
+    const yAxis = chart.yAxes.push(
+      am5xy.ValueAxis.new(root, {
+        ...axisOption(-1, 7),
+        renderer: am5xy.AxisRendererY.new(root, {
+          inside: true,
+          inversed: true,
+        }),
+      })
+    );
+
+    // series 생성
+    const series = chart.series.push(
+      am5xy.LineSeries.new(root, {
+        xAxis,
+        yAxis,
+        valueYField: "y",
+        valueXField: "x",
+        valueField: "value",
+        calculateAggregates: true,
+      })
+    );
+    series.strokes.template.set("strokeOpacity", 0);
+
+    // bullets(벌집) 생성
+    const template = am5.Template.new({});
+    series.bullets.push(() => {
+      const graphics = am5.Line.new(
+        root,
+        {
+          strokeWidth: 2,
+          tooltipY: -am5.p50,
+          strokeDasharray: [0, 0],
+          tooltipText: "{name} {value}",
+          stroke: themes.chartVariables[theme].line,
+        },
+        template
+      );
+
+      graphics.adapters.add("x", (x, target) => {
+        const w = Math.abs(xAxis.getX(0, 1, 0) - xAxis.getX(1, 1, 0)) / 2;
+        const h = Math.abs(yAxis.getY(0, 1, 0) - yAxis.getY(1, 1, 0)) / 2;
+        const p0 = { x: 0, y: -h };
+        const p1 = { x: w, y: -h / 2 };
+        const p2 = { x: w, y: h / 2 };
+        const p3 = { x: 0, y: h };
+        const p4 = { x: -w, y: h / 2 };
+        const p5 = { x: -w, y: -h / 2 };
+        const p6 = { x: 0, y: -h };
+
+        target.set("segments", [[[p0, p1, p2, p3, p4, p5, p6]]]);
+        return x;
+      });
+
+      return am5.Bullet.new(root, { sprite: graphics });
+    });
+
+    // bullet(텍스트 라벨) 생성
+    series.bullets.push(() => {
+      const label = am5.Label.new(root, {
+        text: "{short}",
+        centerX: am5.p50,
+        centerY: am5.p50,
+        populateText: true,
+        fill: am5.color("#fff"),
+      });
+
+      return am5.Bullet.new(root, { sprite: label });
+    });
+
+    series.set("heatRules", [
+      {
+        key: "fill",
+        target: template,
+        dataField: "value",
+        min: am5.color(colorList[0]),
+        max: am5.color(colorList[primary.length - 1]),
+      },
+    ]);
+
     // 벌집 형태 위치 적용
     const vStep = (1 + am5.math.sin(30)) / 2;
     am5.array.each(data, (di) => {
@@ -499,14 +504,5 @@ export default function HoneycombChart() {
     return () => root.dispose();
   }, [theme, colorTheme]);
 
-  return (
-    <div
-      id={id}
-      style={{
-        width: 1000,
-        height: 660,
-        margin: "0 auto",
-      }}
-    />
-  );
+  return <div id={id} style={{ width: "100%", height: "auto" }} />;
 }

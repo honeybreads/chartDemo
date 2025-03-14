@@ -51,6 +51,7 @@ const data = [
   },
 ];
 
+// MovingBulletColumnChart
 export default function MovingBulletColumnChart() {
   const id = "movingbullet-column";
   const { theme, colorTheme } = useTheme();
@@ -58,14 +59,10 @@ export default function MovingBulletColumnChart() {
   useLayoutEffect(() => {
     // Root 객체 생성 및 테마 불러오기
     const root = am5.Root.new(id);
-    const { colorSet } = themes[colorTheme];
-    const colorList = colorSet(data.length);
+    const { primary } = themes[colorTheme];
+    const colorList = primary;
     const myTheme = themes.myThemeRule(root, colorList, theme);
     root.setThemes([am5themes_Animated.new(root), myTheme]);
-
-    // 카테고리, 값 필드
-    const categoryField = Object.keys(data[0])[0];
-    const valueField = Object.keys(data[0])[1];
 
     // XYChart 생성
     const chart = root.container.children.push(
@@ -74,42 +71,40 @@ export default function MovingBulletColumnChart() {
         panY: false,
         wheelX: "none",
         wheelY: "none",
+        paddingLeft: 0,
         paddingTop: 40,
       })
     );
-
     chart.plotContainer.get("background").set("strokeOpacity", 0);
 
     // x,y축 생성
-    const xRenderer = am5xy.AxisRendererX.new(root, {});
-    xRenderer.grid.template.set("visible", false);
-
     const xAxis = chart.xAxes.push(
       am5xy.CategoryAxis.new(root, {
-        categoryField,
         paddingTop: 40,
-        renderer: xRenderer,
+        categoryField: "name",
+        renderer: am5xy.AxisRendererX.new(root, {}),
       })
     );
-
-    const yRenderer = am5xy.AxisRendererY.new(root, {});
-    yRenderer.grid.template.set("strokeDasharray", [3]);
 
     const yAxis = chart.yAxes.push(
       am5xy.ValueAxis.new(root, {
         min: 0,
-        renderer: yRenderer,
+        renderer: am5xy.AxisRendererY.new(root, {}),
       })
     );
+
+    xAxis.get("renderer").setAll({stroke:0})
+    xAxis.get("renderer").grid.template.set("visible", false);
+    yAxis.get("renderer").grid.template.set("strokeDasharray", [3]);
 
     // series 그래프 생성
     const series = chart.series.push(
       am5xy.ColumnSeries.new(root, {
-        xAxis: xAxis,
-        yAxis: yAxis,
+        xAxis,
+        yAxis,
         maskBullets: false,
-        valueYField: valueField,
-        categoryXField: categoryField,
+        valueYField: "steps",
+        categoryXField: "name",
         calculateAggregates: true,
         sequencedInterpolation: true,
         tooltip: am5.Tooltip.new(root, {
@@ -120,6 +115,7 @@ export default function MovingBulletColumnChart() {
       })
     );
 
+    series.get("tooltip").adapters.add("stateAnimationDuration", () => 100);
     series.columns.template.setAll({
       maxWidth: 50,
       cornerRadiusBR: 0,
@@ -128,13 +124,13 @@ export default function MovingBulletColumnChart() {
       cornerRadiusTL: 20,
     });
 
-    series.columns.template.adapters.add("fill", function (_, target) {
-      return chart.get("colors").getIndex(series.columns.indexOf(target));
-    });
+    series.columns.template.adapters.add("fill", (_, target) =>
+      chart.get("colors").getIndex(series.columns.indexOf(target))
+    );
 
-    series.bullets.push((root, _, dataItem) => {
+    series.bullets.push((root, cols, dataItem) => {
       const index = data.findIndex(
-        (item) => item[categoryField] === dataItem.dataContext[categoryField]
+        (item) => item.name === dataItem.dataContext.name
       );
 
       const bulletContainer = am5.Container.new(root, {});
@@ -185,7 +181,7 @@ export default function MovingBulletColumnChart() {
 
     const handleOut = () => {
       if (currentlyHovered) {
-        var bullet = currentlyHovered.bullets[0];
+        const bullet = currentlyHovered.bullets[0];
         bullet.animate({
           key: "locationY",
           to: 0,
@@ -194,6 +190,7 @@ export default function MovingBulletColumnChart() {
         });
       }
     };
+    
     // 커서 생성
     const cursor = chart.set("cursor", am5xy.XYCursor.new(root, {}));
     cursor.lineX.set("visible", false);

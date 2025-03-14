@@ -1061,6 +1061,7 @@ const aggregateData = (list) => {
 // 초기(Korea) 데이터 적용
 data = aggregateData(data);
 
+// PopulationPyramidChart
 export default function PopulationPyramidChart() {
   const id = "population-pyramid-xy";
   const { theme, colorTheme } = useTheme();
@@ -1068,8 +1069,8 @@ export default function PopulationPyramidChart() {
   useLayoutEffect(() => {
     // Root 객체 생성 및 테마 불러오기
     const root = am5.Root.new(id);
-    const { colorSet } = themes[colorTheme];
-    const colorList = colorSet(2);
+    const { primary } = themes[colorTheme];
+    const colorList = primary;
     const myTheme = themes.myThemeRule(root, colorList, theme);
     root.setThemes([am5themes_Animated.new(root), myTheme]);
 
@@ -1095,7 +1096,6 @@ export default function PopulationPyramidChart() {
         width: am5.percent(70),
       })
     );
-    chart.getTooltip().set("autoTextColor", false);
 
     // X,Y축 생성
     const createYAxis = (opposite) => {
@@ -1168,29 +1168,6 @@ export default function PopulationPyramidChart() {
 
     const maleSeries = createXySeries("Males", yAxis1, "malePercent");
     const femaleSeries = createXySeries("FeMales", yAxis2, "femalePercent");
-
-    // labels 생성
-    // const createLabels = (text, labelPos, fill) => {
-    //   chart.plotContainer.children.push(
-    //     am5.Label.new(root, {
-    //       ...labelPos,
-    //       text,
-    //       fontSize: 20,
-    //       fill: fill.get("fill"),
-    //       background: am5.RoundedRectangle.new(root, {
-    //         fillOpacity: 0.3,
-    //         fill: am5.color(0xffffff),
-    //       }),
-    //     })
-    //   );
-    // };
-
-    // createLabels("Males", { y: 7, x: 14 }, maleSeries);
-    // createLabels(
-    //   "Females",
-    //   { y: 7, x: am5.p100, centerX: am5.p100, dx: -14 },
-    //   femaleSeries
-    // );
 
     // map Chart 생성
     const map = container.children.push(

@@ -14,7 +14,7 @@ const data = [
   { numbers: "Australia", value: 2 },
 ];
 
-// BasicDonutChart
+// BasicDonutChart 넓이 고려해보기
 export default function BasicDonutChart() {
   const id = "basic-donut";
   const { theme, colorTheme } = useTheme();

@@ -1352,8 +1352,11 @@ const data = [
     value: 13013678,
   },
 ];
+
+// 데이터에서 카테고리 생성
 const category = [...new Set(data.map((item) => item.continent))];
 
+// ZoomableBubbleChart
 export default function ZoomableBubbleChart() {
   const id = "zoomable-bubble";
   const { theme, colorTheme } = useTheme();
@@ -1361,8 +1364,8 @@ export default function ZoomableBubbleChart() {
   useLayoutEffect(() => {
     // Root 객체 생성 및 테마 불러오기
     const root = am5.Root.new(id);
-    const { colorSet } = themes[colorTheme];
-    const colorList = colorSet(category.length);
+    const { primary } = themes[colorTheme];
+    const colorList = primary;
     const myTheme = themes.myThemeRule(root, colorList, theme);
     root.setThemes([am5themes_Animated.new(root), myTheme]);
 
@@ -1414,23 +1417,16 @@ export default function ZoomableBubbleChart() {
     // series 생성
     const series = chart.series.push(
       am5xy.LineSeries.new(root, {
-        calculateAggregates: true,
-        xAxis: xAxis,
-        yAxis: yAxis,
+        xAxis,
+        yAxis,
         valueYField: "y",
         valueXField: "x",
         valueField: "value",
-        seriesTooltipTarget: "bullet",
-        tooltip: am5.Tooltip.new(root, {
-          pointerOrientation: "horizontal",
-          labelText:
-            "[bold]{title}[/]\nLife expectancy: {valueY.formatNumber('#.0')}\nGDP: {valueX.formatNumber('#,###.')}\nPopulation: {value.formatNumber('#,###.')}",
-        }),
+        calculateAggregates: true,
       })
     );
 
     series.strokes.template.set("visible", false);
-    series.get("tooltip").label.adapters.add("fill", () => am5.color("#fff"));
 
     // bullet 생성
     const circleTemplate = am5.Template.new({});
@@ -1443,13 +1439,15 @@ export default function ZoomableBubbleChart() {
       return fill;
     });
 
-    series.bullets.push(function () {
+    series.bullets.push(() => {
       const bulletCircle = am5.Circle.new(
         root,
         {
           radius: 5,
           fillOpacity: 0.8,
           fill: series.get("fill"),
+          tooltipText:
+            "[bold]{title}[/]\nLife expectancy: {valueY.formatNumber('#.0')}\nGDP: {valueX.formatNumber('#,###.')}\nPopulation: {value.formatNumber('#,###.')}",
         },
         circleTemplate
       );
@@ -1466,14 +1464,17 @@ export default function ZoomableBubbleChart() {
       },
     ]);
 
-    chart.set(
+    // cursor 생성
+    const cursor = chart.set(
       "cursor",
       am5xy.XYCursor.new(root, {
-        xAxis: xAxis,
-        yAxis: yAxis,
+        xAxis,
+        yAxis,
         snapToSeries: [series],
       })
     );
+    cursor.lineX.setAll({ stroke: themes.chartVariables[theme].base });
+    cursor.lineY.setAll({ stroke: themes.chartVariables[theme].base });
 
     // scrollbars 생성
     chart.set(

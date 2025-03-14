@@ -17,7 +17,7 @@ const createData = (count) => {
     return value;
   };
 
-  for (var i = 0; i < count; ++i) {
+  for (let i = 0; i < count; ++i) {
     am5.time.add(date, "day", 1);
     data.push({ date: date.getTime(), value: randomValue() });
   }
@@ -34,8 +34,8 @@ export default function BasicLineChart() {
   useLayoutEffect(() => {
     // Root 객체 생성 및 테마 불러오기
     const root = am5.Root.new(id);
-    const { lineColors } = themes[colorTheme];
-    const colorList = lineColors.lineStroke;
+    const { primary } = themes[colorTheme];
+    const colorList = primary;
     const myTheme = themes.myThemeRule(root, colorList, theme);
     root.setThemes([am5themes_Animated.new(root), myTheme]);
 
@@ -85,8 +85,8 @@ export default function BasicLineChart() {
         xAxis,
         yAxis,
         name: "Series",
-        valueYField: "value",
         valueXField: "date",
+        valueYField: "value",
         tooltip: am5.Tooltip.new(root, {
           labelText: "{valueY}",
           getFillFromSprite: "#000",

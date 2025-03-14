@@ -81,6 +81,7 @@ const data = [
   },
 ];
 
+// FillToXyChart
 export default function FillToXyChart() {
   const id = "fill-xy";
   const { theme, colorTheme } = useTheme();
@@ -88,8 +89,8 @@ export default function FillToXyChart() {
   useLayoutEffect(() => {
     // Root 객체 생성 및 테마 불러오기
     const root = am5.Root.new(id);
-    const { colorSet } = themes[colorTheme];
-    const colorList = colorSet(2);
+    const { primary } = themes[colorTheme];
+    const colorList = primary;
     const myTheme = themes.myThemeRule(root, colorList, theme);
     root.setThemes([am5themes_Animated.new(root), myTheme]);
 
@@ -99,15 +100,15 @@ export default function FillToXyChart() {
         panX: false,
         panY: false,
         wheelY: "none",
-        paddingLeft:0
+        paddingBottom:8,
       })
     );
 
     // X,Y축 생성
     const xAxis = chart.xAxes.push(
       am5xy.ValueAxis.new(root, {
-        strictMinMax: true,
         maxDeviation: 0,
+        strictMinMax: true,
         renderer: am5xy.AxisRendererX.new(root, { minGridDistance: 50 }),
         tooltip: am5.Tooltip.new(root, {
           themeTags: ["axis"],
@@ -118,8 +119,8 @@ export default function FillToXyChart() {
 
     const yAxis = chart.yAxes.push(
       am5xy.ValueAxis.new(root, {
-        strictMinMax: true,
         maxDeviation: 0,
+        strictMinMax: true,
         renderer: am5xy.AxisRendererY.new(root, {}),
         tooltip: am5.Tooltip.new(root, {
           themeTags: ["axis"],
@@ -134,9 +135,9 @@ export default function FillToXyChart() {
         am5xy.LineSeries.new(root, {
           xAxis,
           yAxis,
+          baseAxis: axis,
           valueYField: y,
           valueXField: x,
-          baseAxis: axis,
           tooltip: am5.Tooltip.new(root, {
             labelText: "x:{valueX}, y:{valueY}",
           }),
@@ -144,8 +145,8 @@ export default function FillToXyChart() {
       );
 
       series.fills.template.setAll({
-        fillOpacity: 0.5,
         visible: true,
+        fillOpacity: 0.5,
       });
 
       return series;

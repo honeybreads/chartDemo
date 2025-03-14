@@ -61,7 +61,7 @@ const Column2 = memo(function Column2() {
         {/* 합쳐진 다중? 컬럼 차트 */}
         <div className="chart-layout-box">
           <p className="chart-layout-title">Combine Multiple Column Chart</p>
-          <div className="chart-con" style={{width:"100%", height:340 }}>
+          <div className="chart-con" style={{width:"100%", height:420 }}>
             <CombineMultipleColumnChart />
           </div>
         </div>

@@ -77,6 +77,9 @@ const data = (() => {
       s30: 13,
       s31: 14,
     },
+    {
+      category: "",
+    },
   ];
 
   return {
@@ -85,6 +88,7 @@ const data = (() => {
   };
 })();
 
+// GroupedStacksColumnChart
 export default function GroupedStacksColumnChart() {
   const id = "groupedstacks-column";
   const { theme, colorTheme } = useTheme();
@@ -92,13 +96,10 @@ export default function GroupedStacksColumnChart() {
   useLayoutEffect(() => {
     // Root 객체 생성 및 테마 불러오기
     const root = am5.Root.new(id);
-    const { colorSet } = themes[colorTheme];
-    const colorList = colorSet(data.grouped.length);
+    const { primary } = themes[colorTheme];
+    const colorList = primary;
     const myTheme = themes.myThemeRule(root, colorList, theme);
     root.setThemes([am5themes_Animated.new(root), myTheme]);
-
-    // 카테고리 필드 지정
-    const categoryField = Object.keys(data.list[0])[0];
 
     // XYChart 생성
     const chart = root.container.children.push(
@@ -108,6 +109,7 @@ export default function GroupedStacksColumnChart() {
         wheelX: "panX",
         wheelY: "zoomX",
         layout: root.verticalLayout,
+        paddingLeft: 0,
       })
     );
 
@@ -122,15 +124,13 @@ export default function GroupedStacksColumnChart() {
     // x,y축 생성
     const xAxis = chart.xAxes.push(
       am5xy.CategoryAxis.new(root, {
-        categoryField,
-        
-        renderer: am5xy.AxisRendererX.new(root, {
-          cellStartLocation: 0.1,
-          cellEndLocation: 0.9,
-          minGridDistance: 10,
-          
-        }),
+        categoryField: "category",
         tooltip: am5.Tooltip.new(root, {}),
+        renderer: am5xy.AxisRendererX.new(root, {
+          cellStartLocation: 0,
+          cellEndLocation: 1,
+          minGridDistance: 10,
+        }),
       })
     );
 
@@ -155,21 +155,20 @@ export default function GroupedStacksColumnChart() {
     const makeSeries = (name) => {
       const series = chart.series.push(
         am5xy.ColumnSeries.new(root, {
- 
-          name: name,
-          xAxis: xAxis,
-          yAxis: yAxis,
+          name,
+          xAxis,
+          yAxis,
           stacked: true,
           valueYField: name,
-          categoryXField: categoryField,
+          categoryXField: "category",
         })
       );
 
       series.columns.template.setAll({
-        width: am5.percent(90),
         tooltipY: 0,
         cornerRadiusTL: 0,
         cornerRadiusTR: 0,
+        width: am5.percent(85),
         tooltipText: "{name}, {categoryX}:{valueY}",
       });
 
@@ -192,5 +191,7 @@ export default function GroupedStacksColumnChart() {
     return () => root.dispose();
   }, [theme, colorTheme]);
 
-  return <div id={id} style={{ width: "100%", height: "100%", minWidth: 520 }} />;
+  return (
+    <div id={id} style={{ width: "100%", height: "100%", minWidth: 520 }} />
+  );
 }

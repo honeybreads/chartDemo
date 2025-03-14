@@ -75,6 +75,7 @@ const data = [
   },
 ];
 
+// CarbonZeroChart
 export default function CarbonZeroChart() {
   const id = "carbonzero-chart";
   const { theme } = useTheme();
@@ -116,9 +117,6 @@ export default function CarbonZeroChart() {
       })
     );
 
-    xAxis.get("renderer").grid.template.set("forceHidden", true);
-    xAxis.get("renderer").labels.template.set("forceHidden", true);
-
     const yAxis = chart.yAxes.push(
       am5xy.ValueAxis.new(root, {
         min: 0,
@@ -127,7 +125,11 @@ export default function CarbonZeroChart() {
         renderer: am5xy.AxisRendererY.new(root, {}),
       })
     );
-
+    
+    xAxis.get("renderer").adapters.add("stroke", () => false);
+    xAxis.get("renderer").grid.template.set("forceHidden", true);
+    xAxis.get("renderer").labels.template.set("forceHidden", true);
+    yAxis.get("renderer").adapters.add("stroke", () => false);
     yAxis.get("renderer").grid.template.set("forceHidden", true);
     yAxis.get("renderer").labels.template.set("forceHidden", true);
 
@@ -162,7 +164,7 @@ export default function CarbonZeroChart() {
     series.columns.template.adapters.add("stroke", (c, target) => {
       const targetNum = series.columns.indexOf(target);
       if (targetNum === data.length - 1) return false;
-      return themes.modeColor[theme].line;
+      return themes.chartVariables[theme].line;
     });
 
     // bullets(값 표시) 생성

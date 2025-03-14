@@ -17,7 +17,7 @@ const createData = (count) => {
     return value;
   };
 
-  for (var i = 0; i < count; ++i) {
+  for (let i = 0; i < count; ++i) {
     am5.time.add(date, "day", 1);
     data.push({ date: date.getTime(), value: randomValue() });
   }
@@ -34,8 +34,8 @@ export default function DraggableRangeLineChart() {
   useLayoutEffect(() => {
     // Root 객체 생성 및 테마 불러오기
     const root = am5.Root.new(id);
-    const { lineColors } = themes[colorTheme];
-    const colorList = lineColors.lineStroke;
+    const { primary } = themes[colorTheme];
+    const colorList = primary;
     const myTheme = themes.myThemeRule(root, colorList, theme);
     root.setThemes([am5themes_Animated.new(root), myTheme]);
 
@@ -108,9 +108,7 @@ export default function DraggableRangeLineChart() {
     yAxis.topGridContainer.children.push(container);
     rangeDataItem.set(
       "bullet",
-      am5xy.AxisBullet.new(root, {
-        sprite: container,
-      })
+      am5xy.AxisBullet.new(root, { sprite: container })
     );
 
     //  container grid 설정
@@ -119,7 +117,7 @@ export default function DraggableRangeLineChart() {
       strokeWidth: 2,
       strokeOpacity: 1,
       strokeDasharray: [2, 2],
-      stroke: themes.modeColor[theme].base,
+      stroke: themes.chartVariables[theme].base,
     });
 
     // container background 설정

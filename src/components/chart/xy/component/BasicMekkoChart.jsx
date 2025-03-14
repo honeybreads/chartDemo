@@ -41,6 +41,7 @@ const data = [
   },
 ];
 
+// BasicMekkoChart
 export default function BasicMekkoChart() {
   const id = "mekko-xy";
   const { theme, colorTheme } = useTheme();
@@ -48,8 +49,8 @@ export default function BasicMekkoChart() {
   useLayoutEffect(() => {
     // Root 객체 생성 및 테마 불러오기
     const root = am5.Root.new(id);
-    const { colorSet } = themes[colorTheme];
-    const colorList = colorSet(data.length);
+    const { primary } = themes[colorTheme];
+    const colorList = primary;
     const myTheme = themes.myThemeRule(root, colorList, theme);
     root.setThemes([am5themes_Animated.new(root), myTheme]);
 
@@ -60,8 +61,8 @@ export default function BasicMekkoChart() {
         panY: false,
         wheelX: false,
         wheelY: false,
+        paddingLeft: 0,
         layout: root.verticalLayout,
-        paddingLeft:0,
       })
     );
 
@@ -90,7 +91,7 @@ export default function BasicMekkoChart() {
     const createSeries = (name, data) => {
       const series = chart.series.push(
         am5xy.StepLineSeries.new(root, {
-          name: name,
+          name,
           xAxis,
           yAxis,
           stacked: true,
@@ -109,9 +110,9 @@ export default function BasicMekkoChart() {
       // 불렛(value) 생성
       const bulletSeries = chart.series.push(
         am5xy.ColumnSeries.new(root, {
-          name: name,
-          xAxis: xAxis,
-          yAxis: yAxis,
+          name,
+          xAxis,
+          yAxis,
           stacked: true,
           baseAxis: xAxis,
           valueYField: "ay",
@@ -143,13 +144,13 @@ export default function BasicMekkoChart() {
             centerX: am5.p50,
             populateText: true,
             background: am5.RoundedRectangle.new(root, {
-              fill: themes.modeColor[theme].bg,
+              fill: themes.chartVariables[theme].bg,
             }),
           }),
         });
       });
 
-      series.on("visible", function (visible) {
+      series.on("visible", (visible) => {
         visible ? bulletSeries.show() : bulletSeries.hide();
       });
 

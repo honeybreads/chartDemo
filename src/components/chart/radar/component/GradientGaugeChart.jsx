@@ -12,6 +12,7 @@ const data = {
   max: 100,
 };
 
+// GradientGaugeChart
 export default function GradientGaugeChart() {
   const id = "gradient-gauge";
   const { theme, colorTheme } = useTheme();
@@ -22,8 +23,8 @@ export default function GradientGaugeChart() {
 
     // Root 객체 생성 및 테마 적용
     const root = am5.Root.new(id);
-    const { colorSet } = themes[colorTheme];
-    const colorList = colorSet(21);
+    const { primary } = themes[colorTheme];
+    const colorList = [primary[0], primary[4]];
     const myTheme = themes.myThemeRule(root, colorList, theme);
     root.setThemes([am5themes_Animated.new(root), myTheme]);
 
@@ -59,9 +60,9 @@ export default function GradientGaugeChart() {
     // valueAxis 생성
     const xAxis = chart.xAxes.push(
       am5xy.ValueAxis.new(root, {
-        maxDeviation: 0,
         min,
         max,
+        maxDeviation: 0,
         strictMinMax: true,
         renderer: axisRenderer,
       })
@@ -70,9 +71,8 @@ export default function GradientGaugeChart() {
     // 화살표 아이콘 생성 후 xAxis에 적용
     const axisDataItem = xAxis.makeDataItem({});
     const clockHand = am5radar.ClockHand.new(root, { radius: am5.percent(99) });
-    const clockColor = theme === "light" ? "#222" : "#ddd";
-    clockHand.pin.setAll({ fill: am5.color(clockColor) });
-    clockHand.hand.setAll({ fill: am5.color(clockColor) });
+    clockHand.pin.setAll({ fill: themes.chartVariables[theme].base });
+    clockHand.hand.setAll({ fill: themes.chartVariables[theme].base });
 
     axisDataItem.setAll({
       value: 0,
@@ -103,4 +103,3 @@ export default function GradientGaugeChart() {
 
   return <div id={id} style={{ width: "100%", height: "100%" }} />;
 }
-

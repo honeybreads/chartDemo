@@ -13,24 +13,24 @@ const data = Array.from({ length: 100 }, () => ({
   value: Math.round(Math.random() * 10),
 }));
 
+// 시뮬레이션 업데이트 함수
+const updateNodePositions = () => {
+  nodes.forEach((node) => {
+    const { circle } = node;
+    circle.setAll({ dy: node.y - circle.y() });
+    node.fx = circle.x();
+  });
+};
+
 // D3 물리 시뮬레이션 설정
 const simulation = d3.forceSimulation().on("tick", updateNodePositions);
 const collisionForce = d3
   .forceCollide()
   .radius((node) => node.circle.get("radius", 1) + 1);
 
-// 시뮬레이션 업데이트 함수
-function updateNodePositions() {
-  nodes.forEach((node) => {
-    const { circle } = node;
-    circle.setAll({ dy: node.y - circle.y() });
-    node.fx = circle.x();
-  });
-}
-
 // 노드 데이터 저장 배열
 const nodes = [];
-function addNode(dataItem) {
+const addNode = (dataItem) => {
   const bullet = dataItem.bullets?.[0]?.get("sprite");
   if (bullet) {
     nodes.push({ y: bullet.y(), fx: bullet.x(), circle: bullet });
@@ -38,10 +38,11 @@ function addNode(dataItem) {
 }
 
 // 시뮬레이션 물리 적용
-function updateForces() {
+const updateForces = () => {
   simulation.force("collision", collisionForce);
-}
+};
 
+// BeaswarmBubbleChart
 export default function BeaswarmBubbleChart() {
   const id = "beaswarm-bubble";
   const { theme, colorTheme } = useTheme();
@@ -49,8 +50,8 @@ export default function BeaswarmBubbleChart() {
   useLayoutEffect(() => {
     // Root 객체 생성 및 테마 불러오기
     const root = am5.Root.new(id);
-    const { colorSet } = themes[colorTheme];
-    const colorList = colorSet(2);
+    const { primary } = themes[colorTheme];
+    const colorList = primary;
     const myTheme = themes.myThemeRule(root, colorList, theme);
     root.setThemes([am5themes_Animated.new(root), myTheme]);
 
@@ -64,6 +65,8 @@ export default function BeaswarmBubbleChart() {
         pinchZoomY: true,
       })
     );
+
+    chart.plotContainer.adapters.add("background", () => false);
 
     // x,y축 생성
     const xAxis = chart.xAxes.push(
@@ -80,18 +83,18 @@ export default function BeaswarmBubbleChart() {
         renderer: am5xy.AxisRendererY.new(root, {}),
       })
     );
-
+    xAxis.get("renderer").adapters.add("stroke", () => false);
     yAxis.get("renderer").grid.template.set("forceHidden", true);
 
     // series 생성
     const series = chart.series.push(
       am5xy.LineSeries.new(root, {
-        calculateAggregates: true,
-        xAxis: xAxis,
-        yAxis: yAxis,
+        xAxis,
+        yAxis,
         valueYField: "y",
         valueXField: "x",
         valueField: "value",
+        calculateAggregates: true,
       })
     );
     series.strokes.template.set("visible", false);
@@ -108,13 +111,14 @@ export default function BeaswarmBubbleChart() {
           fillOpacity: 1,
           tooltipText: "{x}",
           fill: series.get("fill"),
-          stateAnimationDuration:0
+          stroke: am5.color("#fff"),
+          stateAnimationDuration: 0,
         },
         circleTemplate
       );
 
       bulletCircle.states.create("hover", {
-        fill: chart.get("colors").getIndex(3),
+        fill: chart.get("colors").getIndex(1),
       });
 
       return am5.Bullet.new(root, { sprite: bulletCircle });

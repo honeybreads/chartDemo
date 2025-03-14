@@ -64,7 +64,7 @@ const calculateData = (values, incrementSize) => {
   values.sort((a, b) => a - b);
   const increments = new Map();
 
-  values.forEach(function (value) {
+  values.forEach((value) => {
     const range = Math.floor(value / incrementSize) * incrementSize;
     const rangeLabel = `${range}-${range + incrementSize - 1}`;
     increments.set(rangeLabel, (increments.get(rangeLabel) || 0) + 1);
@@ -78,6 +78,7 @@ const calculateData = (values, incrementSize) => {
   }));
 };
 
+// ViolinChart
 export default function ViolinChart() {
   const id = "violin-xy";
   const { theme, colorTheme } = useTheme();
@@ -85,8 +86,8 @@ export default function ViolinChart() {
   useLayoutEffect(() => {
     // Root 객체 생성 및 테마 불러오기
     const root = am5.Root.new(id);
-    const { colorSet } = themes[colorTheme];
-    const colorList = colorSet(Object.keys(sourceData).length);
+    const { primary } = themes[colorTheme];
+    const colorList = primary;
     const myTheme = themes.myThemeRule(root, colorList, theme);
     root.setThemes([am5themes_Animated.new(root), myTheme]);
 
@@ -101,7 +102,7 @@ export default function ViolinChart() {
       })
     );
 
-    chart.plotContainer.get("background").setAll({opacity:0})
+    chart.plotContainer.get("background").setAll({ opacity: 0 });
 
     // X,Y축 생성
     const xAxis = chart.xAxes.push(
@@ -118,13 +119,14 @@ export default function ViolinChart() {
       location: 0.5,
       centerY: am5.p50,
       centerX: am5.p100,
-      multiLocation:0.5,
+      multiLocation: 0.5,
     });
 
     xAxis.get("renderer").grid.template.setAll({
       location: 0.5,
       multiLocation: 0.5,
     });
+
 
     // categories 설정
     let combinedValues = [];
@@ -144,6 +146,7 @@ export default function ViolinChart() {
           renderer: am5xy.AxisRendererY.new(root, {}),
         })
       );
+      yAxis.get("renderer").adapters.add("stroke",()=>false);
       yAxis.get("renderer").labels.template.setAll({ forceHidden: true });
 
       const series = chart.series.push(

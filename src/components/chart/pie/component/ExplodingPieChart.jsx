@@ -60,6 +60,7 @@ const data = [
   },
 ];
 
+// ExplodingPieChart
 export default function ExplodingPieChart() {
   const id = "exploding-pie";
   const { theme, colorTheme } = useTheme();
@@ -74,8 +75,8 @@ export default function ExplodingPieChart() {
 
     // Root 객체 생성 및 테마 불러오기
     const root = am5.Root.new(id);
-    const { colorSet } = themes[colorTheme];
-    const colorList = colorSet(data.length);
+    const { primary } = themes[colorTheme];
+    const colorList = primary;
     const myTheme = themes.myThemeRule(root, colorList, theme);
 
     // 테마 및 반응형 적용
@@ -103,14 +104,18 @@ export default function ExplodingPieChart() {
     const series = chart.series.push(
       am5percent.PieSeries.new(root, {
         valueField: "value",
-        categoryField: "category",
         alignLabels: false,
+        categoryField: "category",
       })
     );
 
     // PieSeries(대) 스타일 적용
     series.ticks.template.set("visible", false);
-    series.labels.template.setAll({ textType: "circular", radius: 4, });
+    series.labels.template.setAll({
+      radius: 4,
+      textType: "circular",
+      oversizedBehavior: "truncate",
+    });
 
     // PieChart(소) 생성
     const subChart = container.children.push(
@@ -132,14 +137,17 @@ export default function ExplodingPieChart() {
     const seriesGroup = [series, subSeries];
     seriesGroup.map((series) => {
       series.slices.template.setAll({
-        stroke: 0,
         cornerRadius: 0,
         toggleKey: "none",
       });
     });
 
     // line 생성
-    const createLine = () => am5.Line.new(root, { position: "absolute" });
+    const createLine = () =>
+      am5.Line.new(root, {
+        position: "absolute",
+        stroke: themes.chartVariables[theme].grid,
+      });
     const line0 = container.children.push(createLine());
     const line1 = container.children.push(createLine());
 
@@ -192,7 +200,7 @@ export default function ExplodingPieChart() {
           }
         });
       }
-      const middleAngle = slice.get("startAngle") + slice.get("arc") / 2 ;
+      const middleAngle = slice.get("startAngle") + slice.get("arc") / 2;
       const firstAngle = series.dataItems[0].get("slice").get("startAngle");
 
       series.animate({
@@ -208,6 +216,10 @@ export default function ExplodingPieChart() {
         easing: am5.ease.out(am5.ease.cubic),
       });
     };
+
+    series.labels.template.adapters.add("width", (_, target) => {
+      return themes.seriesSetMaxWidth(root, target);
+    });
 
     // series 클릭 이벤트
     series.slices.template.events.on("click", (e) => selectSlice(e.target));
@@ -229,5 +241,7 @@ export default function ExplodingPieChart() {
     return () => root.dispose();
   }, [theme, colorTheme]);
 
-  return <div id={id} style={{ width: "100%", height: "100%", minWidth:600 }} />;
+  return (
+    <div id={id} style={{ width: "100%", height: "100%", minWidth: 600 }} />
+  );
 }

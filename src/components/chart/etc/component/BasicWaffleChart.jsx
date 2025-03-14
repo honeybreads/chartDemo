@@ -1,6 +1,5 @@
 import * as am5 from "@amcharts/amcharts5";
 import * as am5xy from "@amcharts/amcharts5/xy";
-import am5themes_Animated from "@amcharts/amcharts5/themes/Animated";
 import { useLayoutEffect } from "react";
 import * as themes from "@/assets/chartTheme";
 import { useTheme } from "@/components/Theme";
@@ -54,6 +53,7 @@ const data = [
   },
 ];
 
+//BasicWaffleChart
 export default function BasicWaffleChart() {
   const id = "basic-waffle";
   const { theme, colorTheme } = useTheme();
@@ -61,10 +61,10 @@ export default function BasicWaffleChart() {
   useLayoutEffect(() => {
     // Root 객체 생성 및 테마 불러오기
     const root = am5.Root.new(id);
-    const { colorSet } = themes[colorTheme];
-    const colorList = colorSet(data.length);
+    const { primary } = themes[colorTheme];
+    const colorList = primary;
     const myTheme = themes.myThemeRule(root, colorList, theme);
-    root.setThemes([am5themes_Animated.new(root), myTheme]);
+    root.setThemes([myTheme]);
 
     // XYChart 생성
     const chart = root.container.children.push(
@@ -73,8 +73,8 @@ export default function BasicWaffleChart() {
         panY: false,
         wheelX: "panX",
         wheelY: "zoomX",
-        paddingLeft: 8,
-        paddingRight: 8,
+        paddingLeft: 0,
+        paddingRight: 0,
         paddingBottom: 0,
         layout: root.verticalLayout,
       })
@@ -82,7 +82,11 @@ export default function BasicWaffleChart() {
 
     // 범례 생성
     const legend = chart.children.push(
-      am5.Legend.new(root, { centerX: am5.p50, x: am5.p50 })
+      am5.Legend.new(root, {
+        centerX: am5.p50,
+        x: am5.p50,
+        stateAnimationDuration: 0,
+      })
     );
 
     // X축 및 Y축 생성 함수
@@ -90,11 +94,13 @@ export default function BasicWaffleChart() {
       const axisOption = type === "x" ? chart.xAxes : chart.yAxes;
       const renderOption =
         type === "x" ? am5xy.AxisRendererX : am5xy.AxisRendererY;
+
       const renderer = renderOption.new(root, {
         minorGridEnabled: true,
         minGridDistance: 10,
       });
       renderer.labels.template.set("forceHidden", true);
+
       const axis = axisOption.push(
         am5xy.CategoryAxis.new(root, {
           categoryField: type,
@@ -124,9 +130,9 @@ export default function BasicWaffleChart() {
     const makeSeries = (name, index) => {
       const series = chart.series.push(
         am5xy.ColumnSeries.new(root, {
-          name: name,
-          xAxis: xAxis,
-          yAxis: yAxis,
+          name,
+          xAxis,
+          yAxis,
           categoryYField: "y",
           openCategoryYField: "y",
           categoryXField: "x",
@@ -145,7 +151,7 @@ export default function BasicWaffleChart() {
         cornerRadiusTR: 0,
       });
 
-      series.appear();
+      series.setAll({ stateAnimationDuration: 0 });
       legend.data.push(series);
       return series;
     };

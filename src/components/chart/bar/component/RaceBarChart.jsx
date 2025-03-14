@@ -366,6 +366,7 @@ const data = {
   },
 };
 
+// RaceBarChart
 export default function RaceBarChart() {
   const id = "race-bar";
   const { theme, colorTheme } = useTheme();
@@ -373,8 +374,8 @@ export default function RaceBarChart() {
   useLayoutEffect(() => {
     // Root 객체 생성 및 테마 불러오기
     const root = am5.Root.new(id);
-    const { colorSet } = themes[colorTheme];
-    const colorList = colorSet(Object.keys(data).length);
+    const { primary } = themes[colorTheme];
+    const colorList = primary;
     const myTheme = themes.myThemeRule(root, colorList, theme);
     root.setThemes([am5themes_Animated.new(root), myTheme]);
 
@@ -406,18 +407,15 @@ export default function RaceBarChart() {
     const stepDuration = 2000;
 
     // X,Y축 생성
-    const yRenderer = am5xy.AxisRendererY.new(root, {
-      inversed: true,
-      minGridDistance: 20,
-      minorGridEnabled: true,
-    });
-    yRenderer.grid.template.set("visible", false);
-
     const yAxis = chart.yAxes.push(
       am5xy.CategoryAxis.new(root, {
         maxDeviation: 0,
-        renderer: yRenderer,
         categoryField: "network",
+        renderer: am5xy.AxisRendererY.new(root, {
+          inversed: true,
+          minGridDistance: 20,
+          minorGridEnabled: true,
+        }),
       })
     );
 
@@ -431,6 +429,7 @@ export default function RaceBarChart() {
       })
     );
 
+    yAxis.get("renderer").grid.template.set("visible", false);
     xAxis.setAll({
       interpolationEasing: am5.ease.linear,
       interpolationDuration: stepDuration / 10,
@@ -439,23 +438,23 @@ export default function RaceBarChart() {
     // series 생성
     const series = chart.series.push(
       am5xy.ColumnSeries.new(root, {
-        xAxis: xAxis,
-        yAxis: yAxis,
+        xAxis,
+        yAxis,
         valueXField: "value",
         categoryYField: "network",
       })
     );
 
     series.columns.template.setAll({
-      cornerRadiusBR: 4,
-      cornerRadiusTR: 4,
       cornerRadiusBL: 0,
       cornerRadiusTL: 0,
+      cornerRadiusTR: themes.chartVariables.default.barRadius,
+      cornerRadiusBR: themes.chartVariables.default.barRadius,
     });
 
-    series.columns.template.adapters.add("fill", (_, target) => {
-      return chart.get("colors").getIndex(series.columns.indexOf(target));
-    });
+    series.columns.template.adapters.add("fill", (_, target) =>
+      chart.get("colors").getIndex(series.columns.indexOf(target))
+    );
 
     series.bullets.push(() => {
       return am5.Bullet.new(root, {
@@ -464,8 +463,8 @@ export default function RaceBarChart() {
           centerY: am5.p50,
           centerX: am5.p100,
           populateText: true,
+          fill: am5.color("#fff"),
           text: "{valueXWorking.formatNumber('#.# a')}",
-          fill: root.interfaceColors.get("alternativeText"),
         }),
       });
     });
@@ -488,9 +487,7 @@ export default function RaceBarChart() {
 
     // Axis 정렬 함수
     const sortCategoryAxis = () => {
-      series.dataItems.sort((x, y) => {
-        return y.get("valueX") - x.get("valueX");
-      });
+      series.dataItems.sort((x, y) => y.get("valueX") - x.get("valueX"));
 
       am5.array.each(yAxis.dataItems, (dataItem) => {
         const seriesDataItem = getSeriesItem(dataItem.get("category"));
@@ -512,9 +509,7 @@ export default function RaceBarChart() {
         }
       });
 
-      yAxis.dataItems.sort((x, y) => {
-        return x.get("index") - y.get("index");
-      });
+      yAxis.dataItems.sort((x, y) => x.get("index") - y.get("index"));
     };
 
     // 데이터 연도 가져오기
@@ -568,7 +563,7 @@ export default function RaceBarChart() {
     // 데이터 적용
     const setInitialData = () => {
       let d = data[year];
-      for (var n in d) {
+      for (let n in d) {
         yAxis.data.push({ network: n });
         series.data.push({ network: n, value: d[n] });
       }
@@ -582,7 +577,6 @@ export default function RaceBarChart() {
     chart.appear(1000, 100);
 
     return () => root.dispose();
-    
   }, [theme, colorTheme]);
 
   return <div id={id} style={{ width: "100%", height: "100%" }} />;

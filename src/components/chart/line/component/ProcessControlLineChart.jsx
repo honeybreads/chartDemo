@@ -40,8 +40,8 @@ export default function ProcessControlLineChart() {
   useLayoutEffect(() => {
     // Root 객체 생성 및 테마 불러오기
     const root = am5.Root.new(id);
-    const { lineColors } = themes[colorTheme];
-    const colorList = lineColors.lineStroke;
+    const { primary, lineColors } = themes[colorTheme];
+    const colorList = primary;
     const myTheme = themes.myThemeRule(root, colorList, theme);
     root.setThemes([am5themes_Animated.new(root), myTheme]);
 
@@ -102,10 +102,7 @@ export default function ProcessControlLineChart() {
     // 범위 영역 생성 함수
     const createRange = (value, endValue, label, dashed) => {
       const color = endValue ? colorList[0] : colorList[1];
-      const rangeDataItem = yAxis.makeDataItem({
-        value: value,
-        endValue: endValue,
-      });
+      const rangeDataItem = yAxis.makeDataItem({ value, endValue });
       const range = yAxis.createAxisRange(rangeDataItem);
 
       if (endValue) {
@@ -140,12 +137,12 @@ export default function ProcessControlLineChart() {
     // 제어 라인 표시
     const addLimits = (lower, upper) => {
       createRange(lower, upper, undefined);
-      createRange(lower, undefined, "Lower control limit");
-      createRange(upper, undefined, "Upper control limit");
+      createRange(lower, undefined, "제어 하한 한계");
+      createRange(upper, undefined, "제어 상한 한계");
       createRange(
         lower + (upper - lower) / 2,
         undefined,
-        "Process average",
+        "평균",
         true
       );
     };

@@ -52,6 +52,7 @@ const data = [
   },
 ];
 
+// BrokenPieChart
 export default function BrokenPieChart() {
   const id = "broken-pie";
   const { theme, colorTheme } = useTheme();
@@ -59,8 +60,8 @@ export default function BrokenPieChart() {
   useLayoutEffect(() => {
     // Root 객체 생성 및 테마 불러오기
     const root = am5.Root.new(id);
-    const { colorSet } = themes[colorTheme];
-    const colorList = colorSet(data.length);
+    const { primary } = themes[colorTheme];
+    const colorList = primary;
     const myTheme = themes.myThemeRule(root, colorList, theme);
 
     // 반응형 정의
@@ -68,10 +69,18 @@ export default function BrokenPieChart() {
     responsive.addRule({
       relevant: am5themes_Responsive.widthL,
       applying: () => {
-        series.labels.template.setAll({ textType: "circular", radius: 10 });
+        series.labels.template.setAll({
+          radius: 20,
+          textType: "circular",
+          oversizedBehavior: "truncate",
+        });
       },
       removing: () => {
-        series.labels.template.setAll({ textType: "adjusted", radius: 20 });
+        series.labels.template.setAll({
+          radius: 20,
+          textType: "adjusted",
+          oversizedBehavior: "none",
+        });
       },
     });
 
@@ -95,7 +104,7 @@ export default function BrokenPieChart() {
     );
 
     // series 스타일 설정
-    series.slices.template.events.on("dataitemchanged", function (ev) {
+    series.slices.template.events.on("dataitemchanged", (ev) => {
       const series = ev.target.dataItem;
       const gradient = am5.RadialGradient.new(root, {
         stops: [
@@ -108,6 +117,10 @@ export default function BrokenPieChart() {
 
     series.slices.template.setAll({
       templateField: "sliceSettings",
+    });
+
+    series.labels.template.adapters.add("width", (_, target) => {
+      return themes.seriesSetMaxWidth(root, target);
     });
 
     // series 클릭 이벤트

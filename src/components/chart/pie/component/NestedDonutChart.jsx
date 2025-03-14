@@ -56,6 +56,7 @@ const data = [
   },
 ];
 
+// NestedDonutChart
 export default function NestedDonutChart() {
   const id = "nested-donut";
   const { theme, colorTheme } = useTheme();
@@ -63,8 +64,8 @@ export default function NestedDonutChart() {
   useLayoutEffect(() => {
     // Root 객체 생성 및 테마 불러오기
     const root = am5.Root.new(id);
-    const { colorSet } = themes[colorTheme];
-    const colorList = colorSet(data.length);
+    const { primary } = themes[colorTheme];
+    const colorList = primary;
     const myTheme = myThemeRule(root, colorList, theme);
 
     // 반응형 설정
@@ -72,11 +73,11 @@ export default function NestedDonutChart() {
     responsive.addRule({
       relevant: am5themes_Responsive.widthL,
       applying: () => {
-        series1.labels.template.setAll({ forceHidden: true });
+        series1.labels.template.setAll({ opacity: 0 });
         series1.ticks.template.setAll({ forceHidden: true });
       },
       removing: () => {
-        series1.labels.template.setAll({ forceHidden: false });
+        series1.labels.template.setAll({ opacity: 1 });
         series1.ticks.template.setAll({ forceHidden: false });
       },
     });
@@ -94,9 +95,9 @@ export default function NestedDonutChart() {
     // series 생성
     const series0 = chart.series.push(
       am5percent.PieSeries.new(root, {
+        alignLabels: false,
         valueField: "item1",
         categoryField: "category",
-        alignLabels: false,
         radius: am5.percent(65),
         innerRadius: am5.percent(35),
       })
@@ -104,9 +105,9 @@ export default function NestedDonutChart() {
 
     const series1 = chart.series.push(
       am5percent.PieSeries.new(root, {
+        alignLabels: true,
         valueField: "item2",
         categoryField: "category",
-        alignLabels: true,
         radius: am5.percent(100),
         innerRadius: am5.percent(70),
       })
@@ -119,7 +120,7 @@ export default function NestedDonutChart() {
     const seriesGroup = [series0, series1];
     seriesGroup.map((series) => {
       series.slices.template.setAll({
-        stroke: themes.modeColor[theme].line,
+        stroke: themes.chartVariables[theme].line,
         strokeWidth: 2,
         cornerRadius: 0,
       });

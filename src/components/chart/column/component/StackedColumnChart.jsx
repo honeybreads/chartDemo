@@ -36,6 +36,7 @@ const data = [
   },
 ];
 
+// StackedColumnChart
 export default function StackedColumnChart() {
   const id = "stacked-column";
   const { theme, colorTheme } = useTheme();
@@ -43,13 +44,10 @@ export default function StackedColumnChart() {
   useLayoutEffect(() => {
     // Root 객체 생성 및 테마 불러오기
     const root = am5.Root.new(id);
-    const { colorSet } = themes[colorTheme];
-    const colorList = colorSet(Object.keys(data[0]).length - 1);
+    const { primary } = themes[colorTheme];
+    const colorList = primary;
     const myTheme = themes.myThemeRule(root, colorList, theme);
     root.setThemes([am5themes_Animated.new(root), myTheme]);
-
-    // 카테고리 필드 지정
-    const categoryField = Object.keys(data[0])[0];
 
     // XYChart 생성
     const chart = root.container.children.push(
@@ -58,23 +56,20 @@ export default function StackedColumnChart() {
         panY: false,
         wheelX: "panX",
         wheelY: "zoomX",
+        paddingTop:24,
         paddingLeft: 0,
         layout: root.verticalLayout,
       })
     );
 
     // x,y축 생성
-    const xRenderer = am5xy.AxisRendererX.new(root, { minorGridEnabled: true });
-    xRenderer.grid.template.setAll({ location: 1 });
-
     const xAxis = chart.xAxes.push(
       am5xy.CategoryAxis.new(root, {
-        categoryField,
-        renderer: xRenderer,
+        categoryField: "year",
         tooltip: am5.Tooltip.new(root, {}),
+        renderer: am5xy.AxisRendererX.new(root, { minorGridEnabled: true }),
       })
     );
-    xAxis.data.setAll(data);
 
     const yAxis = chart.yAxes.push(
       am5xy.ValueAxis.new(root, {
@@ -84,6 +79,7 @@ export default function StackedColumnChart() {
         }),
       })
     );
+    xAxis.get("renderer").grid.template.setAll({ location: 1 });
 
     //  legend 생성
     const legend = chart.children.push(
@@ -95,26 +91,32 @@ export default function StackedColumnChart() {
       const series = chart.series.push(
         am5xy.ColumnSeries.new(root, {
           name,
+          xAxis,
+          yAxis,
           stacked: true,
-          xAxis: xAxis,
-          yAxis: yAxis,
           valueYField: name,
-          categoryXField: categoryField,
+          categoryXField: "year",
         })
       );
 
       series.columns.template.setAll({
-        tooltipText: "{name}, {categoryX}: {valueY}",
-        tooltipY: am5.percent(10),
         cornerRadiusTL: 0,
         cornerRadiusTR: 0,
+        tooltipY: am5.percent(10),
+        tooltipText: "{name}, {categoryX}: {valueY}",
       });
 
-      series.bullets.push(function () {
+      series.bullets.push((root, cols) => {
+        const fill = am5.Color.alternative(
+          cols.get("fill"),
+          am5.color("#fff"),
+          am5.color("#000")
+        );
+
         return am5.Bullet.new(root, {
           sprite: am5.Label.new(root, {
             text: "{valueY}",
-            fill: root.interfaceColors.get("alternativeText"),
+            fill,
             centerY: am5.p50,
             centerX: am5.p50,
             populateText: true,
@@ -131,6 +133,9 @@ export default function StackedColumnChart() {
     Object.keys(data[0]).forEach((item, index) => {
       index > 0 && makeSeries(item);
     });
+
+    // 데이터 적용
+    xAxis.data.setAll(data);
 
     // 애니메이션 적용
     chart.appear(1000, 100);

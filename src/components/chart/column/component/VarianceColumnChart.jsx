@@ -37,6 +37,12 @@ const data = [
   },
 ];
 
+// 다음 값 (valueNext) 계산 및 데이터에 추가
+data.forEach((item, i) => {
+  if (i < data.length - 1) item.valueNext = data[i + 1].value;
+});
+
+// VarianceColumnChart
 export default function VarianceColumnChart() {
   const id = "variance-column";
   const { theme, colorTheme } = useTheme();
@@ -44,19 +50,10 @@ export default function VarianceColumnChart() {
   useLayoutEffect(() => {
     // Root 객체 생성 및 테마 불러오기
     const root = am5.Root.new(id);
-    const { colorSet } = themes[colorTheme];
-    const colorList = colorSet(data.length);
+    const { primary, state } = themes[colorTheme];
+    const colorList = primary;
     const myTheme = themes.myThemeRule(root, colorList, theme);
     root.setThemes([am5themes_Animated.new(root), myTheme]);
-
-    // 카테고리, 값 필드 지정
-    const categoryField = Object.keys(data[0])[0];
-    const valueField = Object.keys(data[0])[1];
-
-    // 다음 값 (valueNext) 계산 및 데이터에 추가
-    data.forEach((item, i) => {
-      if (i < data.length - 1) item.valueNext = data[i + 1][valueField];
-    });
 
     // XYChart 생성
     const chart = root.container.children.push(
@@ -71,17 +68,15 @@ export default function VarianceColumnChart() {
     );
 
     // x,y축 생성
-    const xRenderer = am5xy.AxisRendererX.new(root, {
-      cellEndLocation: 0.9,
-      minorGridEnabled: true,
-      cellStartLocation: 0.1,
-    });
-
     const xAxis = chart.xAxes.push(
       am5xy.CategoryAxis.new(root, {
-        categoryField,
-        renderer: xRenderer,
+        categoryField: "year",
         tooltip: am5.Tooltip.new(root, {}),
+        renderer: am5xy.AxisRendererX.new(root, {
+          cellEndLocation: 0.9,
+          minorGridEnabled: true,
+          cellStartLocation: 0.1,
+        }),
       })
     );
 
@@ -97,10 +92,10 @@ export default function VarianceColumnChart() {
     // series(그래프) 생성
     const series = chart.series.push(
       am5xy.ColumnSeries.new(root, {
-        xAxis: xAxis,
-        yAxis: yAxis,
-        valueYField: valueField,
-        categoryXField: categoryField,
+        xAxis,
+        yAxis,
+        valueYField: "value",
+        categoryXField: "year",
       })
     );
 
@@ -110,19 +105,19 @@ export default function VarianceColumnChart() {
       tooltipText: "{categoryX}: {valueY}",
     });
 
-    series.columns.template.adapters.add("fill", function (_, target) {
-      return chart.get("colors").getIndex(series.columns.indexOf(target));
-    });
+    series.columns.template.adapters.add("fill", (_, target) =>
+      chart.get("colors").getIndex(series.columns.indexOf(target))
+    );
 
     // series(indicator) 생성
     const series2 = chart.series.push(
       am5xy.ColumnSeries.new(root, {
-        xAxis: xAxis,
-        yAxis: yAxis,
+        xAxis,
+        yAxis,
+        categoryXField: "year",
         valueYField: "valueNext",
-        openValueYField: valueField,
-        categoryXField: categoryField,
-        fill: am5.color("#bbb"),
+        openValueYField: "value",
+        fill: themes.chartVariables[theme].base,
       })
     );
     series2.columns.template.setAll({ width: 1 });
@@ -139,47 +134,44 @@ export default function VarianceColumnChart() {
     };
 
     // 퍼센트 생성
-    series2.bullets.push(function () {
+    series2.bullets.push(() => {
       const label = am5.Label.new(root, {
         text: "{valueY}",
         fontWeight: "500",
         centerY: am5.p100,
         centerX: am5.p50,
         populateText: true,
-        fill: am5.color(0x00cc00),
+        fill: state.positive,
       });
 
       // 퍼센트 텍스트 업데이트트
-      label.adapters.add("text", function (text, target) {
+      label.adapters.add("text", (text, target) => {
         const percent = getVariancePercent(target.dataItem);
         return percent ? percent + "%" : text;
       });
 
       // 변화율에 따라 레이블 위치 변경
-      label.adapters.add("centerY", function (center, target) {
-        return getVariancePercent(target.dataItem) < 0 ? 0 : center;
-      });
+      label.adapters.add("centerY", (center, target) =>
+        getVariancePercent(target.dataItem) < 0 ? 0 : center
+      );
 
       // 변화율에 따라 색상 변경
-      label.adapters.add("fill", function (fill, target) {
-        return getVariancePercent(target.dataItem) < 0
-          ? am5.color(0xcc0000)
-          : fill;
-      });
+      label.adapters.add("fill", (fill, target) =>
+        getVariancePercent(target.dataItem) < 0 ? state.negative : fill
+      );
 
       return am5.Bullet.new(root, { locationY: 1, sprite: label });
     });
 
     // 삼각형 생성
-    series2.bullets.push(function () {
+    series2.bullets.push(() => {
       const arrow = am5.Graphics.new(root, {
         dy: 3,
         rotation: -90,
         centerX: am5.p50,
         centerY: am5.p50,
-        fill: am5.color(0x555555),
-        stroke: am5.color(0x555555),
-        draw: function (display) {
+        fill: themes.chartVariables[theme].base,
+        draw: (display) => {
           display.moveTo(0, -3);
           display.lineTo(8, 0);
           display.lineTo(0, 3);
@@ -188,14 +180,14 @@ export default function VarianceColumnChart() {
       });
 
       // 변화율이 음수인 경우 회전 방향 변경
-      arrow.adapters.add("rotation", function (rotation, target) {
-        return getVariancePercent(target.dataItem) < 0 ? 90 : rotation;
-      });
+      arrow.adapters.add("rotation", (rotation, target) =>
+        getVariancePercent(target.dataItem) < 0 ? 90 : rotation
+      );
 
       // Y축 위치 변경
-      arrow.adapters.add("dy", function (dy, target) {
-        return getVariancePercent(target.dataItem) < 0 ? -3 : dy;
-      });
+      arrow.adapters.add("dy", (dy, target) =>
+        getVariancePercent(target.dataItem) < 0 ? -3 : dy
+      );
 
       return am5.Bullet.new(root, { locationY: 1, sprite: arrow });
     });

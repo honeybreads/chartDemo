@@ -36,6 +36,7 @@ const data = [
   },
 ];
 
+// ClusteredColumnChart
 export default function ClusteredColumnChart() {
   const id = "clusted-column";
   const { theme, colorTheme } = useTheme();
@@ -43,13 +44,10 @@ export default function ClusteredColumnChart() {
   useLayoutEffect(() => {
     // Root 객체 생성 및 테마 불러오기
     const root = am5.Root.new(id);
-    const { colorSet } = themes[colorTheme];
-    const colorList = colorSet(Object.keys(data).length);
+    const { primary } = themes[colorTheme];
+    const colorList = primary;
     const myTheme = themes.myThemeRule(root, colorList, theme);
     root.setThemes([am5themes_Animated.new(root), myTheme]);
-
-    // 카테고리 필드 지정
-    const categoryField = Object.keys(data[0])[0];
 
     // XYChart 생성
     const chart = root.container.children.push(
@@ -58,23 +56,22 @@ export default function ClusteredColumnChart() {
         panY: false,
         wheelX: "panX",
         wheelY: "zoomX",
+        paddingTop:24,
+        paddingLeft:0,
         layout: root.verticalLayout,
       })
     );
 
     // x,y축 생성
-    const xRenderer = am5xy.AxisRendererX.new(root, {
-      cellEndLocation: 0.9,
-      cellStartLocation: 0.1,
-      minorGridEnabled: true,
-    });
-    xRenderer.grid.template.setAll({ location: 1 });
-
     const xAxis = chart.xAxes.push(
       am5xy.CategoryAxis.new(root, {
-        categoryField,
-        renderer: xRenderer,
+        categoryField:"year",
         tooltip: am5.Tooltip.new(root, {}),
+        renderer: am5xy.AxisRendererX.new(root, {
+          cellEndLocation: 0.9,
+          cellStartLocation: 0.1,
+          minorGridEnabled: true,
+        }),
       })
     );
 
@@ -85,6 +82,8 @@ export default function ClusteredColumnChart() {
         }),
       })
     );
+
+    xAxis.get("renderer").grid.template.setAll({ location: 1 });
 
     // legend 생성
     const legend = chart.children.push(
@@ -99,10 +98,10 @@ export default function ClusteredColumnChart() {
       const series = chart.series.push(
         am5xy.ColumnSeries.new(root, {
           name,
-          xAxis: xAxis,
-          yAxis: yAxis,
+          xAxis,
+          yAxis,
           valueYField: name,
-          categoryXField: categoryField,
+          categoryXField: "year",
         })
       );
 

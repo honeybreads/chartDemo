@@ -61,8 +61,8 @@ export default function CustomBubbleChart() {
   useLayoutEffect(() => {
     // Root 객체 생성 및 테마 불러오기
     const root = am5.Root.new(id);
-    const { colorSet } = themes[colorTheme];
-    const colorList = colorSet(1);
+    const { primary } = themes[colorTheme];
+    const colorList = primary;
     const myTheme = themes.myThemeRule(root, colorList, theme);
     root.setThemes([am5themes_Animated.new(root), myTheme]);
 
@@ -86,6 +86,7 @@ export default function CustomBubbleChart() {
       am5xy.XYCursor.new(root, { behavior: "none" })
     );
     cursor.lineY.set("visible", false);
+    cursor.lineX.set("stroke",themes.chartVariables[theme].base );
 
     // X,Y축 생성
     const xAxis = chart.xAxes.push(
@@ -119,8 +120,8 @@ export default function CustomBubbleChart() {
     // series 생성
     const series = chart.series.push(
       am5xy.LineSeries.new(root, {
-        xAxis: xAxis,
-        yAxis: yAxis,
+        xAxis,
+        yAxis,
         maskBullets: false,
         valueYField: "value",
         valueXField: "date",
@@ -146,13 +147,17 @@ export default function CustomBubbleChart() {
       });
 
       container.children.push(
-        am5.Circle.new(root, { radius: 20, fill: series.get("fill") })
+        am5.Circle.new(root, {
+          radius: 22,
+          stroke:series.get("fill"),
+          fill: themes.chartVariables[theme].bg,
+        })
       );
 
       container.children.push(
         am5.Picture.new(root, {
-          width: 28,
-          height: 28,
+          width: 32,
+          height: 32,
           centerX: am5.p50,
           centerY: am5.p50,
           src: item.dataContext.icon,

@@ -40,6 +40,7 @@ const data = [
   },
 ];
 
+// LineMixColumnChart
 export default function LineMixColumnChart() {
   const id = "linemix-column";
   const { theme, colorTheme } = useTheme();
@@ -47,17 +48,12 @@ export default function LineMixColumnChart() {
   useLayoutEffect(() => {
     // Root 객체 생성 및 테마 불러오기
     const root = am5.Root.new(id);
-    const { colorSet, lineColors } = themes[colorTheme];
-    const colorList = colorSet(2);
+    const { primary, lineColors } = themes[colorTheme];
+    const colorList = primary;
     const myTheme = themes.myThemeRule(root, colorList, theme);
     root.setThemes([am5themes_Animated.new(root), myTheme]);
 
-    // 카테고리, 값 필드 지정
-    const categoryField = Object.keys(data[0])[0];
-    const valueField1 = Object.keys(data[0])[1];
-    const valueField2 = Object.keys(data[0])[2];
-
-    // info가 있는 경우 데이터 스타일 적용
+    // info 스타일 적용
     data.forEach((item, index) => {
       if (item.info) {
         if (index > 0) {
@@ -89,15 +85,13 @@ export default function LineMixColumnChart() {
     );
 
     // x,y축 생성
-    const xRenderer = am5xy.AxisRendererX.new(root, {});
     const xAxis = chart.xAxes.push(
       am5xy.CategoryAxis.new(root, {
-        categoryField,
-        renderer: xRenderer,
+        categoryField:"year",
         tooltip: am5.Tooltip.new(root, {}),
+        renderer: am5xy.AxisRendererX.new(root, {}),
       })
     );
-    xRenderer.grid.template.setAll({ location: 1 });
 
     const yAxis = chart.yAxes.push(
       am5xy.ValueAxis.new(root, {
@@ -109,14 +103,16 @@ export default function LineMixColumnChart() {
       })
     );
 
+    xAxis.get("renderer").grid.template.setAll({ location: 1 });
+
     // series(바 차트) 생성
     const series1 = chart.series.push(
       am5xy.ColumnSeries.new(root, {
-        name: valueField1,
-        xAxis: xAxis,
-        yAxis: yAxis,
-        valueYField: valueField1,
-        categoryXField: categoryField,
+        xAxis,
+        yAxis,
+        name: "income",
+        valueYField: "income",
+        categoryXField: "year",
         tooltip: am5.Tooltip.new(root, {
           pointerOrientation: "horizontal",
           labelText: "{name} in {categoryX}: {valueY} {info}",
@@ -132,14 +128,13 @@ export default function LineMixColumnChart() {
     // series(라인 차트) 생성
     const series2 = chart.series.push(
       am5xy.LineSeries.new(root, {
-        name: valueField2,
-        xAxis: xAxis,
-        yAxis: yAxis,
-        valueYField: valueField2,
-        categoryXField: categoryField,
-        stroke: lineColors.lineStroke[0],
+        xAxis,
+        yAxis,
+        name: "expenses",
+        valueYField: "expenses",
+        categoryXField: "year",
+        stroke: lineColors.lineStroke,
         tooltip: am5.Tooltip.new(root, {
-          // background:am5.color("#fff"),
           pointerOrientation: "horizontal",
           labelText: "{name} in {categoryX}: {valueY} {info}",
         }),
@@ -150,8 +145,10 @@ export default function LineMixColumnChart() {
       .get("tooltip")
       .get("background")
       .adapters.add("fill", () => {
-        return lineColors.lineStroke[0];
+        return lineColors.lineStroke;
       });
+
+    series2.get("tooltip").label.adapters.add("fill", () => "#fff");
 
     series2.strokes.template.setAll({
       strokeWidth: 3,
@@ -162,12 +159,14 @@ export default function LineMixColumnChart() {
       return themes.createBulletSpriet(
         root,
         lineColors.bulletFill,
-        lineColors.lineStroke[0]
+        lineColors.lineStroke
       );
     });
 
     // cursor 생성
-    chart.set("cursor", am5xy.XYCursor.new(root, {}));
+    const cursor = chart.set("cursor", am5xy.XYCursor.new(root, {}));
+    cursor.lineX.set("stroke",themes.chartVariables[theme].base )
+    cursor.lineY.set("stroke",themes.chartVariables[theme].base )
 
     // legend 생성
     const legend = chart.children.push(
@@ -181,8 +180,9 @@ export default function LineMixColumnChart() {
     legend.data.setAll(chart.series.values);
 
     // 애니메이션 적용
-    chart.appear(1000, 100);
     series1.appear();
+    series2.appear();
+    chart.appear(1000, 100);
 
     return () => root.dispose();
   }, [theme, colorTheme]);

@@ -46,6 +46,7 @@ const data = [
   },
 ];
 
+// BasicGaugeChart
 export default function BasicGaugeChart() {
   const id = "basic-gauge";
   const { theme, colorTheme } = useTheme();
@@ -57,8 +58,8 @@ export default function BasicGaugeChart() {
 
     // Root 객체 생성 및 테마 불러오기
     const root = am5.Root.new(id);
-    const { colorSet } = themes[colorTheme];
-    const colorList = colorSet(data.length);
+    const { primary } = themes[colorTheme];
+    const colorList = primary;
     const myTheme = themes.myThemeRule(root, colorList, theme);
 
     // 반응형 설정
@@ -93,7 +94,6 @@ export default function BasicGaugeChart() {
 
     // Circular 생성
     const axisRenderer = am5radar.AxisRendererCircular.new(root, {
-      stroke: 0,
       innerRadius: -40,
       minGridDistance: 60,
     });
@@ -139,7 +139,7 @@ export default function BasicGaugeChart() {
     bullet.get("sprite").on("rotation", () => {
       let fill = colorList[0];
       const value = axisDataItem.get("value");
-      xAxis.axisRanges.each(function (axisRange) {
+      xAxis.axisRanges.each((axisRange) => {
         if (
           value >= axisRange.get("value") &&
           value <= axisRange.get("endValue")
@@ -179,6 +179,12 @@ export default function BasicGaugeChart() {
     // 데이터에 따른 축 생성
     const axisRanges = data.map((newData, index) => {
       const axisRange = xAxis.createAxisRange(xAxis.makeDataItem({}));
+      const textFill = am5.Color.alternative(
+        am5.color(colorList[index]),
+        am5.color("#fff"),
+        am5.color("#000")
+      );
+
       axisRange.setAll({
         value: newData.lowScore,
         endValue: newData.highScore,
@@ -193,8 +199,8 @@ export default function BasicGaugeChart() {
         radius: 15,
         inside: true,
         fontSize: 10,
+        fill: textFill,
         text: newData.title,
-        fill: am5.color("#fff"),
       });
 
       // 클릭 이벤트 설정 (참고용)

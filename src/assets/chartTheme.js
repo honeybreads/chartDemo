@@ -1,173 +1,102 @@
 import * as am5 from "@amcharts/amcharts5";
-// 그라데이션 컬러 생성 함수
-export const createColorList = (color1, color2, steps) => {
-  const rgb2hsl = ([r, g, b]) => {
-    r /= 255;
-    g /= 255;
-    b /= 255;
-    const max = Math.max(r, g, b),
-      min = Math.min(r, g, b);
-    let h,
-      s,
-      l = (max + min) / 2;
 
-    if (max === min) {
-      h = s = 0;
-    } else {
-      const d = max - min;
-      s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
-      h =
-        max === r
-          ? (g - b) / d + (g < b ? 6 : 0)
-          : max === g
-          ? (b - r) / d + 2
-          : (r - g) / d + 4;
-      h /= 6;
-    }
-    return [h, s, l];
-  };
-
-  const hsl2rgb = ([h, s, l]) => {
-    if (s === 0) return [l, l, l].map((v) => Math.round(v * 255));
-
-    const q = l < 0.5 ? l * (1 + s) : l + s - l * s;
-    const p = 2 * l - q;
-
-    const hue2rgb = (t) =>
-      t < 0
-        ? hue2rgb(t + 1)
-        : t > 1
-        ? hue2rgb(t - 1)
-        : t < 1 / 6
-        ? p + (q - p) * 6 * t
-        : t < 1 / 2
-        ? q
-        : t < 2 / 3
-        ? p + (q - p) * (2 / 3 - t) * 6
-        : p;
-
-    return [hue2rgb(h + 1 / 3), hue2rgb(h), hue2rgb(h - 1 / 3)].map((v) =>
-      Math.round(v * 255)
-    );
-  };
-
-  const interpolateHSL = (c1, c2, factor) =>
-    hsl2rgb(rgb2hsl(c1).map((v, i) => v + factor * (rgb2hsl(c2)[i] - v)));
-
-  const rgbToHex = (rgb) =>
-    `#${rgb
-      .map((v) => v.toString(16).padStart(2, "0"))
-      .join("")
-      .toUpperCase()}`;
-
-  return Array.from({ length: steps }, (_, i) =>
-    rgbToHex(interpolateHSL(color1, color2, i / (steps - 1)))
-  );
-};
-
-// 테마
-// 테마별 최소 색상 개수 (이 값 이하이면 기본 색상 배열 사용)
-const colorRange = 8;
-
-// 특정 개수(count)에 맞춰 그라데이션 색상을 생성하고 합치는는 함수
-const createThemeColor = (count, primaryRanges) => {
-  const colorList = [];
-  const newCount = Math.max(2, Math.ceil(count / primaryRanges.length));
-  primaryRanges.forEach(([start, end]) => {
-    colorList.push(...createColorList(start, end, newCount));
-  });
-  return colorList;
-};
-
-// 테마 생성
-// 기본색상(필수), 그라데이션(필수), 라인 불렛, 라인 스트로크
-const createTheme = (primary, primaryRanges, bulletFill, lineStroke) => ({
+// 컬러 설정
+// 컬러 테마 생성 함수
+const createTheme = (primary, lineStroke, bulletFill) => ({
   primary,
   lineColors: {
     bulletFill: bulletFill || "#fff",
-    lineStroke: lineStroke || [primary[1], primary[3], primary[5]],
+    lineStroke: lineStroke || "#222",
   },
-  colorSet(count) {
-    return count <= colorRange
-      ? primary
-      : createThemeColor(count, primaryRanges);
+  state: {
+    positive: "#1C8BFF",
+    negative: "#FF2B67",
   },
 });
 
 // basicTheme
 export const basicTheme = createTheme(
   [
-    "#78DFD7",
-    "#3AC6E1",
-    "#2BABE0",
-    "#207ED1",
-    "#1F5CCC",
-    "#2230BD",
-    "#1413A5",
-    "#0F158F",
+    "#0086cc",
+    "#00b0dd",
+    "#5cdcff",
+    "#38e1d7",
+    "#acdf20",
+    "#80d929",
+    "#11af09",
+    "#008290",
+    "#004a90",
+    "#095bf4",
+    "#47a0ff",
+    "#7bbbff",
+    "#aeafff",
+    "#9e83ff",
+    "#723cf1",
+    "#4b00a6",
+    "#8100bc",
+    "#ad1af0",
+    "#e372ff",
+    "#f3a4ff",
   ],
-  [
-    [
-      [120, 223, 215],
-      [15, 21, 143],
-    ],
-  ]
+  "#214f9e"
 );
 
-// purpleTheme
-export const purpleTheme = createTheme(
+// violetTheme
+export const violetTheme = createTheme(
   [
-    "#9688E5",
-    "#A16EDD",
-    "#C86ED6",
-    "#DD6EC1",
-    "#CB5EA3",
-    "#A23A7C",
-    "#CB5EA3",
-    "#A23A7C",
+    "#ad1af0",
+    "#d372ff",
+    "#e5abff",
+    "#ff7efe",
+    "#ffa7eb",
+    "#ff6dce",
+    "#e900b3",
+    "#8100bc",
+    "#4b00a6",
+    "#723cf1",
+    "#9e83ff",
+    "#aeafff",
+    "#7bbbff",
+    "#47a0ff",
+    "#095bf4",
+    "#004a90",
+    "#0086cc",
+    "#00b0dd",
+    "#5cdcff",
+    "#38e1d7",
   ],
-  [
-    [
-      [150, 136, 229],
-      [162, 58, 124],
-    ],
-  ]
+  "#0086CC"
 );
 
-// colorfullTheme
-export const colorfullTheme = createTheme(
-  [
-    "#F4BF83",
-    "#EEAD9C",
-    "#E1A3CE",
-    "#9DB6D7",
-    "#8ECFCD",
-    "#BFDCB1",
-    "#8ECFCD",
-    "#BFDCB1",
-  ],
-  [
-    [
-      [244, 191, 131],
-      [238, 173, 156],
-    ],
-    [
-      [231, 168, 181],
-      [198, 167, 217],
-    ],
-    [
-      [187, 177, 232],
-      [142, 192, 206],
-    ],
-    [
-      [142, 200, 206],
-      [191, 220, 177],
-    ],
-  ]
-);
+// pastelTheme
+export const pastelTheme = createTheme([
+  "#ff9794",
+  "#ffb663",
+  "#ffd900",
+  "#acdf20",
+  "#80d929",
+  "#72d7d0",
+  "#a7d2ff",
+  "#a8a9ff",
+  "#e5abff",
+  "#ffa7eb",
+  "#c39d91",
+  "#b5b864",
+  "#11af09",
+  "#008290",
+  "#0086cc",
+  "#779cbe",
+  "#6893ff",
+  "#8968ff",
+  "#be5dff",
+  "#ff47ac",
+]);
 
 // 다크모드, 라이트모드 컬러(테마 컬러와 관계 없음)
-export const modeColor = {
+export const chartVariables = {
+  default: {
+    barRadius: 4,
+  },
   light: {
     base: "#222",
     line: "#fff",
@@ -184,49 +113,40 @@ export const modeColor = {
   },
 };
 
-// amchart 커스텀 테마 룰 생성
-export const myThemeRule = (root, colorList, theme) => {
-  const myTheme = am5.Theme.new(root);
-  const colorSet = am5.ColorSet.new(root, {
-    colors: colorList.map((color) => am5.color(color)),
-  });
-
-  // Line 공통
+// 차트 설정
+// 차트 테마 공통 옵션
+const themeCommon = (myTheme, theme) => {
   myTheme.rule("Line").setAll({
     strokeOpacity: 0.4,
     strokeDasharray: [4, 4],
-    stroke: modeColor[theme].base,
   });
 
-  // Tick 공통
   myTheme.rule("Tick").setAll({
     strokeOpacity: 0.4,
     strokeDasharray: [2, 2],
-    stroke: modeColor[theme].base,
   });
 
-  // grid 공통
   myTheme.rule("Grid").setAll({
     strokeOpacity: 0.1,
-    stroke: modeColor[theme].base,
   });
 
-  // Label 공통
   myTheme.rule("Label").setAll({
     fontSize: 11,
     fontWeight: "300",
     fontFamily: "Pretendard-Regular",
-    fill: modeColor[theme].base,
+    fill: chartVariables[theme].base,
   });
 
-  // Tooltip 공통
   myTheme.rule("Tooltip").setAll({
     paddingTop: 4,
     paddingBottom: 5,
   });
 
-  // Legend 공통
-  myTheme.rule("Label", ["legend"]).setAll({ fontSize: 14, fontWeight: 300 });
+  myTheme.rule("Label", ["legend"]).setAll({
+    fontSize: 14,
+    fontWeight: 300,
+  });
+
   myTheme.rule("RoundedRectangle", ["legend", "marker", "rectangle"]).setAll({
     width: 12,
     height: 12,
@@ -237,69 +157,69 @@ export const myThemeRule = (root, colorList, theme) => {
 
   myTheme
     .rule("Label", ["legend", "value"])
-    .events.on("dataitemchanged", function (ev) {
+    .events.on("dataitemchanged", (ev) => {
       const series = ev.target.dataItem;
-      ev.target.setAll({ fill: series.get("fill") });
+      ev.target.setAll({
+        fill: series.get("fill"),
+      });
     });
+    
+};
 
-  // Pie 그래프 공통
+// Pie 그래프 옵션
+const themePie = (myTheme, colorSet) => {
   myTheme.rule("PieSeries").set("colors", colorSet);
-  myTheme
-    .rule("Slice", ["pie", "series"])
-    .states.create("active", { shiftRadius: 10 });
+  myTheme.rule("Slice", ["pie", "series"]).states.create("active", {
+    shiftRadius: 10,
+  });
+};
 
-  // xy 차트 공통
+// xy 그래프 옵션
+const themeXy = (myTheme, theme) => {
   myTheme.rule("XYChart").setAll({
-    paddingTop: 8,
+    paddingTop: 12,
     paddingLeft: 16,
     paddingRight: 16,
-    paddingBottom: 4,
+    paddingBottom: 8,
   });
 
   myTheme.rule("XYChart").setup = (chart) => {
     const plotContainer = chart.plotContainer.get("background");
     plotContainer?.setAll({
       layer: 9,
-      strokeWidth: 1,
-      stroke: modeColor[theme].grid,
+      stroke: chartVariables[theme].grid,
     });
   };
 
   myTheme.rule("AxisRendererX").set("minGridDistance", 50);
-  myTheme.rule("AxisRendererX").setup = (xRenderer) => {
-    xRenderer.grid.template.setAll({
-      stroke: modeColor[theme].grid,
-    });
-  };
-
   myTheme.rule("AxisRendererY").setup = (yRenderer) => {
     yRenderer.labels.template.setAll({
       maxWidth: "auto",
       oversizedBehavior: "none",
     });
-    yRenderer.grid.template.setAll({
-      stroke: modeColor[theme].grid,
-    });
   };
 
-  myTheme
-    .rule("AxisLabel")
-    .setAll({ oversizedBehavior: "truncate", maxWidth: 60 });
+  myTheme.rule("AxisLabel").setAll({
+    maxWidth: 60,
+    oversizedBehavior: "truncate",
+  });
+};
 
-  // column 그래프 공통
+// column 그래프 옵션
+const themeColumn = (myTheme, colorSet) => {
   myTheme.rule("XYChart").set("colors", colorSet);
   myTheme.rule("RoundedRectangle", ["series", "column"]).setAll({
     strokeOpacity: 0,
-    cornerRadiusTL: 5,
-    cornerRadiusTR: 5,
+    cornerRadiusTL: chartVariables.default.barRadius,
+    cornerRadiusTR: chartVariables.default.barRadius,
   });
+};
 
-  // line 그래프 공통
+// line 그래프 옵션
+const themeLine = (myTheme) => {
   myTheme.rule("LineSeries").setup = (line) => {
     line.strokes.template.setAll({ strokeWidth: 2 });
   };
-
-  return myTheme;
 };
 
 // 범용 불렛 스프라이트 생성 함수
@@ -315,4 +235,46 @@ export const createBulletSpriet = (root, fill, stroke, options) => {
     }),
   });
   return bullet;
+};
+
+// Pie Series maxWidth 구하는 함수
+export const seriesSetMaxWidth = (root, target) => {
+  const percent = target.dataItem?.get("valuePercentTotal");
+  const baseWidth = root.width();
+  target.set("maxWidth",(baseWidth * percent) / 100 - 15)
+};
+
+// x,y axis label width 구하는 함수
+export const axisLabelSetWidth = (xAxis, target) => {
+  const x0 = xAxis.getDataItemCoordinateY(xAxis.dataItems[0], "category", 0);
+  const x1 = xAxis.getDataItemCoordinateY(xAxis.dataItems[0], "category", 1);
+  target.set("maxWidth", x1 - x0);
+};
+
+// 커스텀 테마 생성
+export const myThemeRule = (root, colorList, theme) => {
+  // am5 새로운 테마 생성, 컬러셋 생성
+  const myTheme = am5.Theme.new(root);
+  const colorSet = am5.ColorSet.new(root, {
+    colors: colorList.map((color) => am5.color(color)),
+  });
+
+  // 루트 컬러 체인지
+  const primaryCol = am5.color(colorList[0]);
+  const primaryLightCol = am5.Color.lighten(primaryCol, 0.5);
+  root.interfaceColors.set("stroke", chartVariables[theme].base);
+  root.interfaceColors.set("grid", chartVariables[theme].grid);
+  root.interfaceColors.set("primaryButton", primaryCol);
+  root.interfaceColors.set("primaryButtonHover", primaryCol);
+  root.interfaceColors.set("primaryButtonActive", primaryCol);
+  root.interfaceColors.set("primaryButtonDown", primaryLightCol);
+
+  // 각 차트 옵션
+  themeCommon(myTheme, theme);
+  themePie(myTheme, colorSet);
+  themeXy(myTheme, theme);
+  themeColumn(myTheme, colorSet);
+  themeLine(myTheme);
+
+  return myTheme;
 };

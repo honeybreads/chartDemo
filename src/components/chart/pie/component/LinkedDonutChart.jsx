@@ -46,6 +46,7 @@ const data = {
   ],
 };
 
+// LinkedDonutChart
 export default function LinkedDonutChart() {
   const id = "linked-donut";
   const { theme, colorTheme } = useTheme();
@@ -54,8 +55,8 @@ export default function LinkedDonutChart() {
   useLayoutEffect(() => {
     // Root 객체 생성 및 테마 불러오기
     const root = am5.Root.new(id);
-    const { colorSet } = themes[colorTheme];
-    const colorList = colorSet(data.data1.length);
+    const { primary } = themes[colorTheme];
+    const colorList = primary;
     const myTheme = themes.myThemeRule(root, colorList, theme);
     const baseHeight = root.dom.clientHeight;
     setHeight(baseHeight);
@@ -63,7 +64,7 @@ export default function LinkedDonutChart() {
     // 반응형 정의
     const responsive = am5themes_Responsive.newEmpty(root);
     responsive.addRule({
-      relevant: am5themes_Responsive.widthL,
+      relevant: (width) => width < baseHeight * 2,
       applying: () => {
         setHeight(baseHeight * 2);
         chartContainer.setAll({
@@ -89,13 +90,13 @@ export default function LinkedDonutChart() {
     // 차트 컨테이너 생성
     const chartContainer = root.container.children.push(
       am5.Container.new(root, {
-        layout: root.horizontalLayout,
-        width: baseHeight * 2,
-        height: am5.percent(100),
         x: am5.percent(50),
         centerX: am5.percent(50),
+        width: baseHeight * 2,
+        height: am5.percent(100),
+        layout: root.horizontalLayout,
       })
-    );
+    );  
 
     // 파이 차트 생성 함수
     const createPieChart = (container, options) =>
@@ -118,7 +119,11 @@ export default function LinkedDonutChart() {
       );
       series.states.create("hidden", { endAngle: -90 });
       series.slices.template.setAll({ cornerRadius: 4 });
-      series.labels.template.setAll({ textType: "circular" });
+      series.labels.template.setAll({
+        textType: "circular",
+        templateField: "settings",
+        oversizedBehavior: "truncate",
+      });
     };
 
     // 차트 및 시리즈 공통 옵션
@@ -144,6 +149,12 @@ export default function LinkedDonutChart() {
     let series2 = createPieSeries(chart2, {
       ...seriesOptions,
       tooltip: am5.Tooltip.new(root, {}),
+    });
+
+    [series1, series2].map((series) => {
+      series.labels.template.adapters.add("width", (_, target) => {
+        return themes.seriesSetMaxWidth(root, target);
+      });
     });
 
     // PieSeries 구성

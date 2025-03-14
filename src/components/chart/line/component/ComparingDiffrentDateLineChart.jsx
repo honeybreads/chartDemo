@@ -59,8 +59,8 @@ export default function ComparingDiffrentDateLineChart() {
   useLayoutEffect(() => {
     // Root 객체 생성 및 테마 불러오기
     const root = am5.Root.new(id);
-    const { lineColors } = themes[colorTheme];
-    const colorList = lineColors.lineStroke;
+    const { primary } = themes[colorTheme];
+    const colorList = primary;
     const myTheme = themes.myThemeRule(root, colorList, theme);
     root.setThemes([am5themes_Animated.new(root), myTheme]);
     root.dateFormatter.setAll({
@@ -123,7 +123,7 @@ export default function ComparingDiffrentDateLineChart() {
       })
     );
 
-    var series2 = chart.series.push(
+    const series2 = chart.series.push(
       am5xy.LineSeries.new(root, {
         ...seriesOptions,
         name: "Series 2",

@@ -17,7 +17,7 @@ const createData = (count) => {
     return value;
   };
 
-  for (var i = 0; i < count; ++i) {
+  for (let i = 0; i < count; ++i) {
     am5.time.add(date, "day", 1);
     data.push({ date: date.getTime(), value: randomValue() });
   }
@@ -34,8 +34,8 @@ export default function MouseManipulateLineChart() {
   useLayoutEffect(() => {
     // Root 객체 생성 및 테마 불러오기
     const root = am5.Root.new(id);
-    const { lineColors } = themes[colorTheme];
-    const colorList = lineColors.lineStroke;
+    const { primary, lineColors } = themes[colorTheme];
+    const colorList = primary;
     const myTheme = themes.myThemeRule(root, colorList, theme);
     root.setThemes([am5themes_Animated.new(root), myTheme]);
 
@@ -83,8 +83,8 @@ export default function MouseManipulateLineChart() {
         xAxis,
         yAxis,
         name: "Series",
-        valueYField: "value",
         valueXField: "date",
+        valueYField: "value",
         tooltip: am5.Tooltip.new(root, {
           labelText: "{valueY}",
           getFillFromSprite: "#000",
@@ -131,7 +131,8 @@ export default function MouseManipulateLineChart() {
       am5.Label.new(root, {
         x: am5.p100,
         centerX: am5.p100,
-        text: "Click and move mouse anywhere on plot area to change the graph",
+        layer:99,
+        text: "그래프 영역에서 마우스를 클릭하고 이동하면 그래프를 변경 할 수 있습니다.",
       })
     );
 

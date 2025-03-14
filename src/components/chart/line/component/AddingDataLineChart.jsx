@@ -9,14 +9,14 @@ import { useTheme } from "@/components/Theme";
 let value = 100;
 const timer = 5;
 
-function generateChartData() {
-  var chartData = [];
-  var firstDate = new Date();
+const generateChartData = () => {
+  const chartData = [];
+  const firstDate = new Date();
   firstDate.setDate(firstDate.getDate() - 1000);
   firstDate.setHours(0, 0, 0, 0);
 
-  for (var i = 0; i < 50; i++) {
-    var newDate = new Date(firstDate);
+  for (let i = 0; i < 50; i++) {
+    const newDate = new Date(firstDate);
     newDate.setSeconds(newDate.getSeconds() + i * timer);
     value += (Math.random() < 0.5 ? 1 : -1) * Math.random() * 10;
     chartData.push({
@@ -25,9 +25,9 @@ function generateChartData() {
     });
   }
   return chartData;
-}
+};
 
-var data = generateChartData();
+const data = generateChartData();
 
 // AddingDataLineChart
 export default function AddingDataLineChart() {
@@ -37,8 +37,8 @@ export default function AddingDataLineChart() {
   useLayoutEffect(() => {
     // Root 객체 생성 및 테마 불러오기
     const root = am5.Root.new(id);
-    const { lineColors } = themes[colorTheme];
-    const colorList = lineColors.lineStroke;
+    const { primary } = themes[colorTheme];
+    const colorList = primary;
     const myTheme = themes.myThemeRule(root, colorList, theme);
     root.setThemes([am5themes_Animated.new(root), myTheme]);
 
@@ -93,8 +93,8 @@ export default function AddingDataLineChart() {
         xAxis,
         yAxis,
         name: "Series",
-        valueYField: "value",
         valueXField: "date",
+        valueYField: "value",
         tooltip: am5.Tooltip.new(root, {
           labelText: "{valueY}",
           pointerOrientation: "horizontal",
@@ -110,7 +110,7 @@ export default function AddingDataLineChart() {
           return container.children.push(
             am5.Circle.new(root, {
               radius: 5,
-              fill: colorList[1]
+              fill: colorList[1],
             })
           );
         };
@@ -138,8 +138,8 @@ export default function AddingDataLineChart() {
         });
 
         return am5.Bullet.new(root, {
-          locationX: undefined,
           sprite: container,
+          locationX: undefined,
         });
       }
     });
@@ -189,7 +189,7 @@ export default function AddingDataLineChart() {
     };
 
     // 5초간격 업데이트
-    setInterval(addData, timer*1000);
+    setInterval(addData, timer * 1000);
 
     // 데이터 적용
     data[data.length - 1].bullet = true;

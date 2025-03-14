@@ -6,12 +6,13 @@ import { useLayoutEffect } from "react";
 import * as themes from "@/assets/chartTheme";
 import { useTheme } from "@/components/Theme";
 
-// 샘플 데이터 
+// 샘플 데이터
 const data = {
   min: 0,
   max: 100,
 };
 
+// AnimatedGaugeChart
 export default function AnimatedGaugeChart() {
   const id = "animated-gauge";
   const { theme, colorTheme } = useTheme();
@@ -22,8 +23,8 @@ export default function AnimatedGaugeChart() {
 
     // Root 객체 생성 및 테마 설정
     const root = am5.Root.new(id);
-    const { colorSet } = themes[colorTheme];
-    const colorList = colorSet(2);
+    const { primary } = themes[colorTheme];
+    const colorList = primary;
     const myTheme = themes.myThemeRule(root, colorList, theme);
     root.setThemes([am5themes_Animated.new(root), myTheme]);
 
@@ -111,8 +112,8 @@ export default function AnimatedGaugeChart() {
     );
 
     // 화살표 회전 시 라벨 업데이트
-    bullet.get("sprite").on("rotation", function () {
-      var value = axisDataItem.get("value");
+    bullet.get("sprite").on("rotation", () => {
+      const value = axisDataItem.get("value");
       label.set("text", Math.round(value).toString() + "%");
     });
 
@@ -149,9 +150,8 @@ export default function AnimatedGaugeChart() {
       axisRange1.animate({ key: "value", ...animationSettings });
     };
 
-      animateChart();
-      setInterval(animateChart, 3000);
-   
+    animateChart();
+    setInterval(animateChart, 3000);
 
     // 차트 애니메이션 표시
     chart.bulletsContainer.set("mask", undefined);
@@ -162,4 +162,3 @@ export default function AnimatedGaugeChart() {
 
   return <div id={id} style={{ width: "100%", height: "100%" }} />;
 }
-

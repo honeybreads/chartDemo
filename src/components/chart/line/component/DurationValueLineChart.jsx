@@ -138,8 +138,8 @@ export default function DurationValueLineChart() {
   useLayoutEffect(() => {
     // Root 객체 생성 및 테마 불러오기
     const root = am5.Root.new(id);
-    const { lineColors } = themes[colorTheme];
-    const colorList = lineColors.lineStroke;
+    const { primary } = themes[colorTheme];
+    const colorList = primary;
     const myTheme = themes.myThemeRule(root, colorList, theme);
     root.setThemes([am5themes_Animated.new(root), myTheme]);
 
@@ -250,8 +250,8 @@ export default function DurationValueLineChart() {
     });
 
     // bullet(duration) 생성
-    durationSeries.bullets.push(function () {
-      var graphics = am5.Rectangle.new(root, {
+    durationSeries.bullets.push(() => {
+      const graphics = am5.Rectangle.new(root, {
         width: 10,
         height: 10,
         centerX: am5.p50,

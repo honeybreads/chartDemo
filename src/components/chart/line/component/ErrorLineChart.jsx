@@ -59,8 +59,8 @@ export default function ErrorLineChart() {
   useLayoutEffect(() => {
     // Root 객체 생성 및 테마 불러오기
     const root = am5.Root.new(id);
-    const { lineColors } = themes[colorTheme];
-    const colorList = lineColors.lineStroke;
+    const { primary } = themes[colorTheme];
+    const colorList = primary;
     const myTheme = themes.myThemeRule(root, colorList, theme);
     root.setThemes([am5themes_Animated.new(root), myTheme]);
 
@@ -156,7 +156,7 @@ export default function ErrorLineChart() {
 
     // bullets(중앙) 생성
     series.bullets.push(() => {
-      var graphics = am5.Circle.new(root, {
+      const graphics = am5.Circle.new(root, {
         radius: 5,
         strokeWidth: 2,
         stroke: series.get("stroke"),
@@ -169,8 +169,8 @@ export default function ErrorLineChart() {
     chart.set(
       "cursor",
       am5xy.XYCursor.new(root, {
-        xAxis: xAxis,
-        yAxis: yAxis,
+        xAxis,
+        yAxis,
         snapToSeries: [series],
       })
     );

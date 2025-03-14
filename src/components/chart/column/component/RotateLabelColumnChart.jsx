@@ -52,16 +52,16 @@ const data = [
   },
 ];
 
-
-export default function RotateLabelColumnChart( ) {
+// RotateLabelColumnChart
+export default function RotateLabelColumnChart() {
   const id = "rotatelabel-column";
   const { theme, colorTheme } = useTheme();
 
   useLayoutEffect(() => {
     // Root 객체 생성 및 테마 불러오기
     const root = am5.Root.new(id);
-    const { colorSet } = themes[colorTheme];
-    const colorList = colorSet(data.length);
+    const { primary } = themes[colorTheme];
+    const colorList = primary;
     const myTheme = themes.myThemeRule(root, colorList, theme);
     root.setThemes([am5themes_Animated.new(root), myTheme]);
 
@@ -74,60 +74,61 @@ export default function RotateLabelColumnChart( ) {
         wheelY: "zoomX",
         pinchZoomX: true,
         paddingBottom: 0,
+        paddingLeft: 0,
       })
     );
 
     // cursor 생성
     const cursor = chart.set("cursor", am5xy.XYCursor.new(root, {}));
     cursor.lineY.set("visible", false);
+    cursor.lineX.set("stroke", themes.chartVariables[theme].base);
 
     // x,y 축 생성
-    const xRenderer = am5xy.AxisRendererX.new(root, {
-      minGridDistance: 14,
-      minorGridEnabled: true,
-    });
+    const xAxis = chart.xAxes.push(
+      am5xy.CategoryAxis.new(root, {
+        maxDeviation: 0.3,
+        categoryField: "category",
+        tooltip: am5.Tooltip.new(root, {}),
+        renderer: am5xy.AxisRendererX.new(root, {
+          minGridDistance: 14,
+          minorGridEnabled: true,
+        }),
+      })
+    );
 
-    xRenderer.labels.template.setAll({
+    const yAxis = chart.yAxes.push(
+      am5xy.ValueAxis.new(root, {
+        maxDeviation: 0.3,
+        renderer: am5xy.AxisRendererY.new(root, {}),
+      })
+    );
+
+    xAxis.get("renderer").labels.template.setAll({
       rotation: -90,
       centerY: am5.p50,
       centerX: am5.p100,
       paddingRight: 10,
     });
 
-    const xAxis = chart.xAxes.push(
-      am5xy.CategoryAxis.new(root, {
-        categoryField:"category",
-        maxDeviation: 0.3,
-        renderer: xRenderer,
-        tooltip: am5.Tooltip.new(root, {}),
-      })
-    );
-
-    const yRenderer = am5xy.AxisRendererY.new(root, {});
-    const yAxis = chart.yAxes.push(
-      am5xy.ValueAxis.new(root, {
-        maxDeviation: 0.3,
-        renderer: yRenderer,
-      })
-    );
-
     // series(그래프) 생성
     const series = chart.series.push(
       am5xy.ColumnSeries.new(root, {
-        xAxis: xAxis,
-        yAxis: yAxis,
+        xAxis,
+        yAxis,
         valueYField: "value",
         categoryXField: "category",
         sequencedInterpolation: true,
-        tooltip: am5.Tooltip.new(root, {
-          labelText: "{valueY}",
-        }),
       })
     );
 
-    series.columns.template.adapters.add("fill", function (_, target) {
-      return chart.get("colors").getIndex(series.columns.indexOf(target));
+    series.columns.template.setAll({
+      tooltipY: 0,
+      tooltipText: "{valueY}",
     });
+
+    series.columns.template.adapters.add("fill", (_, target) =>
+      chart.get("colors").getIndex(series.columns.indexOf(target))
+    );
 
     // 데이터 적용
     xAxis.data.setAll(data);
@@ -142,4 +143,3 @@ export default function RotateLabelColumnChart( ) {
 
   return <div id={id} style={{ width: "100%", height: "100%" }} />;
 }
-

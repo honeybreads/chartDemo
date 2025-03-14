@@ -29,6 +29,7 @@ const data = [
   { date: new Date(2024, 11, 20).getTime(), value: 78 },
 ];
 
+// DragChangeValueChart
 export default function DragChangeValueChart() {
   const id = "dragchangevalue-column";
   const { theme, colorTheme } = useTheme();
@@ -36,8 +37,8 @@ export default function DragChangeValueChart() {
   useLayoutEffect(() => {
     // Root 객체 생성 및 테마 불러오기
     const root = am5.Root.new(id);
-    const { colorSet } = themes[colorTheme];
-    const colorList = colorSet(data.length);
+    const { primary } = themes[colorTheme];
+    const colorList = primary;
     const myTheme = themes.myThemeRule(root, colorList, theme);
     root.setThemes([am5themes_Animated.new(root), myTheme]);
 
@@ -56,6 +57,7 @@ export default function DragChangeValueChart() {
       am5xy.XYCursor.new(root, { behavior: "none" })
     );
     cursor.lineY.set("visible", false);
+    cursor.lineX.set("stroke",themes.chartVariables[theme].base );
 
     // x,y축 생성
     const xAxis = chart.xAxes.push(
@@ -78,31 +80,28 @@ export default function DragChangeValueChart() {
     // series(그래프) 생성
     const series = chart.series.push(
       am5xy.ColumnSeries.new(root, {
+        xAxis,
+        yAxis,
         name: "Series",
-        xAxis: xAxis,
-        yAxis: yAxis,
         valueYField: "value",
         valueXField: "date",
-        tooltip: am5.Tooltip.new(root, {
-          labelText: "{valueY}",
-        }),
       })
     );
-    series.columns.template.adapters.add("fill", function (_, target) {
-      return chart.get("colors").getIndex(series.columns.indexOf(target));
+
+    series.columns.template.setAll({
+      tooltipY: 0,
+      tooltipText: "{valueY}",
     });
+
+    series.columns.template.adapters.add("fill", (_, target) =>
+      chart.get("colors").getIndex(series.columns.indexOf(target))
+    );
 
     // 드래그 값 조절 이벤트
     let isDown = false;
-    chart.plotContainer.events.on("pointerdown", function () {
-      isDown = true;
-    });
-
-    chart.plotContainer.events.on("globalpointerup", function () {
-      isDown = false;
-    });
-
-    chart.plotContainer.events.on("globalpointermove", function (e) {
+    chart.plotContainer.events.on("pointerdown", () => (isDown = true));
+    chart.plotContainer.events.on("globalpointerup", () => (isDown = false));
+    chart.plotContainer.events.on("globalpointermove", (e) => {
       if (isDown) {
         const tooltipDataItem = series.get("tooltipDataItem");
         if (tooltipDataItem) {

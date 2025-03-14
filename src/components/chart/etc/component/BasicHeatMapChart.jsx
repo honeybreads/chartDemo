@@ -849,6 +849,7 @@ const data = [
   },
 ];
 
+// BasicHeatMapChart
 export default function BasicHeatMapChart() {
   const id = "basic-heatmap";
   const { theme } = useTheme();
@@ -861,7 +862,7 @@ export default function BasicHeatMapChart() {
     root.setThemes([am5themes_Animated.new(root), myTheme]);
 
     // 값 가져오기
-    const [categoryFieldX, categoryFieldY, valueField] = Object.keys(data[0]);
+    const [categoryXField, categoryYField, valueField] = Object.keys(data[0]);
     const minColor = am5.color(colorList[0]);
     const maxColor = am5.color(colorList[1]);
 
@@ -912,21 +913,21 @@ export default function BasicHeatMapChart() {
     };
 
     // X축 및 Y축 생성 및 데이터 설정
-    const xAxis = createRenderer("x", categoryFieldX);
-    const yAxis = createRenderer("y", categoryFieldY);
-    axisDateSet(categoryFieldX, xAxis);
-    axisDateSet(categoryFieldY, yAxis);
+    const xAxis = createRenderer("x", categoryXField);
+    const yAxis = createRenderer("y", categoryYField);
+    axisDateSet(categoryXField, xAxis);
+    axisDateSet(categoryYField, yAxis);
 
     // HeatMap 시리즈 생성
     const series = chart.series.push(
       am5xy.ColumnSeries.new(root, {
-        xAxis: xAxis,
-        yAxis: yAxis,
+        xAxis,
+        yAxis,
+        valueField,
+        categoryXField,
+        categoryYField,
         clustered: false,
         calculateAggregates: true,
-        valueField,
-        categoryXField: categoryFieldX,
-        categoryYField: categoryFieldY,
       })
     );
 
@@ -961,13 +962,13 @@ export default function BasicHeatMapChart() {
     );
 
     // HeatLegend 값 표시 이벤트
-    series.columns.template.events.on("pointerover", function (event) {
-      var di = event.target.dataItem;
+    series.columns.template.events.on("pointerover", (event) => {
+      const di = event.target.dataItem;
       di && heatLegend.showValue(di.get("value", 0));
     });
 
     // 데이터 유효성 검증 후 HeatLegend 값 설정
-    series.events.on("datavalidated", function () {
+    series.events.on("datavalidated", () => {
       heatLegend.set("startValue", series.getPrivate("valueHigh"));
       heatLegend.set("endValue", series.getPrivate("valueLow"));
     });

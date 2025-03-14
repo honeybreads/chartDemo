@@ -1,14 +1,11 @@
 import { useTheme } from "@/components/Theme";
 import { Lightbulb, Menu, SwatchBook } from "lucide-react";
 import PropTypes from "prop-types";
-import { useLayoutEffect } from "react";
-import * as themes from "@/assets/chartTheme";
 
-const colorThemeList = ["basic", "purple", "colorfull"];
+const colorThemeList = ["basic", "violet", "pastel"];
 
 export default function Header({ navToggle, setNavToggle }) {
   const { setTheme, setColorTheme, colorTheme } = useTheme();
-  const { primary } = themes[colorTheme];
 
   const modeChagne = () => {
     const nowTheme = window.document.documentElement.classList.value;
@@ -19,10 +16,6 @@ export default function Header({ navToggle, setNavToggle }) {
   const colorChange = (e) => {
     setColorTheme(e.target.value);
   };
-
-  useLayoutEffect(() => {
-    document.body.style.setProperty("--primary", primary[3]);
-  }, [primary]);
 
   return (
     <header className="header">

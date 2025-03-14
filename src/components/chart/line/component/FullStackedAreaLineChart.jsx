@@ -132,8 +132,8 @@ export default function FullStackedAreaLineChart() {
   useLayoutEffect(() => {
     // Root 객체 생성 및 테마 불러오기
     const root = am5.Root.new(id);
-    const { lineColors } = themes[colorTheme];
-    const colorList = lineColors.lineStroke;
+    const { primary } = themes[colorTheme];
+    const colorList = primary;
     const myTheme = themes.myThemeRule(root, colorList, theme);
     root.setThemes([am5themes_Animated.new(root), myTheme]);
 
@@ -184,9 +184,9 @@ export default function FullStackedAreaLineChart() {
     const createSeries = ( field) => {
       const series = chart.series.push(
         am5xy.LineSeries.new(root, {
+          xAxis,
+          yAxis,
           name: field,
-          xAxis: xAxis,
-          yAxis: yAxis,
           stacked: true,
           valueYField: field,
           categoryXField: "year",

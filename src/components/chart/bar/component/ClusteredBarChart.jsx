@@ -34,6 +34,7 @@ const data = [
   },
 ];
 
+// ClusteredBarChart
 export default function ClusteredBarChart() {
   const id = "clustered-bar";
   const { theme, colorTheme } = useTheme();
@@ -41,8 +42,8 @@ export default function ClusteredBarChart() {
   useLayoutEffect(() => {
     // Root 객체 생성 및 테마 불러오기
     const root = am5.Root.new(id);
-    const { colorSet } = themes[colorTheme];
-    const colorList = colorSet(2);
+    const { primary } = themes[colorTheme];
+    const colorList = primary;
     const myTheme = themes.myThemeRule(root, colorList, theme);
     root.setThemes([am5themes_Animated.new(root), myTheme]);
 
@@ -59,11 +60,9 @@ export default function ClusteredBarChart() {
     );
 
     // cursor 생성
-    var cursor = chart.set(
+    const cursor = chart.set(
       "cursor",
-      am5xy.XYCursor.new(root, {
-        behavior: "zoomY",
-      })
+      am5xy.XYCursor.new(root, { behavior: "zoomY" })
     );
     cursor.lineY.set("forceHidden", true);
     cursor.lineX.set("forceHidden", true);
@@ -93,7 +92,6 @@ export default function ClusteredBarChart() {
       am5xy.ValueAxis.new(root, {
         min: 0,
         renderer: am5xy.AxisRendererX.new(root, {
-          strokeOpacity: 0.1,
           minGridDistance: 50,
         }),
       })
@@ -103,9 +101,9 @@ export default function ClusteredBarChart() {
     const createSeries = (field, name) => {
       const series = chart.series.push(
         am5xy.ColumnSeries.new(root, {
+          xAxis,
+          yAxis,
           name: name,
-          xAxis: xAxis,
-          yAxis: yAxis,
           valueXField: field,
           categoryYField: "year",
           sequencedInterpolation: true,
@@ -136,16 +134,22 @@ export default function ClusteredBarChart() {
         });
       });
 
-      series.bullets.push(() => {
+      series.bullets.push((_, cols) => {
+        const fill = am5.Color.alternative(
+          cols.get("fill"),
+          am5.color("#fff"),
+          am5.color("#000")
+        );
+
         return am5.Bullet.new(root, {
           locationX: 1,
           locationY: 0.5,
           sprite: am5.Label.new(root, {
+            fill,
             text: "{name}",
             centerY: am5.p50,
             centerX: am5.p100,
             populateText: true,
-            fill: am5.color(0xffffff),
           }),
         });
       });

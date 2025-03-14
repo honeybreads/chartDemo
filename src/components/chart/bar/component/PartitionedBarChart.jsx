@@ -209,8 +209,10 @@ const data = [
   },
 ];
 
+// 데이터에서 카테고리 생성
 const category = [...new Set(data.map((item) => item.region))];
 
+// PartitionedBarChart
 export default function PartitionedBarChart() {
   const id = "partitione-bar";
   const { theme, colorTheme } = useTheme();
@@ -218,9 +220,10 @@ export default function PartitionedBarChart() {
   useLayoutEffect(() => {
     // Root 객체 생성 및 테마 불러오기
     const root = am5.Root.new(id);
-    const { colorSet } = themes[colorTheme];
-    const colorList = colorSet(category.length);
+    const { primary } = themes[colorTheme];
+    const colorList = primary;
     const myTheme = themes.myThemeRule(root, colorList, theme);
+    // 개별 반응형 설정
     root.setThemes([am5themes_Animated.new(root), myTheme]);
 
     // XYChart 생성
@@ -239,6 +242,7 @@ export default function PartitionedBarChart() {
     const legendData = [];
     const legend = chart.children.push(
       am5.Legend.new(root, {
+        width: 100,
         nameField: "name",
         fillField: "color",
         strokeField: "color",
@@ -251,11 +255,11 @@ export default function PartitionedBarChart() {
     const yAxis = chart.yAxes.push(
       am5xy.CategoryAxis.new(root, {
         categoryField: "state",
+        tooltip: am5.Tooltip.new(root, {}),
         renderer: am5xy.AxisRendererY.new(root, {
           minGridDistance: 10,
           minorGridEnabled: true,
         }),
-        tooltip: am5.Tooltip.new(root, {}),
       })
     );
 
@@ -266,25 +270,24 @@ export default function PartitionedBarChart() {
 
     const xAxis = chart.xAxes.push(
       am5xy.ValueAxis.new(root, {
-        renderer: am5xy.AxisRendererX.new(root, {}),
         tooltip: am5.Tooltip.new(root, {}),
+        renderer: am5xy.AxisRendererX.new(root, {}),
       })
     );
 
     // cursor 생성
-    chart.set(
+    const cursor = chart.set(
       "cursor",
-      am5xy.XYCursor.new(root, {
-        xAxis: xAxis,
-        yAxis: yAxis,
-      })
+      am5xy.XYCursor.new(root, { xAxis, yAxis })
     );
+    cursor.lineX.setAll({ stroke: themes.chartVariables[theme].base });
+    cursor.lineY.setAll({ stroke: themes.chartVariables[theme].base });
 
     // series 생성
     const series = chart.series.push(
       am5xy.ColumnSeries.new(root, {
-        xAxis: xAxis,
-        yAxis: yAxis,
+        xAxis,
+        yAxis,
         valueXField: "sales",
         categoryYField: "state",
         tooltip: am5.Tooltip.new(root, {

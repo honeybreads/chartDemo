@@ -28,8 +28,8 @@ export default function BasicLollipopChart() {
   useLayoutEffect(() => {
     // Root 객체 생성 및 테마 불러오기
     const root = am5.Root.new(id);
-    const { colorSet } = themes[colorTheme];
-    const colorList = colorSet(data.length);
+    const { primary } = themes[colorTheme];
+    const colorList = primary;
     const myTheme = themes.myThemeRule(root, colorList, theme);
     root.setThemes([am5themes_Animated.new(root), myTheme]);
 
@@ -48,7 +48,8 @@ export default function BasicLollipopChart() {
     // 커서 추가
     const cursor = chart.set("cursor", am5xy.XYCursor.new(root, {}));
     cursor.lineY.set("visible", false);
-
+    cursor.lineX.set("stroke",themes.chartVariables[theme].base);
+    
     // X,Y축 생성
     const xAxis = chart.xAxes.push(
       am5xy.CategoryAxis.new(root, {
@@ -71,8 +72,8 @@ export default function BasicLollipopChart() {
 
     xAxis.get("renderer").labels.template.setAll({
       rotation: -90,
-      centerY: am5.p50,
       centerX: 0,
+      centerY: am5.p50,
     });
 
     yAxis.get("renderer").grid.template.setAll({ visible: false });
@@ -80,8 +81,8 @@ export default function BasicLollipopChart() {
     // series 생성
     const series = chart.series.push(
       am5xy.ColumnSeries.new(root, {
-        xAxis: xAxis,
-        yAxis: yAxis,
+        xAxis,
+        yAxis,
         valueYField: "value",
         categoryXField: "category",
         adjustBulletPosition: false,
@@ -89,6 +90,7 @@ export default function BasicLollipopChart() {
       })
     );
 
+    series.get("tooltip").adapters.add("stateAnimationDuration",()=>0)
     series.columns.template.setAll({ width: 2 });
     series.columns.template.adapters.add("fill", (_, target) => {
       return chart.get("colors").getIndex(series.columns.indexOf(target));

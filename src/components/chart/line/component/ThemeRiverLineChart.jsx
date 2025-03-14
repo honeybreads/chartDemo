@@ -1,6 +1,7 @@
 import * as am5 from "@amcharts/amcharts5";
 import * as am5xy from "@amcharts/amcharts5/xy";
 import am5themes_Animated from "@amcharts/amcharts5/themes/Animated";
+import am5themes_Responsive from "@amcharts/amcharts5/themes/Responsive";
 import { useLayoutEffect } from "react";
 import * as themes from "@/assets/chartTheme";
 import { useTheme } from "@/components/Theme";
@@ -33,10 +34,36 @@ export default function ThemeRiverLineChart() {
   useLayoutEffect(() => {
     // Root 생성 및 테마 적용
     const root = am5.Root.new(id);
-    const { lineColors } = themes[colorTheme];
-    const colorList = lineColors.lineStroke;
+    const { primary } = themes[colorTheme];
+    const colorList = primary;
     const myTheme = themes.myThemeRule(root, colorList, theme);
-    root.setThemes([am5themes_Animated.new(root), myTheme]);
+
+    // 개별 반응형 설정
+    const responsive = am5themes_Responsive.newEmpty(root);
+    responsive.addRule({
+      relevant: am5themes_Responsive.widthL,
+      applying: () => {
+        chart.setAll({ layout: root.verticalLayout });
+        legend.setAll({
+          x: am5.p50,
+          y: am5.p100,
+          centerX: am5.p50,
+          centerY: am5.p100,
+          layout: root.horizontalLayout,
+        });
+      },
+      removing: () => {
+        chart.setAll({ layout: root.horizontalLayout });
+        legend.setAll({
+          y: am5.p50,
+          x:false,
+          centerX:false,
+          centerY: am5.p50,
+          layout: root.verticalLayout,
+        });
+      },
+    });
+    root.setThemes([am5themes_Animated.new(root), myTheme, responsive]);
 
     // 차트 생성
     const chart = root.container.children.push(
@@ -56,8 +83,10 @@ export default function ThemeRiverLineChart() {
         centerY: am5.p50,
         clickTarget: "none",
         layout: root.verticalLayout,
+        
       })
     );
+    legend.markers.template.setAll({width:10,height:10})
     legend.valueLabels.template.set("forceHidden", true);
 
     // X축 생성 (연도)
@@ -81,7 +110,6 @@ export default function ThemeRiverLineChart() {
         renderer: am5xy.AxisRendererY.new(root, { pan: "zoom" }),
       })
     );
-    xAxis.get("renderer").labels.template.setAll({ maxWidth: "auto" });
 
     // 시리즈 생성 함수
     const createSeries = (field, name) => {

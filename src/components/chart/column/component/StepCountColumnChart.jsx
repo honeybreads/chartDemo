@@ -139,6 +139,7 @@ const data = {
   ],
 };
 
+// StepCountColumnChart
 export default function StepCountColumnChart() {
   const id = "stepcount-column";
   const { theme, colorTheme } = useTheme();
@@ -146,8 +147,8 @@ export default function StepCountColumnChart() {
   useLayoutEffect(() => {
     // Root 객체 생성 및 테마 불러오기
     const root = am5.Root.new(id);
-    const { colorSet } = themes[colorTheme];
-    const colorList = colorSet(2);
+    const { primary } = themes[colorTheme];
+    const colorList = primary;
     const myTheme = themes.myThemeRule(root, colorList, theme);
     root.setThemes([am5themes_Animated.new(root), myTheme]);
 
@@ -158,54 +159,51 @@ export default function StepCountColumnChart() {
         panY: false,
         wheelX: "none",
         wheelY: "none",
+        focusable: true,
         pinchZoomY: false,
         pinchZoomX: false,
-        focusable: true,
       })
     );
     chart.zoomOutButton.set("forceHidden", true);
 
     // x,y축 생성
-    const xRenderer = am5xy.AxisRendererX.new(root, {});
-    xRenderer.grid.template.set("forceHidden", true);
-
-    const yRenderer = am5xy.AxisRendererY.new(root, { minGridDistance: 30 });
-    yRenderer.grid.template.set("forceHidden", true);
-
     const xAxis = chart.xAxes.push(
       am5xy.DateAxis.new(root, {
         snapTooltip: false,
-        renderer: xRenderer,
+        renderer: am5xy.AxisRendererX.new(root, {}),
         baseInterval: { timeUnit: "day", count: 1 },
         tooltip: am5.Tooltip.new(root, {}),
       })
     );
 
     const yAxis = chart.yAxes.push(
-      am5xy.ValueAxis.new(root, { renderer: yRenderer })
+      am5xy.ValueAxis.new(root, {
+        renderer: am5xy.AxisRendererY.new(root, { minGridDistance: 30 }),
+      })
     );
+    xAxis.get("renderer").grid.template.set("forceHidden", true);
+    yAxis.get("renderer").grid.template.set("forceHidden", true);
 
     // goal range 생성
     const createGoal = (value, text) => {
       const goal = yAxis.createAxisRange(yAxis.makeDataItem({ value }));
       goal.get("grid").setAll({ forceHidden: false });
 
-      const goalLabel = goal.get("label");
-      goalLabel.setAll({
+      goal.get("label").setAll({
         text,
         inside: true,
         centerY: am5.p100,
       });
 
-      goalLabel.adapters.add("x", () => {
+      goal.get("label").adapters.add("x", () => {
         return chart.plotContainer.width();
       });
 
       chart.plotContainer.onPrivate("width", () => {
-        goalLabel.markDirtyPosition();
+        goal.get("label").markDirtyPosition();
       });
 
-      return goalLabel;
+      return goal.get("label");
     };
 
     data.goal.forEach((item) => {
@@ -222,24 +220,26 @@ export default function StepCountColumnChart() {
       })
     );
     cursor.lineY.set("visible", false);
+    cursor.lineX.set("stroke",themes.chartVariables[theme].base )
+
 
     // series(바 차트) 생성
     const series = chart.series.push(
       am5xy.ColumnSeries.new(root, {
-        xAxis: xAxis,
-        yAxis: yAxis,
+        xAxis,
+        yAxis,
         valueYField: "steps",
         valueXField: "date",
         tooltip: am5.Tooltip.new(root, {
-          pointerOrientation: "vertical",
           labelText: "{valueY}",
+          pointerOrientation: "vertical",
         }),
       })
     );
-
+    
     series.columns.template.adapters.add("fill", (fill, target) => {
       if (target.dataItem.get("valueY") < data.goal[0].value) {
-        return am5.color(0xdadada);
+        return themes.chartVariables[theme].grid;
       }
       return fill;
     });
@@ -266,14 +266,17 @@ export default function StepCountColumnChart() {
       const firstTime = am5.time
         .round(new Date(series.dataItems[0].get("valueX")), "day", 1)
         .getTime();
+
       const lastTime =
         series.dataItems[series.dataItems.length - 1].get("valueX") +
         dayDuration;
+
       const totalTime = lastTime - firstTime;
       const days = totalTime / dayDuration;
 
       const roundedStart =
         firstTime + Math.round(days * xAxis.get("start")) * dayDuration;
+
       const roundedEnd =
         firstTime + Math.round(days * xAxis.get("end")) * dayDuration;
 
@@ -284,7 +287,7 @@ export default function StepCountColumnChart() {
     series.data.setAll(data.list);
 
     // 애니메이션 적용
-    chart.appear(1000, 50);
+    chart.appear(1000, 100);
 
     return () => root.dispose();
   }, [theme, colorTheme]);

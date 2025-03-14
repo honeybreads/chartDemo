@@ -36,6 +36,7 @@ const data = [
   },
 ];
 
+// StackedBarChart
 export default function StackedBarChart() {
   const id = "stacked-bar";
   const { theme, colorTheme } = useTheme();
@@ -43,8 +44,8 @@ export default function StackedBarChart() {
   useLayoutEffect(() => {
     // Root 객체 생성 및 테마 불러오기
     const root = am5.Root.new(id);
-    const { colorSet } = themes[colorTheme];
-    const colorList = colorSet(Object.keys(data[0]).length);
+    const { primary } = themes[colorTheme];
+    const colorList = primary;
     const myTheme = themes.myThemeRule(root, colorList, theme);
     root.setThemes([am5themes_Animated.new(root), myTheme]);
 
@@ -68,7 +69,6 @@ export default function StackedBarChart() {
         renderer: am5xy.AxisRendererY.new(root, {}),
       })
     );
-    yAxis.get("renderer").grid.template.setAll({ location: 1 });
 
     const xAxis = chart.xAxes.push(
       am5xy.ValueAxis.new(root, {
@@ -80,6 +80,8 @@ export default function StackedBarChart() {
         }),
       })
     );
+    
+    yAxis.get("renderer").grid.template.setAll({ location: 1 });
 
     // legend 생성
     const legend = chart.children.push(
@@ -93,9 +95,9 @@ export default function StackedBarChart() {
     const makeSeries = (name, fieldName) => {
       const series = chart.series.push(
         am5xy.ColumnSeries.new(root, {
-          name: name,
-          xAxis: xAxis,
-          yAxis: yAxis,
+          name,
+          xAxis,
+          yAxis,
           stacked: true,
           baseAxis: yAxis,
           valueXField: fieldName,
@@ -112,14 +114,20 @@ export default function StackedBarChart() {
         tooltipText: "{name}, {categoryY}: {valueX}",
       });
 
-      series.bullets.push(() => {
+      series.bullets.push((_, cols) => {
+        const fill = am5.Color.alternative(
+          cols.get("fill"),
+          am5.color("#fff"),
+          am5.color("#000")
+        );
+
         return am5.Bullet.new(root, {
           sprite: am5.Label.new(root, {
+            fill,
             text: "{valueX}",
             centerY: am5.p50,
             centerX: am5.p50,
             populateText: true,
-            fill: root.interfaceColors.get("alternativeText"),
           }),
         });
       });
@@ -130,8 +138,8 @@ export default function StackedBarChart() {
     };
 
     // series 생성
+    // 첫번째 항목은 카테고리로 제외
     Object.keys(data[0]).map((item, index) => {
-      // 첫번째 항목은 카테고리로 제외처리
       index !== 0 && makeSeries(item, item);
     });
 

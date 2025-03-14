@@ -74,6 +74,7 @@ const data = {
   ],
 };
 
+// NestedPieChart
 export default function NestedPieChart() {
   const id = "nested-pie";
   const { theme, colorTheme } = useTheme();
@@ -81,12 +82,8 @@ export default function NestedPieChart() {
   useLayoutEffect(() => {
     // Root 객체 생성 및 테마 불러오기
     const root = am5.Root.new(id);
-    const { colorSet } = themes[colorTheme];
-    let totalCount = 0;
-    Object.entries(data).forEach((item) => {
-      item[1].forEach(() => (totalCount += 1));
-    });
-    const colorList = colorSet(totalCount);
+    const { primary } = themes[colorTheme];
+    const colorList = primary;
     const myTheme = themes.myThemeRule(root, colorList, theme);
 
     // 반응형 설정
@@ -117,9 +114,9 @@ export default function NestedPieChart() {
     // series (내부 그룹) 생성
     const series0 = chart.series.push(
       am5percent.PieSeries.new(root, {
+        alignLabels: false,
         valueField: "value",
         categoryField: "group",
-        alignLabels: false,
         radius: am5.percent(60),
         innerRadius: am5.percent(15),
       })
@@ -136,7 +133,7 @@ export default function NestedPieChart() {
 
     series0.slices.template.setAll({
       strokeWidth: 2,
-      stroke: themes.modeColor[theme].line,
+      stroke: themes.chartVariables[theme].line,
       toggleKey: "none",
       fill: am5.color("#E5EAF5"),
     });
@@ -149,7 +146,6 @@ export default function NestedPieChart() {
       am5percent.PieSeries.new(root, {
         valueField: "value",
         categoryField: "category",
-        alignLabels: true,
         radius: am5.percent(90),
         innerRadius: am5.percent(62),
       })
@@ -157,7 +153,7 @@ export default function NestedPieChart() {
 
     series1.slices.template.setAll({
       strokeWidth: 2,
-      stroke: themes.modeColor[theme].line,
+      stroke: themes.chartVariables[theme].line,
       templateField: "settings",
     });
 
@@ -168,9 +164,9 @@ export default function NestedPieChart() {
     // 데이터 가공
     let innerData = [];
     let outerData = [];
-    am5.object.each(data, function (group, items) {
+    am5.object.each(data, (group, items) => {
       let total = 0;
-      am5.array.each(items, function (item) {
+      am5.array.each(items, (item) => {
         total += item["value"];
         outerData.push(item);
       });

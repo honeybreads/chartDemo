@@ -65,6 +65,7 @@ const data = [
   },
 ];
 
+// StackedWaterfallColumnChart
 export default function StackedWaterfallColumnChart() {
   const id = "stackedwaterfall-column";
   const { theme, colorTheme } = useTheme();
@@ -72,13 +73,10 @@ export default function StackedWaterfallColumnChart() {
   useLayoutEffect(() => {
     // Root 객체 생성 및 테마 불러오기
     const root = am5.Root.new(id);
-    const { colorSet } = themes[colorTheme];
-    const colorList = colorSet(2);
+    const { primary } = themes[colorTheme];
+    const colorList = primary;
     const myTheme = themes.myThemeRule(root, colorList, theme);
     root.setThemes([am5themes_Animated.new(root), myTheme]);
-
-    // 카테고리 필드 지정
-    const categoryField = Object.keys(data[0])[0];
 
     // XYChart 생성
     const chart = root.container.children.push(
@@ -87,47 +85,49 @@ export default function StackedWaterfallColumnChart() {
         panY: false,
         wheelX: "panX",
         wheelY: "zoomX",
-        layout: root.verticalLayout,
         paddingLeft: 0,
+        layout: root.verticalLayout,
       })
     );
 
     // x,y축 생성
-    const xRenderer = am5xy.AxisRendererX.new(root, {
-      cellStartLocation: 0.1,
-      cellEndLocation: 0.9,
-      minorGridEnabled: true,
-    });
-
     const xAxis = chart.xAxes.push(
       am5xy.CategoryAxis.new(root, {
-        categoryField,
-        renderer: xRenderer,
+        categoryField: "category",
         tooltip: am5.Tooltip.new(root, {}),
+        renderer: am5xy.AxisRendererX.new(root, {
+          minGridDistance:20,
+          cellEndLocation: 0.9,
+          cellStartLocation: 0.1,
+        }),
       })
     );
-    xRenderer.grid.template.setAll({ location: 1 });
-    xRenderer.labels.template.setAll({ maxWidth: "auto" });
 
     const yAxis = chart.yAxes.push(
       am5xy.ValueAxis.new(root, {
-        calculateTotals: true,
         extraMax: 0.05,
+        calculateTotals: true,
         renderer: am5xy.AxisRendererY.new(root, { strokeOpacity: 0.1 }),
       })
     );
+
+    xAxis.get("renderer").grid.template.setAll({ location: 1 });
+    xAxis.get("renderer").labels.template.setAll({ textAlign: "center" });
+    xAxis.get("renderer").labels.template.adapters.add("width", (_, target) => {
+      return themes.axisLabelSetWidth(xAxis, target);
+    });
 
     // series 생성 함수
     const makeSeries = (name, openField, field, total) => {
       const series = chart.series.push(
         am5xy.ColumnSeries.new(root, {
-          name: name,
-          xAxis: xAxis,
-          yAxis: yAxis,
+          name,
+          xAxis,
+          yAxis,
+          clustered: false,
           valueYField: field,
           openValueYField: openField,
-          categoryXField: categoryField,
-          clustered: false,
+          categoryXField: "category",
         })
       );
 
@@ -143,10 +143,16 @@ export default function StackedWaterfallColumnChart() {
       series.appear();
 
       // bullet 생성
-      series.bullets.push(function () {
+      series.bullets.push((root, cols) => {
+        const fill = am5.Color.alternative(
+          cols.get("fill"),
+          am5.color("#fff"),
+          am5.color("#000")
+        );
+
         const label = am5.Label.new(root, {
+          fill,
           text: "{valueY}",
-          fill: root.interfaceColors.get("alternativeText"),
           centerY: am5.p50,
           centerX: am5.p50,
           populateText: true,

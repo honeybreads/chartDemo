@@ -1,6 +1,7 @@
 import * as am5 from "@amcharts/amcharts5";
 import * as am5xy from "@amcharts/amcharts5/xy";
 import am5themes_Animated from "@amcharts/amcharts5/themes/Animated";
+import am5themes_Responsive from "@amcharts/amcharts5/themes/Responsive";
 import { useLayoutEffect } from "react";
 import * as themes from "@/assets/chartTheme";
 import { useTheme } from "@/components/Theme";
@@ -86,6 +87,7 @@ const data = [
   },
 ];
 
+// DivergentStackedBarChart
 export default function DivergentStackedBarChart() {
   const id = "divergent-bar";
   const { theme, colorTheme } = useTheme();
@@ -93,10 +95,34 @@ export default function DivergentStackedBarChart() {
   useLayoutEffect(() => {
     // Root 객체 생성 및 테마 불러오기
     const root = am5.Root.new(id);
-    const { colorSet } = themes[colorTheme];
-    const colorList = colorSet(4);
+    const { primary } = themes[colorTheme];
+    const colorList = primary;
     const myTheme = themes.myThemeRule(root, colorList, theme);
-    root.setThemes([am5themes_Animated.new(root), myTheme]);
+
+    // 개별 반응형 설정 
+    const responsive = am5themes_Responsive.newEmpty(root);
+    responsive.addRule({
+      relevant: am5themes_Responsive.widthL,
+      applying: () => {
+        chart.setAll({ layout: root.verticalLayout });
+        legend.setAll({
+          y: am5.p100,
+          centerY: am5.p100,
+          marginLeft: 0,
+          layout: root.horizontalLayout,
+        });
+      },
+      removing: () => {
+        chart.setAll({ layout: root.horizontalLayout });
+        legend.setAll({
+          y: am5.p50,
+          centerY: am5.p50,
+          marginLeft: 20,
+          layout: root.verticalLayout,
+        });
+      },
+    });
+    root.setThemes([am5themes_Animated.new(root), myTheme, responsive]);
 
     // XYChart 생성
     const chart = root.container.children.push(
@@ -106,7 +132,7 @@ export default function DivergentStackedBarChart() {
         wheelX: "panX",
         wheelY: "zoomX",
         paddingLeft: 0,
-        paddingRight:0,
+        paddingRight: 0,
         arrangeTooltips: false,
         layout: root.horizontalLayout,
       })
@@ -131,7 +157,7 @@ export default function DivergentStackedBarChart() {
           inversed: true,
           cellEndLocation: 0.9,
           cellStartLocation: 0.1,
-          minGridDistance:20,
+          minGridDistance: 20,
           minorGridEnabled: true,
         }),
       })
@@ -158,8 +184,8 @@ export default function DivergentStackedBarChart() {
     const createSeries = (field, name, color) => {
       const series = chart.series.push(
         am5xy.ColumnSeries.new(root, {
-          xAxis: xAxis,
-          yAxis: yAxis,
+          xAxis,
+          yAxis,
           name: name,
           fill: color,
           stroke: color,
@@ -183,13 +209,25 @@ export default function DivergentStackedBarChart() {
       series.appear();
 
       return series;
-    }
+    };
+
+    //color
+    const colNegative = themes[colorTheme].state.negative;
+    const colPositive = themes[colorTheme].state.positive;
 
     // series 생성
-    createSeries("negative2", "Unlikely", colorList[0]);
-    createSeries("negative1", "Never", colorList[1]);
-    createSeries("positive1", "Sometimes", colorList[2]);
-    createSeries("positive2", "Very often", colorList[3]);
+    createSeries(
+      "negative2",
+      "Unlikely",
+      am5.Color.lighten(am5.color(colNegative), 0.2)
+    );
+    createSeries("negative1", "Never", colNegative);
+    createSeries(
+      "positive1",
+      "Sometimes",
+      am5.Color.lighten(am5.color(colPositive), 0.2)
+    );
+    createSeries("positive2", "Very often", colPositive);
 
     // 데이터터 적용
     legend.data.setAll(chart.series.values);

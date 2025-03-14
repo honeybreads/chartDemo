@@ -30,6 +30,7 @@ const data = [
   },
 ];
 
+// SolidGaugeChart
 export default function SolidGaugeChart() {
   const id = "solid-gauge";
   const { theme, colorTheme } = useTheme();
@@ -37,8 +38,8 @@ export default function SolidGaugeChart() {
   useLayoutEffect(() => {
     // Root 객체 생성 및 테마 불러오기
     const root = am5.Root.new(id);
-    const { colorSet } = themes[colorTheme];
-    const colorList = colorSet(data.length);
+    const { primary } = themes[colorTheme];
+    const colorList = primary;
     const myTheme = themes.myThemeRule(root, colorList, theme);
     root.setThemes([am5themes_Animated.new(root), myTheme]);
 
@@ -55,8 +56,8 @@ export default function SolidGaugeChart() {
         endAngle: 180,
         startAngle: -90,
         innerRadius: am5.percent(20),
-        // wheelX: "panX",
-        // wheelY: "zoomX",
+        wheelX: "panX",
+        wheelY: "zoomX",
       })
     );
     chart.plotContainer.get("background").set("visible", false);
@@ -69,51 +70,47 @@ export default function SolidGaugeChart() {
     cursor.lineY.set("visible", false);
 
     // X축 생성
-    const xRenderer = am5radar.AxisRendererCircular.new(root, {
-      strokeOpacity: 0,
-    });
-    xRenderer.labels.template.setAll({ radius: 10 });
-    xRenderer.grid.template.setAll({ forceHidden: true });
-
     const xAxis = chart.xAxes.push(
       am5xy.ValueAxis.new(root, {
-        renderer: xRenderer,
         min: 0,
         max: 100,
         strictMinMax: true,
         numberFormat: "#'%'",
         tooltip: am5.Tooltip.new(root, {}),
+        renderer: am5radar.AxisRendererCircular.new(root, {}),
+      })
+    );
+    xAxis.get("renderer").labels.template.setAll({ radius: 10 });
+    xAxis.get("renderer").grid.template.setAll({ forceHidden: true });
+    xAxis.get("renderer").adapters.add("stroke", () => false);
+
+    // Y축 생성
+    const yAxis = chart.yAxes.push(
+      am5xy.CategoryAxis.new(root, {
+        categoryField: "category",
+        renderer: am5radar.AxisRendererRadial.new(root, {
+          minGridDistance: 10,
+        }),
       })
     );
 
-    // Y축 생성
-    const yRenderer = am5radar.AxisRendererRadial.new(root, {
-      minGridDistance: 10,
-      strokeOpacity: 0,
-    });
-    yRenderer.labels.template.setAll({
+    yAxis.get("renderer").labels.template.setAll({
       fontSize: 14,
       centerX: am5.p100,
       templateField: "columnSettings",
     });
-    yRenderer.grid.template.setAll({ forceHidden: true });
-
-    const yAxis = chart.yAxes.push(
-      am5xy.CategoryAxis.new(root, {
-        categoryField: "category",
-        renderer: yRenderer,
-      })
-    );
+    yAxis.get("renderer").grid.template.setAll({ forceHidden: true });
+    yAxis.get("renderer").adapters.add("stroke", () => false);
 
     // RadarColumnSeries1 (빈) 생성
     const series1 = chart.series.push(
       am5radar.RadarColumnSeries.new(root, {
-        xAxis: xAxis,
-        yAxis: yAxis,
+        xAxis,
+        yAxis,
         clustered: false,
         valueXField: "full",
         categoryYField: "category",
-        fill: am5.color(theme === "light" ? "#ddd" : "#666"),
+        fill: themes.chartVariables[theme].grid,
       })
     );
 
@@ -126,8 +123,8 @@ export default function SolidGaugeChart() {
     // RadarColumnSeries2 (실제 값) 생성
     const series2 = chart.series.push(
       am5radar.RadarColumnSeries.new(root, {
-        xAxis: xAxis,
-        yAxis: yAxis,
+        xAxis,
+        yAxis,
         clustered: false,
         valueXField: "value",
         categoryYField: "category",

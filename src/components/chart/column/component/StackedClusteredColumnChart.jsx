@@ -36,6 +36,7 @@ const data = [
   },
 ];
 
+// StackedClusteredColumnChart
 export default function StackedClusteredColumnChart() {
   const id = "stackedclusted-column";
   const { theme, colorTheme } = useTheme();
@@ -43,13 +44,10 @@ export default function StackedClusteredColumnChart() {
   useLayoutEffect(() => {
     // Root 객체 생성 및 테마 불러오기
     const root = am5.Root.new(id);
-    const { colorSet } = themes[colorTheme];
-    const colorList = colorSet(data.length);
+    const { primary } = themes[colorTheme];
+    const colorList = primary;
     const myTheme = themes.myThemeRule(root, colorList, theme);
     root.setThemes([am5themes_Animated.new(root), myTheme]);
-
-    // 카테고리 필드 지정
-    const categoryField = Object.keys(data[0])[0];
 
     // XYChart 생성
     const chart = root.container.children.push(
@@ -72,18 +70,15 @@ export default function StackedClusteredColumnChart() {
     );
 
     // x,y축 생성
-    const xRenderer = am5xy.AxisRendererX.new(root, {
-      cellEndLocation: 0.9,
-      cellStartLocation: 0.1,
-      minorGridEnabled: true,
-    });
-    xRenderer.grid.template.setAll({ location: 1 });
-
     const xAxis = chart.xAxes.push(
       am5xy.CategoryAxis.new(root, {
-        categoryField,
-        renderer: xRenderer,
+        categoryField: "year",
         tooltip: am5.Tooltip.new(root, {}),
+        renderer: am5xy.AxisRendererX.new(root, {
+          cellEndLocation: 0.9,
+          cellStartLocation: 0.1,
+          minorGridEnabled: true,
+        }),
       })
     );
 
@@ -96,16 +91,18 @@ export default function StackedClusteredColumnChart() {
       })
     );
 
+    xAxis.get("renderer").grid.template.setAll({ location: 1 });
+
     // series(막대 그래프) 생성 함수
     const makeSeries = (name, stacked) => {
       const series = chart.series.push(
         am5xy.ColumnSeries.new(root, {
-          stacked: stacked,
-          name: name,
-          xAxis: xAxis,
-          yAxis: yAxis,
+          name,
+          xAxis,
+          yAxis,
+          stacked,
           valueYField: name,
-          categoryXField: categoryField,
+          categoryXField: "year",
         })
       );
 
@@ -117,12 +114,18 @@ export default function StackedClusteredColumnChart() {
         tooltipText: "{name}, {categoryX}:{valueY}",
       });
 
-      series.bullets.push(function () {
+      series.bullets.push((root, cols) => {
+        const fill = am5.Color.alternative(
+          cols.get("fill"),
+          am5.color("#fff"),
+          am5.color("#000")
+        );
+
         return am5.Bullet.new(root, {
           locationY: 0.5,
           sprite: am5.Label.new(root, {
+            fill,
             text: "{valueY}",
-            fill: root.interfaceColors.get("alternativeText"),
             centerY: am5.percent(50),
             centerX: am5.percent(50),
             populateText: true,
@@ -137,7 +140,7 @@ export default function StackedClusteredColumnChart() {
 
     // 데이터의 각 필드로부터 series 생성 (첫 번째 필드는 카테고리 필드이므로 제외)
     Object.keys(data[0]).forEach((item, index) => {
-      const stacked = index !== 3;
+      const stacked = index !== 3;  // 3단에서 스택처리
       index > 0 && makeSeries(item, stacked);
     });
 

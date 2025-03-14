@@ -6,11 +6,11 @@ import * as themes from "@/assets/chartTheme";
 import { useTheme } from "@/components/Theme";
 
 // 데이터, 카테고리 생성 함수
-const rowSize = 20;
-const colSize = 5;
-const maleSize = 58;
-const femaleSize = 67;
-const fullSize = rowSize * colSize;
+const rowLength = 20;
+const colLength = 5;
+const maleLength = 58;
+const femaleLength = 67;
+const fullLength = rowLength * colLength;
 
 const generateData = (count) => {
   let row = 1;
@@ -19,7 +19,7 @@ const generateData = (count) => {
   for (let i = 0; i < count; i++) {
     data.push({ x: col + "", y: row + "" });
     col++;
-    if (col > rowSize) {
+    if (col > rowLength) {
       row++;
       col = 1;
     }
@@ -29,7 +29,7 @@ const generateData = (count) => {
 
 const generateCategories = (count) => {
   const data = [];
-  for (var i = 0; i < count; i++) {
+  for (let i = 0; i < count; i++) {
     data.push({ cat: i + 1 + "" });
   }
   return data;
@@ -44,6 +44,7 @@ const maleIcon =
 const femaleIcon =
   "M23.8125 12.5873C23.8128 10.323 23.1622 8.10634 21.9384 6.20129C20.7145 4.29625 18.9689 2.78308 16.9095 1.84201C14.85 0.900929 12.5635 0.571592 10.3221 0.893215C8.08081 1.21484 5.97914 2.17387 4.26741 3.6561C2.55568 5.13832 1.30603 7.08129 0.667271 9.25362C0.0285107 11.4259 0.0275587 13.7361 0.664528 15.9089C1.3015 18.0818 2.54955 20.0258 4.26005 21.5094C5.97056 22.9931 8.07143 23.9538 10.3125 24.2773V26.6498H6.375C5.92745 26.6498 5.49822 26.8276 5.18176 27.144C4.86529 27.4605 4.6875 27.8897 4.6875 28.3373C4.6875 28.7848 4.86529 29.2141 5.18176 29.5305C5.49822 29.847 5.92745 30.0248 6.375 30.0248H10.3125V32.8373C10.3125 33.2848 10.4903 33.7141 10.8068 34.0305C11.1232 34.347 11.5524 34.5248 12 34.5248C12.4476 34.5248 12.8768 34.347 13.1932 34.0305C13.5097 33.7141 13.6875 33.2848 13.6875 32.8373V30.0248H17.625C18.0726 30.0248 18.5018 29.847 18.8182 29.5305C19.1347 29.2141 19.3125 28.7848 19.3125 28.3373C19.3125 27.8897 19.1347 27.4605 18.8182 27.144C18.5018 26.8276 18.0726 26.6498 17.625 26.6498H13.6875V24.2773C16.4972 23.8682 19.066 22.4622 20.9249 20.316C22.7838 18.1698 23.8087 15.4266 23.8125 12.5873ZM3.5625 12.5873C3.5625 10.9185 4.05735 9.2872 4.98447 7.89966C5.9116 6.51212 7.22936 5.43067 8.77111 4.79205C10.3129 4.15344 12.0094 3.98635 13.6461 4.31191C15.2828 4.63747 16.7862 5.44107 17.9662 6.62107C19.1462 7.80108 19.9498 9.3045 20.2754 10.9412C20.6009 12.5779 20.4338 14.2744 19.7952 15.8162C19.1566 17.3579 18.0752 18.6757 16.6876 19.6028C15.3001 20.5299 13.6688 21.0248 12 21.0248C9.76301 21.0223 7.61838 20.1325 6.03659 18.5507C4.4548 16.9689 3.56504 14.8243 3.5625 12.5873Z";
 
+// PictogramChart
 export default function PictogramChart() {
   const id = "pictogram-xy";
   const { theme, colorTheme } = useTheme();
@@ -51,8 +52,8 @@ export default function PictogramChart() {
   useLayoutEffect(() => {
     // Root 객체 생성 및 테마 불러오기
     const root = am5.Root.new(id);
-    const { colorSet } = themes[colorTheme];
-    const colorList = colorSet(2);
+    const { primary } = themes[colorTheme];
+    const colorList = primary;
     const myTheme = themes.myThemeRule(root, colorList, theme);
     root.setThemes([am5themes_Animated.new(root), myTheme]);
 
@@ -83,10 +84,10 @@ export default function PictogramChart() {
         })
       );
 
+      axis.get("renderer").adapters.add("stroke", () => false);
       axis.get("renderer").labels.template.set("forceHidden", true);
       axis.get("renderer").grid.template.set("forceHidden", true);
       axis.data.setAll(generateCategories(data));
-
       return axis;
     };
 
@@ -96,22 +97,22 @@ export default function PictogramChart() {
           text,
           y: am5.p50,
           fontSize: 24,
-          paddingRight: 80,
+          paddingRight: 40,
           centerY: am5.p50,
         })
       );
     };
 
-    const xAxis = createAxis("x", rowSize);
-    const yAxis1 = createAxis("y", colSize);
-    const yAxis2 = createAxis("y", colSize);
+    const xAxis = createAxis("x", rowLength);
+    const yAxis1 = createAxis("y", colLength);
+    const yAxis2 = createAxis("y", colLength);
     createLabel(
       yAxis1,
-      `[${maleColor}]Male[/]\n[${maleColor}]${maleSize}[/][${placeholderColor}]/${fullSize}[/]`
+      `[${maleColor}]Male[/]\n[${maleColor}]${maleLength}[/][${placeholderColor}]/${fullLength}[/]`
     );
     createLabel(
       yAxis2,
-      `[${femaleColor}]Female[/]\n[${femaleColor}]${femaleSize}[/][${placeholderColor}]/${fullSize}[/]`
+      `[${femaleColor}]Female[/]\n[${femaleColor}]${femaleLength}[/][${placeholderColor}]/${fullLength}[/]`
     );
     chart.leftAxesContainer.set("layout", root.verticalLayout);
 
@@ -125,11 +126,11 @@ export default function PictogramChart() {
           name,
           xAxis,
           yAxis,
-          categoryYField: "y",
-          openCategoryYField: "y",
-          categoryXField: "x",
-          openCategoryXField: "x",
           clustered: false,
+          categoryXField: "x",
+          categoryYField: "y",
+          openCategoryXField: "x",
+          openCategoryYField: "y",
         })
       );
 
@@ -160,10 +161,10 @@ export default function PictogramChart() {
     };
 
     // series 생성
-    makeSeries("Male", generateData(fullSize), placeholderColor);
-    makeSeries("Male", generateData(maleSize), maleColor);
-    makeSeries("Female", generateData(fullSize), placeholderColor);
-    makeSeries("Female", generateData(femaleSize), femaleColor);
+    makeSeries("Male", generateData(fullLength), placeholderColor);
+    makeSeries("Male", generateData(maleLength), maleColor);
+    makeSeries("Female", generateData(fullLength), placeholderColor);
+    makeSeries("Female", generateData(femaleLength), femaleColor);
 
     // 애니메이션 적용
     chart.appear(1000, 100);
@@ -171,5 +172,5 @@ export default function PictogramChart() {
     return () => root.dispose();
   }, [theme, colorTheme]);
 
-  return <div id={id} style={{ width: "100%", height: "100%", minWidth:640 }} />;
+  return <div id={id} style={{ width: "100%", height: "100%" }} />;
 }

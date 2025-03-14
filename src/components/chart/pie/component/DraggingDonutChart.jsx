@@ -34,6 +34,7 @@ const data = [
   },
 ];
 
+// DragginDonutChart
 export default function DragginDonutChart() {
   const id = "draggin-donut";
   const { theme, colorTheme } = useTheme();
@@ -42,8 +43,8 @@ export default function DragginDonutChart() {
   useLayoutEffect(() => {
     // Root 객체 생성 및 테마 불러오기
     const root = am5.Root.new(id);
-    const { colorSet } = themes[colorTheme];
-    const colorList = ["#fff", ...colorSet(data.length)];
+    const { primary } = themes[colorTheme];
+    const colorList = ["#fff", ...primary];
     const myTheme = themes.myThemeRule(root, colorList, theme);
     const baseHeight = root.dom.clientHeight;
     setHeight(baseHeight);
@@ -52,7 +53,7 @@ export default function DragginDonutChart() {
     let mobileCheck = false;
     const responsive = am5themes_Responsive.newEmpty(root);
     responsive.addRule({
-      relevant: am5themes_Responsive.widthL,
+      relevant: (width) => width < baseHeight * 2,
       applying: () => {
         mobileCheck = true;
         setHeight(baseHeight * 2.2);
@@ -128,6 +129,7 @@ export default function DragginDonutChart() {
       // series 스타일
       series.labels.template.setAll({
         textType: "circular",
+        oversizedBehavior: "truncate",
         templateField: "dummyLabelSettings",
       });
 
@@ -136,7 +138,6 @@ export default function DragginDonutChart() {
       sliceTemplate.setAll({
         draggable: true,
         templateField: "settings",
-        stroke: 0,
       });
 
       return { series, sliceTemplate };
@@ -156,6 +157,7 @@ export default function DragginDonutChart() {
         centerX: am5.p50,
         centerY: am5.p50,
         height: am5.percent(60),
+        stroke: themes.chartVariables[theme].grid
       })
     );
 
@@ -165,10 +167,11 @@ export default function DragginDonutChart() {
         layer: 1,
         y: am5.p50,
         x: am5.p50,
+        centerY: 5,
         rotation: -90,
         isMeasured: false,
         textAlign: "center",
-        text: "Drag slices over the line",
+        text: "슬라이스를 드래그",
       })
     );
 
@@ -180,15 +183,15 @@ export default function DragginDonutChart() {
 
     // 드래그 앤 드롭 이벤트
     let previousDownSlice;
-    function handleDummy(series) {
-      var visibleCount = 0;
-      am5.array.each(series.dataItems, function (dataItem) {
+    const handleDummy = (series) => {
+      let visibleCount = 0;
+      am5.array.each(series.dataItems, (dataItem) => {
         if (!dataItem.isHidden()) visibleCount++;
       });
       // if all hidden, show dummy
       if (visibleCount == 0) series.dataItems[0].show();
       else series.dataItems[0].hide();
-    }
+    };
 
     const pointerDownEvent = (e) => {
       if (previousDownSlice) previousDownSlice.set("layer", 0);
@@ -228,15 +231,29 @@ export default function DragginDonutChart() {
           easing: am5.ease.out(am5.ease.cubic),
         });
       }
+      setTimeout(() => {
+        [prev, next].map((series) => {
+          series.labels.template.adapters.add("width", (_, target) => {
+            return themes.seriesSetMaxWidth(root, target);
+          });
+        });
+      }, 500);
     };
 
     sliceTemplate1.events.on("pointerdown", pointerDownEvent);
     sliceTemplate2.events.on("pointerdown", pointerDownEvent);
-    sliceTemplate1.events.on("pointerup", function (e) {
+    sliceTemplate1.events.on("pointerup", (e) => {
       pointerUpEvent(e, series1, series2);
     });
-    sliceTemplate2.events.on("pointerup", function (e) {
+    sliceTemplate2.events.on("pointerup", (e) => {
       pointerUpEvent(e, series2, series1);
+    });
+
+    // 드롭 이벤트 체크
+    [series1, series2].map((series) => {
+      series.labels.template.adapters.add("width", (_, target) => {
+        return themes.seriesSetMaxWidth(root, target);
+      });
     });
 
     // 데이터 적용
@@ -245,7 +262,7 @@ export default function DragginDonutChart() {
 
     // 숨기 보임 처리 초기화
     series1.dataItems[0].hide(0);
-    am5.array.each(series2.dataItems, function (dataItem) {
+    am5.array.each(series2.dataItems, (dataItem) => {
       if (dataItem.get("category") != "Dummy") {
         dataItem.hide(0);
       }

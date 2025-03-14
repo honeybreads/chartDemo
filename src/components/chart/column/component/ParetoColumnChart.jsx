@@ -38,9 +38,10 @@ const data = [
   {
     category: "Spain",
     value: 711,
-  }
+  },
 ];
 
+// ParetoColumnChart
 export default function ParetoColumnChart() {
   const id = "pareto-column";
   const { theme, colorTheme } = useTheme();
@@ -48,22 +49,18 @@ export default function ParetoColumnChart() {
   useLayoutEffect(() => {
     // Root 객체 생성 및 테마 불러오기
     const root = am5.Root.new(id);
-    const { colorSet, lineColors } = themes[colorTheme];
-    const colorList = colorSet(data.length);
+    const { primary, lineColors } = themes[colorTheme];
+    const colorList = primary;
     const myTheme = themes.myThemeRule(root, colorList, theme);
     root.setThemes([am5themes_Animated.new(root), myTheme]);
 
-    // 카테고리, 값 필드 지정
-    const categoryField = Object.keys(data[0])[0];
-    const valueField = Object.keys(data[0])[1];
-
     // 누적 값 생성
     const calculateParetoData = () => {
-      let total = data.reduce((sum, item) => sum + item[valueField], 0);
+      let total = data.reduce((sum, item) => sum + item.value, 0);
       let cumulative = 0;
       data.forEach((item) => {
-        cumulative += item[valueField];
-        item.pareto = (cumulative / total) * 100; // 누적 비율 계산
+        cumulative += item.value;
+        item.pareto = (cumulative / total) * 100;
       });
     };
     calculateParetoData();
@@ -81,48 +78,48 @@ export default function ParetoColumnChart() {
       })
     );
 
-    // x,y축 생성
-    const xRenderer = am5xy.AxisRendererX.new(root, {});
-    xRenderer.grid.template.setAll({ location: 1 });
+    // x,y,pareto축 생성
     const xAxis = chart.xAxes.push(
       am5xy.CategoryAxis.new(root, {
-        categoryField,
-        renderer: xRenderer,
+        categoryField: "category",
+        renderer: am5xy.AxisRendererX.new(root, { minGridDistance: 20 }),
       })
     );
 
     const yAxis = chart.yAxes.push(
       am5xy.ValueAxis.new(root, {
-        renderer: am5xy.AxisRendererY.new(root, {
-          strokeOpacity: 0.1,
-        }),
+        renderer: am5xy.AxisRendererY.new(root, { minGridDistance: 40 }),
       })
     );
-
-    // pareto축 생성
-    const paretoAxisRenderer = am5xy.AxisRendererY.new(root, {
-      opposite: true,
-    });
 
     const paretoAxis = chart.yAxes.push(
       am5xy.ValueAxis.new(root, {
         min: 0,
         max: 100,
         strictMinMax: true,
-        renderer: paretoAxisRenderer,
+        renderer: am5xy.AxisRendererY.new(root, {
+          opposite: true,
+          minGridDistance: 100,
+        }),
       })
     );
 
+    xAxis.get("renderer").grid.template.setAll({ location: 1 });
+    xAxis.get("renderer").labels.template.setAll({ textAlign: "center" });
+    xAxis.get("renderer").labels.template.adapters.add("width", (_, target) => {
+      return themes.axisLabelSetWidth(xAxis, target);
+    });
+
     paretoAxis.set("numberFormat", "#'%");
-    paretoAxisRenderer.grid.template.set("forceHidden", true);
+    paretoAxis.get("renderer").grid.template.set("forceHidden", true);
 
     // series(바 그래프) 생성
     const series = chart.series.push(
       am5xy.ColumnSeries.new(root, {
-        xAxis: xAxis,
-        yAxis: yAxis,
-        valueYField: valueField,
-        categoryXField: categoryField,
+        xAxis,
+        yAxis,
+        valueYField: "value",
+        categoryXField: "category",
       })
     );
 
@@ -131,19 +128,19 @@ export default function ParetoColumnChart() {
       tooltipText: "{categoryX}: {valueY}",
     });
 
-    series.columns.template.adapters.add("fill", function (_, target) {
-      return chart.get("colors").getIndex(series.columns.indexOf(target));
-    });
+    series.columns.template.adapters.add("fill", (_, target) =>
+      chart.get("colors").getIndex(series.columns.indexOf(target))
+    );
 
     // pareto series(라인 그래프) 생성
     const paretoSeries = chart.series.push(
       am5xy.LineSeries.new(root, {
-        xAxis: xAxis,
+        xAxis,
         yAxis: paretoAxis,
-        maskBullets: true, // hide
+        maskBullets: true,
         valueYField: "pareto",
-        categoryXField: categoryField,
-        stroke: lineColors.lineStroke[0],
+        categoryXField: "category",
+        stroke: lineColors.lineStroke,
       })
     );
 
@@ -151,7 +148,7 @@ export default function ParetoColumnChart() {
       return themes.createBulletSpriet(
         root,
         lineColors.bulletFill,
-        lineColors.lineStroke[0]
+        lineColors.lineStroke
       );
     });
 

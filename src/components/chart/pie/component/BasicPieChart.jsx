@@ -17,6 +17,7 @@ const data = [
   { numbers: "Seven", value: 1 },
 ];
 
+// BasicPieChart
 export default function BasicPieChart() {
   const id = "basic-pie";
   const { theme, colorTheme } = useTheme();
@@ -24,8 +25,8 @@ export default function BasicPieChart() {
   useLayoutEffect(() => {
     // Root 객체 생성 및 테마 불러오기
     const root = am5.Root.new(id);
-    const { colorSet } = themes[colorTheme];
-    const colorList = colorSet(data.length);
+    const { primary } = themes[colorTheme];
+    const colorList = primary;
     const myTheme = themes.myThemeRule(root, colorList, theme);
 
     // 개별 반응형 설정
@@ -79,8 +80,8 @@ export default function BasicPieChart() {
           cornerRadiusBL: 4,
           shadowBlur: 4,
           fillOpacity: 1,
-          fill: themes.modeColor[theme].bg,
-          shadowColor: am5.color(themes.modeColor[theme].bg),
+          fill: themes.chartVariables[theme].bg,
+          shadowColor: am5.color(themes.chartVariables[theme].bg),
         }),
       })
     );

@@ -14,6 +14,7 @@ const data = [
   { min: 0, max: 140 },
 ];
 
+// MultiGaugeChart
 export default function MultiGaugeChart() {
   const id = "multi-gauge";
   const { theme, colorTheme } = useTheme();
@@ -21,8 +22,8 @@ export default function MultiGaugeChart() {
   useLayoutEffect(() => {
     // Root 객체 생성 및 테마 적용
     const root = am5.Root.new(id);
-    const { colorSet } = themes[colorTheme];
-    const colorList = colorSet(data.length);
+    const { primary } = themes[colorTheme];
+    const colorList = primary;
     const myTheme = themes.myThemeRule(root, colorList, theme);
     root.setThemes([am5themes_Animated.new(root), myTheme]);
 
@@ -39,7 +40,7 @@ export default function MultiGaugeChart() {
 
     // Axis 생성 함수
     const createAxis = (min, max, start, end, color) => {
-      var axisRenderer = am5radar.AxisRendererCircular.new(root, {
+      const axisRenderer = am5radar.AxisRendererCircular.new(root, {
         stroke: color,
         endAngle: end,
         startAngle: start,
@@ -140,7 +141,7 @@ export default function MultiGaugeChart() {
 
     // 애니메이션 적용
     allHands.map((hand) => animateChart(hand));
-    setInterval(function () {
+    setInterval(() => {
       allHands.map((hand) => animateChart(hand));
     }, 3000);
 

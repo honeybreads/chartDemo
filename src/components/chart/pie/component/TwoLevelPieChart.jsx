@@ -13,6 +13,7 @@ const data = [
   { category: "Remaining", value: 30, type: "unused" },
 ];
 
+// TwoLevelPieChart
 export default function TwoLevelPieChart() {
   const id = "twolevel-pie";
   const { theme, colorTheme } = useTheme();
@@ -20,8 +21,8 @@ export default function TwoLevelPieChart() {
   useLayoutEffect(() => {
     // Root 객체 생성 및 테마 불러오기
     const root = am5.Root.new(id);
-    const { colorSet } = themes[colorTheme];
-    const colorList = colorSet(data.length);
+    const { primary } = themes[colorTheme];
+    const colorList = primary;
     const myTheme = themes.myThemeRule(root, colorList, theme);
 
     // 테마 적용
@@ -74,19 +75,29 @@ export default function TwoLevelPieChart() {
     series1.slices.template.setAll({
       stroke: 0,
       cornerRadius: 0,
+      toggleKey: "none",
       templateField: "settings",
     });
-    series1.slices.template.set("toggleKey", "none");
     series1.ticks.template.setAll({ forceHidden: true });
     series1.slices.template.states.create("hover", { scale: 1 });
     series1.labels.template.setAll({
       textType: "circular",
-      fill: am5.color("#fff"),
     });
 
-    series1.labels.template.adapters.add("radius", function (_, target) {
-      var dataItem = target.dataItem;
-      var slice = dataItem.get("slice");
+    series1.labels.template.adapters.add("fill", (_, target) => {
+      const fill = target.dataItem?._settings.fill.hex;
+      return fill
+        ? am5.Color.alternative(
+            am5.color(fill),
+            am5.color("#FFF"),
+            am5.color("#000")
+          )
+        : am5.color("#222");
+    });
+
+    series1.labels.template.adapters.add("radius", (_, target) => {
+      const dataItem = target.dataItem;
+      const slice = dataItem.get("slice");
       return -(slice.get("radius") - slice.get("innerRadius")) / 2 - 6;
     });
 

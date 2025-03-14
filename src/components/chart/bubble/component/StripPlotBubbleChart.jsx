@@ -54,6 +54,7 @@ const data = categories.flatMap((category) =>
   }))
 );
 
+// StripPlotBubbleChart
 export default function StripPlotBubbleChart() {
   const id = "stripplot-bubble";
   const { theme, colorTheme } = useTheme();
@@ -61,8 +62,8 @@ export default function StripPlotBubbleChart() {
   useLayoutEffect(() => {
     // Root 객체 생성 및 테마 불러오기
     const root = am5.Root.new(id);
-    const { colorSet } = themes[colorTheme];
-    const colorList = colorSet(0);
+    const { primary } = themes[colorTheme];
+    const colorList = primary;
     const myTheme = themes.myThemeRule(root, colorList, theme);
     root.setThemes([am5themes_Animated.new(root), myTheme]);
 
@@ -123,8 +124,8 @@ export default function StripPlotBubbleChart() {
     // series 생성
     const series = chart.series.push(
       am5xy.LineSeries.new(root, {
-        xAxis: xAxis,
-        yAxis: yAxis,
+        xAxis,
+        yAxis,
         baseAxis: yAxis,
         valueField: "value",
         valueXField: "position",
@@ -142,12 +143,12 @@ export default function StripPlotBubbleChart() {
         sprite: am5.Circle.new(
           root,
           {
-            tooltipText: "{valueX}: [bold]{value}[/]",
             radius: 5,
-            stroke: am5.color(0xffffff),
             strokeWidth: 1,
             fillOpacity: 0.8,
+            stroke: am5.color(0xffffff),
             templateField: "bulletSettings",
+            tooltipText: "{valueX}: [bold]{value}[/]",
           },
           circleTemplate
         ),
@@ -159,8 +160,8 @@ export default function StripPlotBubbleChart() {
         target: circleTemplate,
         min: 5,
         max: 20,
-        dataField: "value",
         key: "radius",
+        dataField: "value",
       },
     ]);
 

@@ -29,8 +29,11 @@ export default function Intro() {
         </h2>
         <p>
           본 데모 페이지는 <strong>amCharts 5</strong>를 기반으로 다양한 차트를
-          각각 프로젝트 디자인에 맞춰 빠르고 일관성 있게 구현하기 위하여 만들어졌습니다.<br/>   
-          <code>amCharts</code>에 대해 자세한 내용은 공식 문서를 참고 부탁드립니다.
+          각각 프로젝트 디자인에 맞춰 빠르고 일관성 있게 구현하기 위하여
+          만들어졌습니다.
+          <br />
+          <code>amCharts</code>에 대해 자세한 내용은 공식 문서를 참고
+          부탁드립니다.
         </p>
 
         {/* amCharts 5 설치 */}
@@ -39,9 +42,13 @@ export default function Intro() {
           ref={(el) => (articleRef.current.install = el)}
         >
           <h3 className="intro-subtitle">1. amCharts 5 설치</h3>
-          <p>아래 명령어로 amCharts 5를 프로젝트에 설치합니다.</p>
-          <small>* 일부 차트는 추가 라이브러리 설치가 필요할 수 있습니다.</small>
-          <CodeMirror {...createCodeMirrorConfig("npm install @amcharts/amcharts5")} />
+          <p>아래 명령어로 amCharts를 프로젝트에 설치합니다.</p>
+          <small>
+            * 일부 차트는 추가 라이브러리 설치가 필요할 수 있습니다.
+          </small>
+          <CodeMirror
+            {...createCodeMirrorConfig("npm install @amcharts/amcharts5")}
+          />
         </article>
 
         {/* 커스텀 테마 설정 */}
@@ -54,9 +61,8 @@ export default function Intro() {
             amCharts 5의 스타일을 통일하기 위해 <code>chartTheme.js</code>에서
             공통 설정을 관리합니다. 데모 프로젝트의 아래 경로 파일을 복사합니다.
           </p>
-          <CodeMirror {...createCodeMirrorConfig("src/assets/chartTheme.js // 데모 파일 경로")} />
-
-          <p>이후 폰트 스타일을 적용하기 위해 아래 설정을 수정합니다.</p>
+          <CodeMirror {...createCodeMirrorConfig("src/assets/chartTheme.js")} />
+          <p>이후 차트의 폰트 스타일을 적용하기 위해 아래 설정을 수정합니다.</p>
           <p>
             파일 내부 <code>Label</code> 공통 설정의{" "}
             <code>fontFamily, fontWeight</code>를{" "}
@@ -67,14 +73,13 @@ export default function Intro() {
           </p>
           <CodeMirror
             {...createCodeMirrorConfig(`...
-export const myThemeRule = (root, colorList, theme) => {
+const themeCommon = (myTheme, theme) => {
 ...
-  // Label 공통 스타일
   myTheme.rule("Label").setAll({
     fontSize: 11,
     fontWeight: "300",
     fontFamily: "Pretendard-Regular",
-    fill: modeColor[theme].base,
+    fill: chartVariables[theme].base,
   });
 ...
 }`)}
@@ -88,38 +93,51 @@ export const myThemeRule = (root, colorList, theme) => {
         >
           <h3 className="intro-subtitle">3. 차트 사용</h3>
           <p>
-            본 페이지에서 원하는 차트의 코드를 복사한 후 일부 항목을 수정합니다.
+            페이지에서 원하는 차트를 확인하고 데모 프로젝트의{" "}
+            <strong>
+              <code>src/components/chart</code>
+            </strong>{" "}
+            경로에서 동일한 이름의 파일을 복사한 후 일부 항목을 수정합니다.
           </p>
           <p>
             <strong>차트 테마</strong> 및 <strong>컬러/모드 테마</strong>를
             가져오는 경로를 프로젝트 환경에 맞게 수정해야 합니다.
           </p>
           <p className="my-3">
-            데모에서는 <code>useTheme</code> 훅을 활용하여 테마 설정을 관리합니다.
+            * 데모에서는 <code>useTheme</code> 훅을 활용하여 테마 설정을
+            관리하고 있으며 이부분은 프로젝트에 맞춰 변경합니다.
             <br />
-            <strong><code>theme</code></strong>: 라이트/다크 모드  
-            <strong><code>colorTheme</code></strong>: 차트 색상 테마
+            <strong>
+              <code>theme</code>
+            </strong>
+            : 라이트/다크 모드
+            <strong>
+              <code>colorTheme</code>
+            </strong>
+            : 차트 색상 테마
           </p>
           <CodeMirror
             {...createCodeMirrorConfig(`...
 import * as themes from '@/assets/chartTheme'
 import { useTheme } from '@/components/Theme'
 ...
-function Chart() {
+export default function BasicBarChart() {
+  const id = "basic-bar";
   const { theme, colorTheme } = useTheme();
   ...
 }`)}
           />
-
           <p>
-            프로젝트에서 동적 테마 관리가 필요하지 않다면, 아래와 같이 특정 값으로 고정할 수 있습니다.
+            프로젝트에서 동적 테마 관리가 필요하지 않다면, 아래와 같이 특정
+            값으로 고정할 수 있습니다.
           </p>
           <CodeMirror
             {...createCodeMirrorConfig(`...
-function Chart() {
+export default function BasicBarChart() {
+  const id = "basic-bar";
   // const { theme, colorTheme } = useTheme();
   const theme = "light"; // light | dark
-  const colorTheme = "basicTheme"; // basicTheme | purpleTheme | colorfullTheme
+  const colorTheme = "basicTheme"; // basicTheme | violetTheme | pastelTheme |...
   ...
 }`)}
           />

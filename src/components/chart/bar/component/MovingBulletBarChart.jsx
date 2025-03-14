@@ -51,6 +51,7 @@ const data = [
   },
 ];
 
+// MovingBulletBarChart
 export default function MovingBulletBarChart() {
   const id = "movingbullet-bar";
   const { theme, colorTheme } = useTheme();
@@ -58,24 +59,21 @@ export default function MovingBulletBarChart() {
   useLayoutEffect(() => {
     // Root 객체 생성 및 테마 불러오기
     const root = am5.Root.new(id);
-    const { colorSet } = themes[colorTheme];
-    const colorList = colorSet(data.length);
+    const { primary } = themes[colorTheme];
+    const colorList = primary;
     const myTheme = themes.myThemeRule(root, colorList, theme);
     root.setThemes([am5themes_Animated.new(root), myTheme]);
-
-    // 카테고리, 값 필드
-    const categoryField = Object.keys(data[0])[0];
-    const valueField = Object.keys(data[0])[1];
 
     // XYChart 생성
     const chart = root.container.children.push(
       am5xy.XYChart.new(root, {
         panX: false,
         panY: false,
-        paddingLeft: 0,
-        paddingRight: 20,
         wheelX: "none",
         wheelY: "none",
+        paddingTop: 20,
+        paddingLeft: 0,
+        paddingRight: 20,
       })
     );
 
@@ -99,46 +97,46 @@ export default function MovingBulletBarChart() {
         }),
       })
     );
-
+    yAxis.get("renderer").adapters.add("stroke", () => false);
     yAxis.get("renderer").grid.template.set("visible", false);
 
     // series 생성
     const series = chart.series.push(
       am5xy.ColumnSeries.new(root, {
+        xAxis,
+        yAxis,
         name: "Income",
-        xAxis: xAxis,
-        yAxis: yAxis,
         maskBullets: false,
-        valueXField: valueField,
-        categoryYField: categoryField,
+        valueXField: "steps",
+        categoryYField: "name",
         calculateAggregates: true,
         sequencedInterpolation: true,
         tooltip: am5.Tooltip.new(root, {
-          dy: -20,
+          dy: -30,
           labelText: "{valueX}",
           pointerOrientation: "vertical",
         }),
       })
     );
 
+    series.get("tooltip").adapters.add("stateAnimationDuration", () => 100);
     series.columns.template.setAll({
       maxHeight: 50,
       fillOpacity: 0.8,
-      strokeOpacity: 0,
-      cornerRadiusBR: 10,
-      cornerRadiusTR: 10,
       cornerRadiusBL: 0,
       cornerRadiusTL: 0,
+      cornerRadiusBR: 10,
+      cornerRadiusTR: 10,
     });
 
-    series.columns.template.adapters.add("fill", function (_, target) {
-      return chart.get("colors").getIndex(series.columns.indexOf(target));
-    });
+    series.columns.template.adapters.add("fill", (_, target) =>
+      chart.get("colors").getIndex(series.columns.indexOf(target))
+    );
 
     // 이미지 bullet 생성
-    series.bullets.push((root, _, dataItem) => {
+    series.bullets.push((root, cols, dataItem) => {
       const index = data.findIndex(
-        (item) => item[categoryField] === dataItem.dataContext[categoryField]
+        (item) => item.name === dataItem.dataContext.name
       );
 
       const bulletContainer = am5.Container.new(root, {});
@@ -170,6 +168,7 @@ export default function MovingBulletBarChart() {
         sprite: bulletContainer,
       });
     });
+
     // 마우스 이벤트 함수
     let currentlyHovered = null;
     const handleHover = (dataItem) => {
@@ -188,7 +187,7 @@ export default function MovingBulletBarChart() {
 
     const handleOut = () => {
       if (currentlyHovered) {
-        var bullet = currentlyHovered.bullets[0];
+        const bullet = currentlyHovered.bullets[0];
         bullet.animate({
           key: "locationX",
           to: 0,

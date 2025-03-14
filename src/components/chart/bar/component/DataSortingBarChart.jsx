@@ -47,12 +47,9 @@ const data = [
     category: "South Korea",
     value: 443,
   },
-  {
-    category: "Canada",
-    value: 441,
-  },
 ];
 
+// DataSortingBarChart
 export default function DataSortingBarChart() {
   const id = "datasorting-bar";
   const { theme, colorTheme } = useTheme();
@@ -60,14 +57,10 @@ export default function DataSortingBarChart() {
   useLayoutEffect(() => {
     // Root 객체 생성 및 테마 불러오기
     const root = am5.Root.new(id);
-    const { colorSet } = themes[colorTheme];
-    const colorList = colorSet(data.length);
+    const { primary } = themes[colorTheme];
+    const colorList = primary;
     const myTheme = themes.myThemeRule(root, colorList, theme);
     root.setThemes([am5themes_Animated.new(root), myTheme]);
-
-    // 카테고리, 값 필드 지정
-    const categoryField = Object.keys(data[0])[0];
-    const valueField = Object.keys(data[0])[1];
 
     // XYChart 생성
     const chart = root.container.children.push(
@@ -82,16 +75,11 @@ export default function DataSortingBarChart() {
     chart.zoomOutButton.set("forceHidden", true);
 
     // x,y축 생성
-    const xRenderer = am5xy.AxisRendererX.new(root, { minGridDistance: 40 });
-    xRenderer.labels.template.setAll({
-      paddingRight: 10,
-    });
-
     const xAxis = chart.xAxes.push(
       am5xy.ValueAxis.new(root, {
         min: 0,
         maxDeviation: 0.3,
-        renderer: xRenderer,
+        renderer: am5xy.AxisRendererX.new(root, { minGridDistance: 40 }),
       })
     );
 
@@ -99,33 +87,31 @@ export default function DataSortingBarChart() {
       am5xy.CategoryAxis.new(root, {
         min: 0,
         maxDeviation: 0.3,
-        categoryField,
-        renderer: am5xy.AxisRendererY.new(root, {
-          minGridDistance: 30,
-        }),
+        categoryField: "category",
+        renderer: am5xy.AxisRendererY.new(root, { minGridDistance: 30 }),
       })
     );
-    // yAxis.get("renderer").grid.template.set("visible", false)
 
     // series 생성
     const series = chart.series.push(
       am5xy.ColumnSeries.new(root, {
         xAxis,
         yAxis,
-        valueXField: valueField,
-        categoryYField: categoryField,
+        valueXField: "value",
+        categoryYField: "category",
       })
     );
 
     series.columns.template.setAll({
       cornerRadiusBL: 0,
       cornerRadiusTL: 0,
-      cornerRadiusTR: 2,
-      cornerRadiusBR: 2,
+      cornerRadiusTR: themes.chartVariables.default.barRadius,
+      cornerRadiusBR: themes.chartVariables.default.barRadius,
     });
-    series.columns.template.adapters.add("fill", function (_, target) {
-      return chart.get("colors").getIndex(series.columns.indexOf(target));
-    });
+
+    series.columns.template.adapters.add("fill", (_, target) =>
+      chart.get("colors").getIndex(series.columns.indexOf(target))
+    );
 
     // 특정 카테고리에 대한 Series 데이터 아이템 가져오기
     const getSeriesItem = (category) => {
@@ -134,7 +120,7 @@ export default function DataSortingBarChart() {
       );
     };
 
-    // x축 데이터 정렬 함수
+    // 축 데이터 정렬 함수
     const sortCategoryAxis = () => {
       series.dataItems.sort((a, b) => a.get("valueX") - b.get("valueX"));
       am5.array.each(yAxis.dataItems, (dataItem) => {
@@ -174,10 +160,7 @@ export default function DataSortingBarChart() {
       });
       sortCategoryAxis();
     };
-
-    const DataSort = () => {
-      return data.sort((a, b) => a.value - b.value);
-    };
+    const DataSort = () => data.sort((a, b) => a.value - b.value);
 
     // 데이터 적용
     DataSort();

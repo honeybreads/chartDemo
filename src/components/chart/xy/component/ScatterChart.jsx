@@ -81,6 +81,7 @@ const data = [
   },
 ];
 
+// ScatterChart
 export default function ScatterChart() {
   const id = "scatter-xy";
   const { theme, colorTheme } = useTheme();
@@ -88,8 +89,8 @@ export default function ScatterChart() {
   useLayoutEffect(() => {
     // Root 객체 생성 및 테마 불러오기
     const root = am5.Root.new(id);
-    const { colorSet } = themes[colorTheme];
-    const colorList = colorSet(2);
+    const { primary } = themes[colorTheme];
+    const colorList = primary;
     const myTheme = themes.myThemeRule(root, colorList, theme);
     root.setThemes([am5themes_Animated.new(root), myTheme]);
 
@@ -101,7 +102,7 @@ export default function ScatterChart() {
         wheelY: "zoomXY",
         pinchZoomX: true,
         pinchZoomY: true,
-        paddingLeft:0,
+        paddingBottom: 8,
       })
     );
 
@@ -141,7 +142,7 @@ export default function ScatterChart() {
       );
 
       series.bullets.push(() => {
-        var graphics = am5.Triangle.new(root, {
+        const graphics = am5.Triangle.new(root, {
           fill: series.get("fill"),
           width: 15,
           height: 13,

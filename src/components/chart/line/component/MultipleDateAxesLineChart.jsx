@@ -10,7 +10,7 @@ const data0 = [];
 const data1 = [];
 const createData = (data, priceValue, date) => {
   let price = priceValue;
-  for (var i = 0; i < 90; i++) {
+  for (let i = 0; i < 90; i++) {
     price += Math.round((Math.random() < 0.5 ? 1 : -1) * Math.random() * 100);
     data.push({ date: new Date(2024, date, i).getTime(), price: price });
   }
@@ -26,8 +26,8 @@ export default function MultipleDateAxesLineChart() {
   useLayoutEffect(() => {
     // Root 객체 생성 및 테마 불러오기
     const root = am5.Root.new(id);
-    const { lineColors } = themes[colorTheme];
-    const colorList = lineColors.lineStroke;
+    const { primary } = themes[colorTheme];
+    const colorList = primary;
     const myTheme = themes.myThemeRule(root, colorList, theme);
     root.setThemes([am5themes_Animated.new(root), myTheme]);
 
@@ -54,10 +54,10 @@ export default function MultipleDateAxesLineChart() {
     const createXaxis = () => {
       const xAxis = chart.xAxes.push(
         am5xy.DateAxis.new(root, {
-          baseInterval: { timeUnit: "day", count: 1 },
-          renderer: am5xy.AxisRendererX.new(root, {}),
           tooltip: am5.Tooltip.new(root, {}),
           tooltipDateFormat: "yyyy-MM-dd",
+          renderer: am5xy.AxisRendererX.new(root, {}),
+          baseInterval: { timeUnit: "day", count: 1 },
         })
       );
 
@@ -77,9 +77,9 @@ export default function MultipleDateAxesLineChart() {
     const createSeries = (xAxis) => {
       return chart.series.push(
         am5xy.LineSeries.new(root, {
-          name: "Series",
           xAxis,
           yAxis,
+          name: "Series",
           valueYField: "price",
           valueXField: "date",
           tooltip: am5.Tooltip.new(root, {
@@ -103,7 +103,7 @@ export default function MultipleDateAxesLineChart() {
 
     scrollbar
       .get("background")
-      .setAll({ fill: themes.modeColor[theme].shadow });
+      .setAll({ fill: themes.chartVariables[theme].shadow });
 
     // scrollbar x,y축 생성
     const sbDateAxis = scrollbar.chart.xAxes.push(

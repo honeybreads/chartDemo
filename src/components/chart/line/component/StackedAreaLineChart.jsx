@@ -133,8 +133,8 @@ export default function StackedAreaLineChart() {
   useLayoutEffect(() => {
     // Root 객체 생성 및 테마 불러오기
     const root = am5.Root.new(id);
-    const { lineColors } = themes[colorTheme];
-    const colorList = lineColors.lineStroke;
+    const { primary } = themes[colorTheme];
+    const colorList = primary;
     const myTheme = themes.myThemeRule(root, colorList, theme);
     root.setThemes([am5themes_Animated.new(root), myTheme]);
 
@@ -182,9 +182,9 @@ export default function StackedAreaLineChart() {
     const createSeries = ( field) => {
       const series = chart.series.push(
         am5xy.LineSeries.new(root, {
-          name:field,
           xAxis,
           yAxis,
+          name:field,
           stacked: true,
           valueYField: field,
           categoryXField: "year",
@@ -226,8 +226,8 @@ export default function StackedAreaLineChart() {
     };
 
     // range 생성
-    createRange("2001", "2003", "Fines for speeding increased");
-    createRange("2007", "2007", "Motorcycle fee introduced");
+    createRange("2001", "2003", "과속에 대한 벌금 증가");
+    createRange("2007", "2007", "오토바이 요금 도입");
 
     // 데이터 적용
     xAxis.data.setAll(data);

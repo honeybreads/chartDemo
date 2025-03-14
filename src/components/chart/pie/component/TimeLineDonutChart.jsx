@@ -23,14 +23,15 @@ const data = {
     { category: "Five", value: 7.5 },
   ],
   2002: [
-    { category: "One", value: 6.6 },
-    { category: "Two", value: 0.6 },
-    { category: "Three", value: 23.2 },
-    { category: "Four", value: 2.2 },
-    { category: "Five", value: 4.5 },
+    { category: "One", value: 3.2 },
+    { category: "Two", value: 1.2 },
+    { category: "Three", value: 21.2 },
+    { category: "Four", value: 5.2 },
+    { category: "Five", value: 3.5 },
   ],
 };
 
+// TimelineDonutChart
 export default function TimelineDonutChart() {
   const id = "timeline-donut";
   const { theme, colorTheme } = useTheme();
@@ -38,30 +39,28 @@ export default function TimelineDonutChart() {
   useLayoutEffect(() => {
     // Root 객체 생성 및 테마 불러오기
     const root = am5.Root.new(id);
-    const { colorSet } = themes[colorTheme];
-    const colorList = colorSet(data[Object.keys(data)[0]].length);
+    const { primary } = themes[colorTheme];
+    const colorList = primary;
     const myTheme = themes.myThemeRule(root, colorList, theme);
+    const responsive = am5themes_Responsive.newEmpty(root);
 
     // 반응형 정의
-    const responsive = am5themes_Responsive.newEmpty(root);
     responsive.addRule({
       relevant: am5themes_Responsive.widthL,
       applying: () => {
-        series.labels.template.setAll({ textType: "circular" });
-      },
-      removing: () => {
         series.labels.template.setAll({ textType: "adjusted", radius: 10 });
       },
+      removing: () => {},
     });
 
-    // 테마 적용
+    // 테마 및 반응형 적용
     root.setThemes([am5themes_Animated.new(root), myTheme, responsive]);
 
     // PieChart 생성
     const chart = root.container.children.push(
       am5percent.PieChart.new(root, {
-        innerRadius: am5.percent(60),
         layout: root.verticalLayout,
+        innerRadius: am5.percent(60),
       })
     );
 

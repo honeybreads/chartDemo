@@ -143,6 +143,7 @@ const data = {
   ],
 };
 
+// RiskHeatMapChart
 export default function RiskHeatMapChart() {
   const id = "risk-heatmap";
   const { theme } = useTheme();
@@ -166,6 +167,7 @@ export default function RiskHeatMapChart() {
         wheelY: "none",
         paddingLeft: 0,
         paddingRight: 0,
+        paddingBottom: 0,
         layout: root.verticalLayout,
       })
     );
@@ -201,14 +203,14 @@ export default function RiskHeatMapChart() {
     // series 생성
     const series = chart.series.push(
       am5xy.ColumnSeries.new(root, {
-        xAxis: xAxis,
-        yAxis: yAxis,
+        xAxis,
+        yAxis,
         clustered: false,
+        valueField: "value",
         categoryXField: "x",
         categoryYField: "y",
-        valueField: "value",
         calculateAggregates: true,
-        stroke: themes.modeColor[theme].line,
+        stroke: themes.chartVariables[theme].line,
       })
     );
 
@@ -219,6 +221,7 @@ export default function RiskHeatMapChart() {
       cornerRadiusTR: 5,
       cornerRadiusBL: 5,
       cornerRadiusBR: 5,
+      tooltipY: 20,
       tooltipText: "{value}",
       width: am5.percent(100),
       height: am5.percent(100),
@@ -236,7 +239,7 @@ export default function RiskHeatMapChart() {
       },
     ]);
 
-    series.bullets.push(function () {
+    series.bullets.push(() => {
       return am5.Bullet.new(root, {
         sprite: am5.Circle.new(
           root,
@@ -250,15 +253,15 @@ export default function RiskHeatMapChart() {
       });
     });
 
-    series.bullets.push(function () {
+    series.bullets.push(() => {
       return am5.Bullet.new(root, {
         sprite: am5.Label.new(root, {
-          fill: am5.color(0xffffff),
-          populateText: true,
-          centerX: am5.p50,
-          centerY: am5.p50,
           fontSize: 10,
           text: "{value}",
+          centerX: am5.p50,
+          centerY: am5.p50,
+          populateText: true,
+          fill: am5.color(0xffffff),
         }),
       });
     });

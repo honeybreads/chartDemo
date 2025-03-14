@@ -28,8 +28,8 @@ export default function HorizontalLollipopChart() {
   useLayoutEffect(() => {
     // Root 객체 생성 및 테마 불러오기
     const root = am5.Root.new(id);
-    const { colorSet } = themes[colorTheme];
-    const colorList = colorSet(data.length);
+    const { primary } = themes[colorTheme];
+    const colorList = primary;
     const myTheme = themes.myThemeRule(root, colorList, theme);
     root.setThemes([am5themes_Animated.new(root), myTheme]);
 
@@ -38,6 +38,7 @@ export default function HorizontalLollipopChart() {
       am5xy.XYChart.new(root, {
         panX: true,
         panY: true,
+        paddingTop:20,
         paddingLeft: 0,
         wheelX: "panX",
         wheelY: "zoomX",
@@ -47,13 +48,13 @@ export default function HorizontalLollipopChart() {
 
     // 커서 추가
     const cursor = chart.set("cursor", am5xy.XYCursor.new(root, {}));
-    cursor.lineY.set("visible", false);
+    cursor.lineX.set("visible", false);
+    cursor.lineY.set("stroke",themes.chartVariables[theme].base);
 
     // X,Y축 생성
     const xAxis = chart.xAxes.push(
       am5xy.ValueAxis.new(root, {
         maxDeviation: 0.3,
-        tooltip: am5.Tooltip.new(root, {}),
         renderer: am5xy.AxisRendererX.new(root, {
           minGridDistance: 50,
           minorGridEnabled: true,
@@ -74,7 +75,7 @@ export default function HorizontalLollipopChart() {
     xAxis.get("renderer").grid.template.setAll({
       visible: false,
     });
-    
+
     // series 생성
     const series = chart.series.push(
       am5xy.ColumnSeries.new(root, {
@@ -84,11 +85,12 @@ export default function HorizontalLollipopChart() {
         categoryYField: "category",
         adjustBulletPosition: false,
         tooltip: am5.Tooltip.new(root, {
-          labelText: "{valueY}",
+          labelText: "{valueX}",
         }),
       })
     );
 
+    series.get("tooltip").adapters.add("stateAnimationDuration", () => 0);
     series.columns.template.setAll({ height: 2 });
     series.columns.template.adapters.add("fill", (_, target) => {
       return chart.get("colors").getIndex(series.columns.indexOf(target));

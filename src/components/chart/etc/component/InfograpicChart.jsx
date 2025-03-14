@@ -1,6 +1,7 @@
 import * as am5 from "@amcharts/amcharts5";
 import * as am5xy from "@amcharts/amcharts5/xy";
 import am5themes_Animated from "@amcharts/amcharts5/themes/Animated";
+import am5themes_Responsive from "@amcharts/amcharts5/themes/Responsive";
 import { useLayoutEffect } from "react";
 import * as themes from "@/assets/chartTheme";
 import { useTheme } from "@/components/Theme";
@@ -51,9 +52,10 @@ const placeholderColor = am5.color(0xcccccc);
 const iconSize = { w: 34, h: 24 };
 const goodIcon =
   "M9.49958 9.27618C11.2113 8.76073 14.5559 6.33814 14.2398 0.771333C16.3466 -0.130696 19.9282 -0.00183481 17.4 7.72984C21.0869 7.21434 27.9866 7.42041 26.0905 12.3687C26.6172 14.6882 26.3275 19.7138 20.9552 21.2601C15.5829 22.8064 11.0797 20.1004 9.49958 18.554H8.31451V9.27618H9.49958Z";
-var badIcon =
+const badIcon =
   "M9.49958 12.7238C11.2113 13.2393 14.5559 15.6619 14.2398 21.2287C16.3466 22.1307 19.9282 22.0018 17.4 14.2702C21.0869 14.7857 27.9866 14.5796 26.0905 9.63132C26.6172 7.31182 26.3275 2.28622 20.9552 0.739889C15.5829 -0.806446 11.0797 1.89964 9.49958 3.44598H8.31451V12.7238H9.49958Z";
 
+  //InfograpicChart
 export default function InfograpicChart() {
   const id = "infograpic-xy";
   const { theme, colorTheme } = useTheme();
@@ -61,10 +63,38 @@ export default function InfograpicChart() {
   useLayoutEffect(() => {
     // Root 객체 생성 및 테마 불러오기
     const root = am5.Root.new(id);
-    const { colorSet } = themes[colorTheme];
-    const colorList = colorSet(4);
+    const { primary } = themes[colorTheme];
+    const colorList = primary;
     const myTheme = themes.myThemeRule(root, colorList, theme);
-    root.setThemes([am5themes_Animated.new(root), myTheme]);
+
+    // 개별 반응형 설정
+    const responsive = am5themes_Responsive.newEmpty(root);
+    responsive.addRule({
+      relevant: am5themes_Responsive.widthL,
+      applying: () => {
+        chart.setAll({ layout: root.verticalLayout });
+        legend.setAll({
+          x: am5.p50,
+          y: am5.p100,
+          paddingLeft: 0,
+          centerX: am5.p50,
+          centerY: am5.p100,
+          layout: root.horizontalLayout,
+        });
+      },
+      removing: () => {
+        chart.setAll({ layout: root.horizontalLayout });
+        legend.setAll({
+          x: false,
+          y: am5.p50,
+          paddingLeft: 40,
+          centerX: false,
+          centerY: am5.p50,
+          layout: root.verticalLayout,
+        });
+      },
+    });
+    root.setThemes([am5themes_Animated.new(root), myTheme, responsive]);
 
     // XYChart 생성
     const chart = root.container.children.push(
@@ -75,8 +105,8 @@ export default function InfograpicChart() {
         wheelY: "zoomX",
         paddingLeft: 0,
         paddingRight: 0,
-        layout: root.horizontalLayout,
         arrangeTooltips: false,
+        layout: root.horizontalLayout,
       })
     );
     chart.plotContainer.get("background").set("opacity", 0);
@@ -125,6 +155,8 @@ export default function InfograpicChart() {
       })
     );
 
+    xAxis.get("renderer").adapters.add("stroke", () => false);
+    yAxis.get("renderer").adapters.add("stroke", () => false);
     yAxis.get("renderer").labels.template.setAll({ location: 0.5 });
     yAxis.get("renderer").grid.template.setAll({ visible: false });
     xAxis.get("renderer").grid.template.setAll({ visible: false });
@@ -136,7 +168,7 @@ export default function InfograpicChart() {
       location: 1,
       visible: true,
       strokeOpacity: 1,
-      stroke: am5.color(0x999999),
+      stroke: themes.chartVariables[theme].grid,
     });
 
     // series 생성 함수

@@ -29,7 +29,7 @@ const data = [
   },
 ];
 
-// 드래그중인 아이템이 최상단으로 올라오지 않는 이슈
+// DragOrderingBarChart
 export default function DragOrderingBarChart() {
   const id = "dragordering-bar";
   const { theme, colorTheme } = useTheme();
@@ -37,8 +37,8 @@ export default function DragOrderingBarChart() {
   useLayoutEffect(() => {
     // Root 객체 생성 및 테마 불러오기
     const root = am5.Root.new(id);
-    const { colorSet } = themes[colorTheme];
-    const colorList = colorSet(data.length);
+    const { primary } = themes[colorTheme];
+    const colorList = primary;
     const myTheme = themes.myThemeRule(root, colorList, theme);
     root.setThemes([am5themes_Animated.new(root), myTheme]);
 
@@ -54,24 +54,21 @@ export default function DragOrderingBarChart() {
     );
 
     // x,y축 생성
-    const yRenderer = am5xy.AxisRendererY.new(root, {
-      minGridDistance: 30,
-      minorGridEnabled: true,
-    });
-    yRenderer.grid.template.set("location", 1);
-
     const yAxis = chart.yAxes.push(
       am5xy.CategoryAxis.new(root, {
         maxDeviation: 0,
         categoryField: "country",
-        renderer: yRenderer,
+        renderer: am5xy.AxisRendererY.new(root, {
+          minGridDistance: 30,
+          minorGridEnabled: true,
+        }),
       })
     );
 
     const xAxis = chart.xAxes.push(
       am5xy.ValueAxis.new(root, {
-        maxDeviation: 0,
         min: 0,
+        maxDeviation: 0,
         renderer: am5xy.AxisRendererX.new(root, {
           visible: true,
           strokeOpacity: 0.1,
@@ -80,32 +77,34 @@ export default function DragOrderingBarChart() {
       })
     );
 
+    yAxis.get("renderer").grid.template.set("location", 1);
+
     // series 생성
     const series = chart.series.push(
       am5xy.ColumnSeries.new(root, {
-        name: "Series 1",
-        xAxis: xAxis,
-        yAxis: yAxis,
+        xAxis,
+        yAxis,
+        name: "Series",
         valueXField: "value",
-        sequencedInterpolation: true,
         categoryYField: "country",
+        sequencedInterpolation: true,
       })
     );
 
     series.columns.template.setAll({
       draggable: true,
-      cursorOverStyle: "pointer",
-      tooltipText: "drag to rearrange",
-      cornerRadiusBR: 4,
-      cornerRadiusTR: 4,
+      strokeOpacity: 0,
       cornerRadiusBL: 0,
       cornerRadiusTL: 0,
-      strokeOpacity: 0,
+      cursorOverStyle: "grab",
+      tooltipText: "drag to rearrange",
+      cornerRadiusTR: themes.chartVariables.default.barRadius,
+      cornerRadiusBR: themes.chartVariables.default.barRadius,
     });
 
-    series.columns.template.adapters.add("fill", (_, target) => {
-      return chart.get("colors").getIndex(series.columns.indexOf(target));
-    });
+    series.columns.template.adapters.add("fill", (_, target) =>
+      chart.get("colors").getIndex(series.columns.indexOf(target))
+    );
 
     // 특정 카테고리 찾기 함수
     const getSeriesItem = (category) =>
@@ -113,20 +112,21 @@ export default function DragOrderingBarChart() {
 
     // Y축 데이터를 드래그된 순서대로 정렬
     const sortCategoryAxis = () => {
-      // 높이를 비교하여 데이터 정렬
-      series.dataItems.sort((a, b) => {
-        return b.get("graphics").y() - a.get("graphics").y();
-      });
+      const easing = am5.ease.out(am5.ease.cubic);
+      series.dataItems.sort(
+        (a, b) => b.get("graphics").y() - a.get("graphics").y()
+      );
 
       // 정렬된 데이터 기반으로 Y축 업데이트
-      const easing = am5.ease.out(am5.ease.cubic);
       am5.array.each(yAxis.dataItems, (dataItem) => {
         const seriesDataItem = getSeriesItem(dataItem.get("category"));
         if (seriesDataItem) {
           const index = series.dataItems.indexOf(seriesDataItem);
           const column = seriesDataItem.get("graphics");
           const fy =
-            yRenderer.positionToCoordinate(yAxis.indexToPosition(index)) -
+            yAxis
+              .get("renderer")
+              .positionToCoordinate(yAxis.indexToPosition(index)) -
             column.height() / 2;
           if (index != dataItem.get("index")) {
             // 위치가 다를 경우

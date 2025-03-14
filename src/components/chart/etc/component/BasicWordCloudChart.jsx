@@ -49,6 +49,7 @@ const data = [
 
 const maxValue = Math.max(...[...data.map((item) => Math.ceil(item.weight))]);
 
+// BasicWordCloudChart
 export default function BasicWordCloudChart() {
   const id = "basic-word";
   const { theme, colorTheme } = useTheme();
@@ -56,17 +57,17 @@ export default function BasicWordCloudChart() {
   useLayoutEffect(() => {
     // Root 객체 생성 및 테마 불러오기
     const root = am5.Root.new(id);
-    const { colorSet } = themes[colorTheme];
-    const colorList = colorSet(7);
+    const { primary } = themes[colorTheme];
+    const colorList = primary;
     const myTheme = themes.myThemeRule(root, colorList, theme);
     root.setThemes([am5themes_Animated.new(root), myTheme]);
 
     // series 생성
     const series = root.container.children.push(
       am5wc.WordCloud.new(root, {
-        categoryField: "tag",
-        valueField: "weight",
         angles: [0, 90],
+        valueField: "weight",
+        categoryField: "tag",
         minFontSize: am5.percent(5),
         maxFontSize: am5.percent(20),
       })

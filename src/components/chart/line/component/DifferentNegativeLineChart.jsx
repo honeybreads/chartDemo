@@ -18,7 +18,7 @@ const createData = (count) => {
     return value;
   };
 
-  for (var i = 0; i < count; ++i) {
+  for (let i = 0; i < count; ++i) {
     am5.time.add(date, "day", 1);
     data.push({ date: date.getTime(), value: randomValue() });
   }
@@ -35,8 +35,8 @@ export default function DifferentNegativeLineChart() {
   useLayoutEffect(() => {
     // Root 객체 생성 및 테마 불러오기
     const root = am5.Root.new(id);
-    const { lineColors } = themes[colorTheme];
-    const colorList = lineColors.lineStroke;
+    const { primary } = themes[colorTheme];
+    const colorList = primary;
     const myTheme = themes.myThemeRule(root, colorList, theme);
     root.setThemes([am5themes_Animated.new(root), myTheme]);
 
@@ -78,8 +78,8 @@ export default function DifferentNegativeLineChart() {
     // series 생성
     const series = chart.series.push(
       am5xy.SmoothedXLineSeries.new(root, {
-        xAxis: xAxis,
-        yAxis: yAxis,
+        xAxis,
+        yAxis,
         valueYField: "value",
         valueXField: "date",
       })
@@ -102,10 +102,7 @@ export default function DifferentNegativeLineChart() {
     });
 
     // cursor 생성
-    chart.set(
-      "cursor",
-      am5xy.XYCursor.new(root, { behavior: "zoomX", xAxis: xAxis })
-    );
+    chart.set("cursor", am5xy.XYCursor.new(root, { behavior: "zoomX", xAxis }));
 
     // 애니메이션 적용
     series.appear(1000);

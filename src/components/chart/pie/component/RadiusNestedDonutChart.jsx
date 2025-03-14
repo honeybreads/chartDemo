@@ -54,6 +54,7 @@ const data = [
   },
 ];
 
+// RadiusNestedDonutChart
 export default function RadiusNestedDonutChart() {
   const id = "radiusnested-donut";
   const { theme, colorTheme } = useTheme();
@@ -61,11 +62,9 @@ export default function RadiusNestedDonutChart() {
   useLayoutEffect(() => {
     // Root 객체 생성 및 테마 불러오기
     const root = am5.Root.new(id);
-    const { colorSet } = themes[colorTheme];
-    const colorList = colorSet(data.length);
+    const { primary } = themes[colorTheme];
+    const colorList = primary;
     const myTheme = themes.myThemeRule(root, colorList, theme);
-
-    // 테마 및 반응형 적용
     root.setThemes([am5themes_Animated.new(root), myTheme]);
 
     // PieChart 생성
@@ -79,10 +78,10 @@ export default function RadiusNestedDonutChart() {
     // series(안) 생성
     const series0 = chart.series.push(
       am5percent.PieSeries.new(root, {
-        valueField: "item1",
-        categoryField: "category",
         endAngle: 380,
         startAngle: 160,
+        valueField: "item1",
+        categoryField: "category",
         radius: am5.percent(70),
         innerRadius: am5.percent(65),
       })
@@ -117,7 +116,7 @@ export default function RadiusNestedDonutChart() {
       // 스타일 적용
       series.ticks.template.set("forceHidden", true);
       series.labels.template.set("forceHidden", true);
-      series.slices.template.setAll({ cornerRadius: 0, stroke: 0 });
+      series.slices.template.setAll({ cornerRadius: 0 });
       series.states.create("hidden", { endAngle: 180, startAngle: 160 });
       // 데이터 적용
       series.data.setAll(data);

@@ -93,6 +93,7 @@ const data = [
   },
 ];
 
+// DateBasedBubbleChart
 export default function DateBasedBubbleChart() {
   const id = "datebase-bubble";
   const { theme, colorTheme } = useTheme();
@@ -100,8 +101,8 @@ export default function DateBasedBubbleChart() {
   useLayoutEffect(() => {
     // Root 객체 생성 및 테마 불러오기
     const root = am5.Root.new(id);
-    const { colorSet } = themes[colorTheme];
-    const colorList = colorSet(2);
+    const { primary } = themes[colorTheme];
+    const colorList = primary;
     const myTheme = themes.myThemeRule(root, colorList, theme);
     root.setThemes([am5themes_Animated.new(root), myTheme]);
 
@@ -116,9 +117,8 @@ export default function DateBasedBubbleChart() {
 
     root.dateFormatter.setAll({
       dateFormat: "yyyy-MM-dd",
-      dateFields: ["valueX"]
+      dateFields: ["valueX"],
     });
-    
 
     // X,Y축 생성
     const xAxis = chart.xAxes.push(
@@ -141,115 +141,90 @@ export default function DateBasedBubbleChart() {
       })
     );
 
-    // series(0) 생성
-    const series0 = chart.series.push(
-      am5xy.LineSeries.new(root, {
-        xAxis: xAxis,
-        yAxis: yAxis,
-        valueYField: "ay",
-        valueXField: "date",
-        valueField: "aValue",
-        calculateAggregates: true,
-        tooltip: am5.Tooltip.new(root, {
-          labelText: "{valueX}, y: {valueY}, value: {value}",
-        }),
-      })
-    );
-
-    // bullet 생성
-    const circleTemplate = am5.Template.new({});
-    series0.bullets.push(() => {
-      var graphics = am5.Circle.new(
-        root,
-        { fill: series0.get("fill") },
-        circleTemplate
+    // series 생성 함수
+    const createSeries = (y, value, type) => {
+      const series = chart.series.push(
+        am5xy.LineSeries.new(root, {
+          xAxis,
+          yAxis,
+          valueYField: y,
+          valueXField: "date",
+          valueField: value,
+          calculateAggregates: true,
+          tooltip: am5.Tooltip.new(root, {
+            labelText: "{valueX}, y: {valueY}, value: {value}",
+          }),
+        })
       );
-      return am5.Bullet.new(root, { sprite: graphics });
-    });
 
-    series0.set("heatRules", [
-      {
-        min: 3,
-        max: 35,
-        key: "radius",
-        dataField: "value",
-        target: circleTemplate,
-      },
-    ]);
+      const newTemp = am5.Template.new({});
+      series.bullets.push(() => {
+        let graphics;
+        if (type === "circle") {
+          graphics = am5.Circle.new(
+            root,
+            { fill: series.get("fill") },
+            newTemp
+          );
+        } else if (type === "star") {
+          graphics = am5.Star.new(
+            root,
+            {
+              spikes: 4,
+              fill: series.get("fill"),
+              innerRadius: am5.percent(70),
+            },
+            newTemp
+          );
+        }
 
-    // series(1) 생성
-    const starTemplate = am5.Template.new({});
-    const series1 = chart.series.push(
-      am5xy.LineSeries.new(root, {
-        calculateAggregates: true,
-        xAxis: xAxis,
-        yAxis: yAxis,
-        valueYField: "by",
-        valueXField: "date",
-        valueField: "bValue",
-        tooltip: am5.Tooltip.new(root, {
-          labelText: "{valueX}, y: {valueY}, value: {value}",
-        }),
-      })
-    );
+        return am5.Bullet.new(root, { sprite: graphics });
+      });
 
-    // bullet 생성
-    series1.bullets.push(() => {
-      var graphics = am5.Star.new(
-        root,
+      series.set("heatRules", [
         {
-          spikes: 4,
-          fill: series1.get("fill"),
-          innerRadius: am5.percent(70),
+          min: 3,
+          max: 35,
+          key: "radius",
+          dataField: "value",
+          target: newTemp,
         },
-        starTemplate
-      );
-      return am5.Bullet.new(root, { sprite: graphics });
-    });
+      ]);
 
-    series1.set("heatRules", [
-      {
-        target: starTemplate,
-        min: 3,
-        max: 50,
-        dataField: "value",
-        key: "radius",
-      },
-    ]);
+      series.strokes.template.set("strokeOpacity", 0);
+      series.data.processor = am5.DataProcessor.new(root, {
+        dateFields: ["date"],
+        dateFormat: "yyyy-MM-dd",
+      });
 
-    series0.strokes.template.set("strokeOpacity", 0);
-    series1.strokes.template.set("strokeOpacity", 0);
-    series0.data.processor = am5.DataProcessor.new(root, {
-      dateFields: ["date"],
-      dateFormat: "yyyy-MM-dd",
-    });
-    series1.data.processor = am5.DataProcessor.new(root, {
-      dateFields: ["date"],
-      dateFormat: "yyyy-MM-dd",
-    });
+      series.data.setAll(data);
+      series.appear(1000);
+
+      return series;
+    };
+
+    // series(0) 생성
+    const series0 = createSeries("ay", "aValue", "circle");
+    const series1 = createSeries("by", "bValue", "star");
 
     // cursor 생성
-    chart.set(
+    const cursor = chart.set(
       "cursor",
       am5xy.XYCursor.new(root, {
-        xAxis: xAxis,
-        yAxis: yAxis,
+        xAxis,
+        yAxis,
         behavior: "zoomXY",
         snapToSeries: [series0, series1],
       })
     );
-
-    // 데이터 적용
-    series0.data.setAll(data);
-    series1.data.setAll(data);
+    cursor.lineX.setAll({ stroke: themes.chartVariables[theme].base });
+    cursor.lineY.setAll({ stroke: themes.chartVariables[theme].base });
 
     // 애니메이션 적용
-    series0.appear(1000);
-    series1.appear(1000);
     chart.appear(1000, 100);
 
     return () => root.dispose();
   }, [theme, colorTheme]);
 
-  return <div id={id} style={{ width: "100%", height: "100%"}} />;
+  return <div id={id} style={{ width: "100%", height: "100%" }} />;
 }

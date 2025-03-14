@@ -17,7 +17,7 @@ const createData = (count) => {
     return value;
   };
 
-  for (var i = 0; i < count; ++i) {
+  for (let i = 0; i < count; ++i) {
     am5.time.add(date, "day", 1);
     data.push({ date: date.getTime(), value: randomValue() });
   }
@@ -33,8 +33,8 @@ export default function RangeSliderLineChart() {
   useLayoutEffect(() => {
     // Root 객체 생성 및 테마 불러오기
     const root = am5.Root.new(id);
-    const { lineColors } = themes[colorTheme];
-    const colorList = lineColors.lineStroke;
+    const { primary } = themes[colorTheme];
+    const colorList = primary;
     const myTheme = themes.myThemeRule(root, colorList, theme);
     root.setThemes([am5themes_Animated.new(root), myTheme]);
 
@@ -71,14 +71,12 @@ export default function RangeSliderLineChart() {
     // series 생성
     const series = chart.series.push(
       am5xy.LineSeries.new(root, {
+        xAxis,
+        yAxis,
         name: "Series",
-        xAxis: xAxis,
-        yAxis: yAxis,
-        valueYField: "value",
         valueXField: "date",
-        tooltip: am5.Tooltip.new(root, {
-          labelText: "{valueY}",
-        }),
+        valueYField: "value",
+        tooltip: am5.Tooltip.new(root, { labelText: "{valueY}" }),
       })
     );
     series.fills.template.setAll({ fillOpacity: 0.3, visible: true });
@@ -101,12 +99,12 @@ export default function RangeSliderLineChart() {
     seriesRange.fills.template.set(
       "fillPattern",
       am5.LinePattern.new(root, {
-        rotation: 45,
-        strokeWidth: 2,
         width: 2000,
         height: 2000,
-        color: colorList[0],
+        rotation: 45,
+        strokeWidth: 2,
         fill: colorList[1],
+        color: colorList[0],
       })
     );
 

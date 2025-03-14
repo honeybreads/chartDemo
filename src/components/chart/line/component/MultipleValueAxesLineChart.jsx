@@ -17,7 +17,7 @@ const createData = (count) => {
     return value;
   };
 
-  for (var i = 0; i < count; ++i) {
+  for (let i = 0; i < count; ++i) {
     am5.time.add(date, "day", 1);
     data.push({ date: date.getTime(), value: randomValue() });
   }
@@ -32,8 +32,8 @@ export default function MultipleValueAxesLineChart() {
   useLayoutEffect(() => {
     // Root 객체 생성 및 테마 불러오기
     const root = am5.Root.new(id);
-    const { lineColors } = themes[colorTheme];
-    const colorList = lineColors.lineStroke;
+    const { primary } = themes[colorTheme];
+    const colorList = primary;
     const myTheme = themes.myThemeRule(root, colorList, theme);
     root.setThemes([am5themes_Animated.new(root), myTheme]);
 
@@ -46,8 +46,8 @@ export default function MultipleValueAxesLineChart() {
         wheelY: "zoomX",
         focusable: true,
         pinchZoomX: true,
-        paddingLeft:0,
-        paddingRight:0,
+        paddingLeft: 0,
+        paddingRight: 0,
       })
     );
 
@@ -67,24 +67,26 @@ export default function MultipleValueAxesLineChart() {
 
     // axis,series 생성 함수
     const createAxisAndSeries = (opposite) => {
-      const yRenderer = am5xy.AxisRendererY.new(root, { opposite });
       const yAxis = chart.yAxes.push(
         am5xy.ValueAxis.new(root, {
           maxDeviation: 1,
-          renderer: yRenderer,
+          renderer: am5xy.AxisRendererY.new(root, { opposite }),
         })
       );
       const nowIndex = chart.yAxes.indexOf(yAxis);
       const color = colorList[nowIndex];
-      yRenderer.setAll({ opacity: 1, stroke: color, strokeOpacity: 1 });
+
+      yAxis
+        .get("renderer")
+        .setAll({ opacity: 1, stroke: color, strokeOpacity: 1 });
       if (nowIndex > 0) yAxis.set("syncWithAxis", chart.yAxes.getIndex(0));
 
       const series = chart.series.push(
         am5xy.LineSeries.new(root, {
           xAxis,
           yAxis,
-          valueYField: "value",
           valueXField: "date",
+          valueYField: "value",
           tooltip: am5.Tooltip.new(root, {
             labelText: "{valueY}",
             pointerOrientation: "horizontal",

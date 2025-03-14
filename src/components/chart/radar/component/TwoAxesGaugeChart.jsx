@@ -20,6 +20,7 @@ const data = [
   },
 ];
 
+// TwoAxesGaugeChart
 export default function TwoAxesGaugeChart() {
   const id = "twoaxes-gauge";
   const { theme, colorTheme } = useTheme();
@@ -27,8 +28,8 @@ export default function TwoAxesGaugeChart() {
   useLayoutEffect(() => {
     // Root 객체 생성 및 테마 불러오기
     const root = am5.Root.new(id);
-    const { colorSet } = themes[colorTheme];
-    const colorList = colorSet(2);
+    const { primary } = themes[colorTheme];
+    const colorList = primary;
     const myTheme = themes.myThemeRule(root, colorList, theme);
     root.setThemes([am5themes_Animated.new(root), myTheme]);
 
@@ -45,18 +46,13 @@ export default function TwoAxesGaugeChart() {
     );
     chart.plotContainer.get("background").set("visible", false);
 
-    // 상수 정의
-    const PIN_RADIUS = [14, 10];
-    const LABEL_POSITION = [-100, 100];
-    const RADIUS_PERCENTAGE = am5.percent(98);
-
     // 축과 핸드 생성 함수
     const createItem = (index) => {
       const newData = data[index];
       const color = colorList[index];
-      const pinRadius = PIN_RADIUS[index];
-      const labelPosition = LABEL_POSITION[index];
       const inside = index === 1; // 0이면 바깥쪽, 1이면 안쪽
+      const pinRadius = inside ? 10 : 14;
+      const labelPosition = inside ? -70 : 70;
 
       // 축 렌더러 생성
       const axisRenderer = am5radar.AxisRendererCircular.new(root, {
@@ -86,7 +82,7 @@ export default function TwoAxesGaugeChart() {
         am5.Label.new(root, {
           y: -60,
           text: "0",
-          width: 100,
+          width: 70,
           fontSize: 24,
           x: labelPosition,
           textAlign: "center",
@@ -107,7 +103,7 @@ export default function TwoAxesGaugeChart() {
       const clockHand = am5radar.ClockHand.new(root, {
         pinRadius,
         bottomWidth: 10,
-        radius: RADIUS_PERCENTAGE,
+        radius: am5.percent(98),
       });
 
       clockHand.pin.setAll({ fill: color });

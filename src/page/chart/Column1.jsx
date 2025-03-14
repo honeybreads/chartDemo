@@ -71,7 +71,7 @@ const Column1 = memo(function Column1() {
         </div>
         {/* 라인 믹스 컬럼 차트 */}
         <div className="chart-layout-box">
-          <p className="chart-layout-title">Lien Mix Column Chart</p>
+          <p className="chart-layout-title">Line Mix Column Chart</p>
           <div className="chart-con" style={{ width: "100%", height: 340 }}>
             <LineMixColumnChart />
           </div>

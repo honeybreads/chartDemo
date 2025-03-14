@@ -849,6 +849,7 @@ const data = [
   },
 ];
 
+// 데이터에서 카테고리 생성
 const createCategory = (name) =>
   [...new Set(data.map((item) => item[name]))].map((value) => ({
     [name]: value,
@@ -857,6 +858,7 @@ const createCategory = (name) =>
 const xAxisData = createCategory("hour");
 const yAxisData = createCategory("weekday");
 
+// HeatmapBubbleChart
 export default function HeatmapBubbleChart() {
   const id = "heatmap-bubble";
   const { theme, colorTheme } = useTheme();
@@ -864,8 +866,8 @@ export default function HeatmapBubbleChart() {
   useLayoutEffect(() => {
     // Root 객체 생성 및 테마 불러오기
     const root = am5.Root.new(id);
-    const { colorSet } = themes[colorTheme];
-    const colorList = colorSet(1);
+    const { primary } = themes[colorTheme];
+    const colorList = primary;
     const myTheme = themes.myThemeRule(root, colorList, theme);
     root.setThemes([am5themes_Animated.new(root), myTheme]);
 
@@ -876,7 +878,7 @@ export default function HeatmapBubbleChart() {
         panY: false,
         wheelX: "none",
         wheelY: "none",
-        paddingLeft:0,
+        paddingLeft: 0,
         layout: root.verticalLayout,
       })
     );
@@ -889,8 +891,8 @@ export default function HeatmapBubbleChart() {
         categoryField: "weekday",
         renderer: am5xy.AxisRendererY.new(root, {
           visible: false,
-          minGridDistance: 20,
           inversed: true,
+          minGridDistance: 20,
         }),
       })
     );
@@ -900,12 +902,11 @@ export default function HeatmapBubbleChart() {
         categoryField: "hour",
         renderer: am5xy.AxisRendererX.new(root, {
           visible: false,
-          minGridDistance: 20,
           opposite: true,
+          minGridDistance: 30,
         }),
       })
     );
-
     xAxis.get("renderer").grid.template.set("visible", false);
 
     // series 생성
@@ -918,7 +919,8 @@ export default function HeatmapBubbleChart() {
         categoryXField: "hour",
         categoryYField: "weekday",
         calculateAggregates: true,
-        stroke: am5.color(0xffffff),
+        stroke: themes.chartVariables[theme].line,
+        maskBullets:false
       })
     );
 
@@ -941,7 +943,7 @@ export default function HeatmapBubbleChart() {
     series.set("heatRules", [
       {
         min: 5,
-        max: 25,
+        max: 20,
         key: "radius",
         dataField: "value",
         target: circleTemplate,
@@ -957,7 +959,7 @@ export default function HeatmapBubbleChart() {
     chart.appear(1000, 100);
     setInterval(() => {
       let i = 0;
-      series.data.each(function (d) {
+      series.data.each((d) => {
         let n = {
           value: d.value + d.value * Math.random() * 0.5,
           hour: d.hour,

@@ -39,6 +39,7 @@ const data = [
   },
 ];
 
+// WaterfallColumnChart
 export default function WaterfallColumnChart() {
   const id = "waterfall-column";
   const { theme, colorTheme } = useTheme();
@@ -46,44 +47,44 @@ export default function WaterfallColumnChart() {
   useLayoutEffect(() => {
     // Root 객체 생성 및 테마 불러오기
     const root = am5.Root.new(id);
-    const { colorSet } = themes[colorTheme];
-    const colorList = colorSet(data.length);
+    const { primary } = themes[colorTheme];
+    const colorList = primary;
     const myTheme = themes.myThemeRule(root, colorList, theme);
     root.setThemes([am5themes_Animated.new(root), myTheme]);
-
-    // 카테고리 필드 지정
-    const categoryField = Object.keys(data[0])[0];
 
     // XYChart 생성
     const chart = root.container.children.push(
       am5xy.XYChart.new(root, {
         panX: false,
         panY: false,
-        paddingLeft: 16,
+        paddingLeft: 12,
+        paddingBottom: 12,
       })
     );
 
     // cursor 생성
     const cursor = chart.set("cursor", am5xy.XYCursor.new(root, {}));
     cursor.lineY.set("visible", false);
+    cursor.lineX.set("stroke",themes.chartVariables[theme].base);
 
     // x,y축 생성
-    const xRenderer = am5xy.AxisRendererX.new(root, {
-      minGridDistance: 100,
-      minorGridEnabled: true,
-    });
-
     const xAxis = chart.xAxes.push(
       am5xy.CategoryAxis.new(root, {
-        renderer: xRenderer,
-        categoryField,
         maxDeviation: 0,
+        categoryField: "category",
         tooltip: am5.Tooltip.new(root, {}),
+        renderer: am5xy.AxisRendererX.new(root, {
+          minGridDistance: 20,
+          minorGridEnabled: true,
+        }),
       })
     );
 
-    xRenderer.grid.template.setAll({ location: 1 });
-    xRenderer.labels.template.setAll({ maxWidth: "auto" });
+    xAxis.get("renderer").grid.template.setAll({ location: 1 });
+    xAxis.get("renderer").labels.template.setAll({ textAlign: "center" });
+    xAxis.get("renderer").labels.template.adapters.add("width", (_, target) => {
+      return themes.axisLabelSetWidth(xAxis, target);
+    });
 
     const yAxis = chart.yAxes.push(
       am5xy.ValueAxis.new(root, {
@@ -97,11 +98,11 @@ export default function WaterfallColumnChart() {
     // series 생성
     const series = chart.series.push(
       am5xy.ColumnSeries.new(root, {
-        xAxis: xAxis,
-        yAxis: yAxis,
+        xAxis,
+        yAxis,
         valueYField: "start",
         openValueYField: "end",
-        categoryXField: categoryField,
+        categoryXField: "category",
       })
     );
 
@@ -110,21 +111,27 @@ export default function WaterfallColumnChart() {
       cornerRadiusTR: 0,
     });
 
-    series.columns.template.adapters.add("fill", function (_, target) {
-      return chart.get("colors").getIndex(series.columns.indexOf(target));
-    });
+    series.columns.template.adapters.add("fill", (_, target) =>
+      chart.get("colors").getIndex(series.columns.indexOf(target))
+    );
 
     series.bullets.push((_, series, dataItem) => {
       const values = dataItem.dataContext;
-      const textValue = Math.abs(values.start - values.end);
+      const text = Math.abs(values.start - values.end);
+      const index = series.dataItems.indexOf(dataItem);
+      const fill = am5.Color.alternative(
+        am5.color(colorList[index]),
+        am5.color("#FFF"),
+        am5.color("#000")
+      );
 
       return am5.Bullet.new(root, {
         sprite: am5.Label.new(root, {
-          text: textValue,
+          text,
+          fill,
           centerY: am5.p50,
           centerX: am5.p50,
           populateText: true,
-          fill: root.interfaceColors.get("alternativeText"),
         }),
       });
     });
@@ -132,12 +139,12 @@ export default function WaterfallColumnChart() {
     // 점선 series 생성
     const stepSeries = chart.series.push(
       am5xy.StepLineSeries.new(root, {
-        xAxis: xAxis,
-        yAxis: yAxis,
+        xAxis,
+        yAxis,
         noRisers: true,
         locationX: 0.65,
         valueYField: "start",
-        categoryXField: categoryField,
+        categoryXField: "category",
         stroke: am5.color(theme === "light" ? "#222" : "#ccc"),
       })
     );
@@ -162,4 +169,3 @@ export default function WaterfallColumnChart() {
 
   return <div id={id} style={{ width: "100%", height: "100%" }} />;
 }
-

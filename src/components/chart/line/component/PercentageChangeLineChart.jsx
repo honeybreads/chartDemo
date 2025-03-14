@@ -17,7 +17,7 @@ const createData = (count) => {
     return value;
   };
 
-  for (var i = 0; i < count; ++i) {
+  for (let i = 0; i < count; ++i) {
     am5.time.add(date, "day", 1);
     data.push({ date: date.getTime(), value: randomValue() });
   }
@@ -32,8 +32,8 @@ export default function PercentageChangeLineChart() {
   useLayoutEffect(() => {
     // Root 객체 생성 및 테마 불러오기
     const root = am5.Root.new(id);
-    const {  lineColors } = themes[colorTheme];
-    const colorList = lineColors.lineStroke;
+    const { primary, state } = themes[colorTheme];
+    const colorList = primary;
     const myTheme = themes.myThemeRule(root, colorList, theme);
     root.setThemes([am5themes_Animated.new(root), myTheme]);
 
@@ -92,7 +92,11 @@ export default function PercentageChangeLineChart() {
         getFillFromSprite: false,
         getStrokeFromSprite: true,
         labelText:
-          "[#000]${valueY} {valueYChangeSelectionPercent.formatNumber('[#0f0]+0.00|[#f00]0.00|[#000]0.00')}%",
+          "[#000]${valueY} {valueYChangeSelectionPercent.formatNumber('[" +
+          state.positive +
+          "]+0.00|[" +
+          state.negative +
+          "]0.00|[#000]0.00')}%",
       });
 
       tooltip.get("background").setAll({ fill: am5.color(0xffffff) });
@@ -103,12 +107,16 @@ export default function PercentageChangeLineChart() {
           name,
           xAxis,
           yAxis,
-          valueYField: "value",
           valueXField: "date",
+          valueYField: "value",
           calculateAggregates: true,
           valueYShow: "valueYChangeSelectionPercent",
           legendValueText:
-            "[#000]${valueY} {valueYChangeSelectionPercent.formatNumber('[#0f0]+0.00|[#f00]0.00|[#000]0.00')}%",
+            "[#000]${valueY} {valueYChangeSelectionPercent.formatNumber('[" +
+            state.positive +
+            "]+0.00|[" +
+            state.negative +
+            "]0.00|[#000]0.00')}%",
           tooltip: tooltip,
         })
       );
@@ -134,7 +142,7 @@ export default function PercentageChangeLineChart() {
     );
 
     cont.children.push(
-      am5.Label.new(root, { centerY: am5.p50, text: "Since selection" })
+      am5.Label.new(root, { centerY: am5.p50, text: "선택영역" })
     );
 
     const switchButton = cont.children.push(
@@ -151,11 +159,19 @@ export default function PercentageChangeLineChart() {
       if (!switchButton.get("active")) {
         valueYShow = "valueYChangeSelectionPercent";
         valueText =
-          "[#000]${valueY} {valueYChangeSelectionPercent.formatNumber('[#0f0]+0.00|[#f00]0.00|[#000]0.00')}%";
+          "[#000]${valueY} {valueYChangeSelectionPercent.formatNumber('[" +
+          state.positive +
+          "]+0.00|[" +
+          state.negative +
+          "]0.00|[#000]0.00')}%";
       } else {
         valueYShow = "valueYChangePercent";
         valueText =
-          "[#000]${valueY} {valueYChangePercent.formatNumber('[#0f0]+0.00|[#f00]0.00|[#000]0.00')}%";
+          "[#000]${valueY} {valueYChangePercent.formatNumber('[" +
+          state.positive +
+          "]+0.00|[" +
+          state.negative +
+          "]0.00|[#000]0.00')}%";
       }
 
       chart.series.each((series) => {
@@ -166,7 +182,7 @@ export default function PercentageChangeLineChart() {
     });
 
     cont.children.push(
-      am5.Label.new(root, { centerY: am5.p50, text: "Since start" })
+      am5.Label.new(root, { centerY: am5.p50, text: "시작부터" })
     );
 
     // 애니메이션 적용

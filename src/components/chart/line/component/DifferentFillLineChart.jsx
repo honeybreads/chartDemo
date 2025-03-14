@@ -17,7 +17,7 @@ const createData = (count) => {
     return value;
   };
 
-  for (var i = 0; i < count; ++i) {
+  for (let i = 0; i < count; ++i) {
     am5.time.add(date, "day", 1);
     data.push({
       date: date.getTime(),
@@ -38,8 +38,8 @@ export default function DifferentFillLineChart() {
   useLayoutEffect(() => {
     // Root 객체 생성 및 테마 불러오기
     const root = am5.Root.new(id);
-    const { lineColors } = themes[colorTheme];
-    const colorList = lineColors.lineStroke;
+    const { primary } = themes[colorTheme];
+    const colorList = primary;
     const myTheme = themes.myThemeRule(root, colorList, theme);
     root.setThemes([am5themes_Animated.new(root), myTheme]);
 
@@ -51,7 +51,7 @@ export default function DifferentFillLineChart() {
         wheelX: "panX",
         wheelY: "zoomX",
         pinchZoomX: true,
-        paddingLeft:0,
+        paddingLeft: 0,
       })
     );
 
@@ -68,8 +68,8 @@ export default function DifferentFillLineChart() {
         tooltip: am5.Tooltip.new(root, {}),
         baseInterval: { timeUnit: "day", count: 1 },
         renderer: am5xy.AxisRendererX.new(root, {
-          minorGridEnabled: true,
           minGridDistance: 80,
+          minorGridEnabled: true,
         }),
       })
     );
@@ -126,7 +126,7 @@ export default function DifferentFillLineChart() {
     const baseDuration = xAxis.baseDuration();
     let rangeDataItem;
 
-    am5.array.each(series1.dataItems, function (s1DataItem) {
+    am5.array.each(series1.dataItems, (s1DataItem) => {
       let s1PreviousDataItem;
       let s2PreviousDataItem;
       const s2DataItem = series2.dataItems[i];
@@ -205,7 +205,6 @@ export default function DifferentFillLineChart() {
           rangeDataItem = undefined;
         }
       }
-
       i++;
     });
 

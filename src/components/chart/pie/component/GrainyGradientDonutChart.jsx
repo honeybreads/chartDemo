@@ -30,6 +30,7 @@ const data = [
   },
 ];
 
+// GrainyGradientDonutChart
 export default function GrainyGradientDonutChart() {
   const id = "grainy-donut";
   const { theme, colorTheme } = useTheme();
@@ -37,8 +38,8 @@ export default function GrainyGradientDonutChart() {
   useLayoutEffect(() => {
     // Root 객체 생성 및 테마 불러오기
     const root = am5.Root.new(id);
-    const { colorSet } = themes[colorTheme];
-    const colorList = colorSet(data.length);
+    const { primary } = themes[colorTheme];
+    const colorList = primary;
     const myTheme = themes.myThemeRule(root, colorList, theme);
 
     // 반응형 정의
@@ -78,26 +79,22 @@ export default function GrainyGradientDonutChart() {
 
     // series 스타일
     const gradient = am5.RadialGradient.new(root, {
-      stops: [
-        { color: am5.color(0x000000) },
-        { color: am5.color(0x222222) },
-        {},
-      ],
+      stops: [{}, { color: am5.color(0x666666) }, {}],
     });
 
     series.slices.template.setAll({
-      stroke: themes.modeColor[theme].line,
-      strokeWidth:2,
+      stroke: themes.chartVariables[theme].line,
+      strokeWidth: 2,
       cornerRadius: 6,
       shadowOffsetX: 2,
       shadowOffsetY: 2,
       shadowOpacity: 0.1,
       fillGradient: gradient,
-      shadowColor: am5.color(0x000000),
+      shadowColor: am5.color(themes.chartVariables[theme].shadow),
       fillPattern: am5.GrainPattern.new(root, {
         density: 0.1,
         maxOpacity: 0.2,
-        colors: [am5.color(0x000000)],
+        colors: [am5.color(0x444444)],
       }),
     });
 

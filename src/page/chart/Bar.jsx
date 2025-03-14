@@ -100,7 +100,7 @@ const Bar = memo(function Bar() {
         {/* 구분 바 차트 */}
         <div className="chart-layout-box">
           <p className="chart-layout-title">Partitione bar Chart</p>
-          <div className="chart-con" style={{ width: "100%", height: 640 }}>
+          <div className="chart-con" style={{ width: "100%", height: 720 }}>
             <PartitionedBarChart />
           </div>
         </div>

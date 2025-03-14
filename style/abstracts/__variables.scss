@@ -8,7 +8,7 @@
     --border: #ddd;
     --ring: #ddd;
     // add Color
-    --primary: #3AC6E1;
+    --primary: #000;
     --secondary: #0077b0;
     --normal: #1ddb16;
     --critical: #ff0000;
@@ -21,6 +21,7 @@
 
   .dark {
     // base color
+    --primary: #fff;
     --background: #222;
     --foreground: #eee;
     --card: #333;

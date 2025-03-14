@@ -17,7 +17,7 @@ const createData = (count) => {
     return value;
   };
 
-  for (var i = 0; i < count; ++i) {
+  for (let i = 0; i < count; ++i) {
     date.setMinutes(date.getMinutes() + i);
     data.push({ date: date.getTime(), value: randomValue() });
   }
@@ -34,8 +34,8 @@ export default function AreaWithTimeBasedLineChart() {
   useLayoutEffect(() => {
     // Root 객체 생성 및 테마 불러오기
     const root = am5.Root.new(id);
-    const { lineColors } = themes[colorTheme];
-    const colorList = lineColors.lineStroke;
+    const { primary } = themes[colorTheme];
+    const colorList = primary;
     const myTheme = themes.myThemeRule(root, colorList, theme);
     root.setThemes([am5themes_Animated.new(root), myTheme]);
 
@@ -46,6 +46,7 @@ export default function AreaWithTimeBasedLineChart() {
         panY: true,
         wheelY: "zoomX",
         pinchZoomX: true,
+        paddingLeft: 0,
         layout: root.verticalLayout,
       })
     );
@@ -57,8 +58,8 @@ export default function AreaWithTimeBasedLineChart() {
         maxDeviation: 0.5,
         baseInterval: { timeUnit: "minute", count: 1 },
         renderer: am5xy.AxisRendererX.new(root, {
-          minGridDistance: 60,
           pan: "zoom",
+          minGridDistance: 60,
           minorGridEnabled: true,
         }),
       })
@@ -92,7 +93,7 @@ export default function AreaWithTimeBasedLineChart() {
     series.fills.template.setAll({ visible: true, fillOpacity: 0.3 });
 
     // xAxis 범위 지정 이벤트
-    series.events.once("datavalidated", function () {
+    series.events.once("datavalidated", () => {
       const lastDate = new Date(data[data.length - 1].date);
       const firstDate = new Date(data[data.length - 100].date);
       xAxis.zoomToDates(firstDate, lastDate);
@@ -105,7 +106,7 @@ export default function AreaWithTimeBasedLineChart() {
     });
     chart.set("scrollbarX", scrollbarX);
 
-    // x,y축(scrollbar) 생성 
+    // x,y축(scrollbar) 생성
     const sbxAxis = scrollbarX.chart.xAxes.push(
       am5xy.DateAxis.new(root, {
         baseInterval: { timeUnit: "minute", count: 1 },
@@ -124,7 +125,7 @@ export default function AreaWithTimeBasedLineChart() {
       })
     );
 
-    // series(scrollbar) 생성 
+    // series(scrollbar) 생성
     const sbseries = scrollbarX.chart.series.push(
       am5xy.LineSeries.new(root, {
         xAxis: sbxAxis,

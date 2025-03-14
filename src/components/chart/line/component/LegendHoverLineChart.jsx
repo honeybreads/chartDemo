@@ -17,7 +17,7 @@ const createData = (count) => {
     return value;
   };
 
-  for (var i = 0; i < count; ++i) {
+  for (let i = 0; i < count; ++i) {
     am5.time.add(date, "day", 1);
     data.push({ date: date.getTime(), value: randomValue() });
   }
@@ -32,8 +32,8 @@ export default function LegendHoverLineChart() {
   useLayoutEffect(() => {
     // Root 객체 생성 및 테마 불러오기
     const root = am5.Root.new(id);
-    const { lineColors } = themes[colorTheme];
-    const colorList = lineColors.lineStroke;
+    const { primary } = themes[colorTheme];
+    const colorList = primary;
     const myTheme = themes.myThemeRule(root, colorList, theme);
     root.setThemes([am5themes_Animated.new(root), myTheme]);
 
@@ -77,14 +77,14 @@ export default function LegendHoverLineChart() {
     xAxis.get("renderer").labels.template.setAll({ maxWidth: "auto" });
 
     // series 생성
-    for (let i = 0; i < 6; i++) {
+    for (let i = 0; i < 14; i++) {
       const series = chart.series.push(
         am5xy.LineSeries.new(root, {
+          xAxis,
+          yAxis,
           name: "Series " + i,
-          xAxis: xAxis,
-          yAxis: yAxis,
-          valueYField: "value",
           valueXField: "date",
+          valueYField: "value",
           legendValueText: "{valueY}",
           tooltip: am5.Tooltip.new(root, {
             labelText: "{valueY}",
@@ -100,7 +100,7 @@ export default function LegendHoverLineChart() {
     // legend 생성
     const legend = chart.rightAxesContainer.children.push(
       am5.Legend.new(root, {
-        width: 200,
+        width: 150,
         paddingLeft: 15,
         height: am5.percent(100),
       })
@@ -126,7 +126,7 @@ export default function LegendHoverLineChart() {
     });
 
     // legend 마우스 아웃
-    legend.itemContainers.template.events.on("pointerout", function (e) {
+    legend.itemContainers.template.events.on("pointerout", (e) => {
       const itemContainer = e.target;
       itemContainer.dataItem.dataContext;
       chart.series.each((chartSeries) => {
@@ -146,7 +146,7 @@ export default function LegendHoverLineChart() {
     });
     legend.valueLabels.template.adapters.add(
       "fill",
-      () => themes.modeColor[theme].base
+      () => themes.chartVariables[theme].base
     );
 
     // 데이터 적용

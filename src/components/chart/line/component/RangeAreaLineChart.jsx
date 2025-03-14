@@ -17,7 +17,7 @@ const createData = (count) => {
     return value;
   };
 
-  for (var i = 0; i < count; ++i) {
+  for (let i = 0; i < count; ++i) {
     am5.time.add(date, "day", 1);
     const value = randomValue();
     data.push({
@@ -39,8 +39,8 @@ export default function RangeAreaLineChart() {
   useLayoutEffect(() => {
     // Root 객체 생성 및 테마 불러오기
     const root = am5.Root.new(id);
-    const { lineColors } = themes[colorTheme];
-    const colorList = lineColors.lineStroke;
+    const { primary } = themes[colorTheme];
+    const colorList = primary;
     const myTheme = themes.myThemeRule(root, colorList, theme);
     root.setThemes([am5themes_Animated.new(root), myTheme]);
 
@@ -95,7 +95,6 @@ export default function RangeAreaLineChart() {
           stroke: colorList[0],
           tooltip: am5.Tooltip.new(root, {
             labelText: "{valueY}",
-            getFillFromSprite: "#000",
           }),
         })
       );
@@ -104,7 +103,6 @@ export default function RangeAreaLineChart() {
         .get("tooltip")
         .get("background")
         .adapters.add("fill", () => colorList[0]);
-      series.get("tooltip").label.adapters.add("fill", () => am5.color("#fff"));
       return series;
     };
 

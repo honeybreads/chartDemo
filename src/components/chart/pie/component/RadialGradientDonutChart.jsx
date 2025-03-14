@@ -55,6 +55,7 @@ const data = [
   },
 ];
 
+// RadialGradientDonutChart
 export default function RadialGradientDonutChart() {
   const id = "radialgradient-donut";
   const { theme, colorTheme } = useTheme();
@@ -63,8 +64,8 @@ export default function RadialGradientDonutChart() {
   useLayoutEffect(() => {
     // Root 객체 생성 및 테마 불러오기
     const root = am5.Root.new(id);
-    const { colorSet } = themes[colorTheme];
-    const colorList = colorSet(data.length);
+    const { primary } = themes[colorTheme];
+    const colorList = primary;
     const myTheme = themes.myThemeRule(root, colorList, theme);
     const baseHeight = root.dom.clientHeight;
     setHeight(baseHeight);
@@ -79,8 +80,8 @@ export default function RadialGradientDonutChart() {
         legend.setAll({
           x: am5.percent(50),
           y: undefined,
-          centerY: undefined,
           centerX: am5.percent(50),
+          centerY: undefined,
         });
       },
       removing: () => {
@@ -134,9 +135,9 @@ export default function RadialGradientDonutChart() {
     series.labels.template.set("forceHidden", true);
     series.ticks.template.set("forceHidden", true);
     series.slices.template.setAll({
+      fillGradient,
       cornerRadius: 0,
       strokeOpacity: 0,
-      fillGradient: fillGradient,
     });
 
     // legend 생성
@@ -155,8 +156,8 @@ export default function RadialGradientDonutChart() {
           cornerRadiusTL: 4,
           cornerRadiusBR: 4,
           cornerRadiusBL: 4,
-          fill: themes.modeColor[theme].bg,
-          shadowColor: am5.color(themes.modeColor[theme].bg),
+          fill: themes.chartVariables[theme].bg,
+          shadowColor: am5.color(themes.chartVariables[theme].bg),
         }),
       })
     );

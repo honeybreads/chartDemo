@@ -53,6 +53,7 @@ const data = [
   },
 ];
 
+// DataSortingColumnChart
 export default function DataSortingColumnChart() {
   const id = "datasorting-column";
   const { theme, colorTheme } = useTheme();
@@ -60,14 +61,10 @@ export default function DataSortingColumnChart() {
   useLayoutEffect(() => {
     // Root 객체 생성 및 테마 불러오기
     const root = am5.Root.new(id);
-    const { colorSet } = themes[colorTheme];
-    const colorList = colorSet(data.length);
+    const { primary } = themes[colorTheme];
+    const colorList = primary;
     const myTheme = themes.myThemeRule(root, colorList, theme);
     root.setThemes([am5themes_Animated.new(root), myTheme]);
-
-    // 카테고리, 값 필드 지정
-    const categoryField = Object.keys(data[0])[0];
-    const valueField = Object.keys(data[0])[1];
 
     // XYChart 생성
     const chart = root.container.children.push(
@@ -82,20 +79,13 @@ export default function DataSortingColumnChart() {
     chart.zoomOutButton.set("forceHidden", true);
 
     // x,y축 생성
-    const xRenderer = am5xy.AxisRendererX.new(root, {});
-    xRenderer.labels.template.setAll({
-      centerX: 0,
-      rotation: -90,
-      centerY: am5.p50,
-      paddingRight: 10,
-    });
-    xRenderer.grid.template.set("visible", false);
-
     const xAxis = chart.xAxes.push(
       am5xy.CategoryAxis.new(root, {
-        categoryField,
         maxDeviation: 0.3,
-        renderer: xRenderer,
+        categoryField: "category",
+        renderer: am5xy.AxisRendererX.new(root, {
+          minGridDistance: 20,
+        }),
       })
     );
 
@@ -107,22 +97,38 @@ export default function DataSortingColumnChart() {
       })
     );
 
+    xAxis.get("renderer").labels.template.setAll({
+      centerX: 0,
+      rotation: -90,
+      centerY: am5.p50,
+      paddingRight: 10,
+    });
+
+    xAxis.get("renderer").grid.template.set("visible", false);
+
     // series 생성
     const series = chart.series.push(
       am5xy.ColumnSeries.new(root, {
-        xAxis: xAxis,
-        yAxis: yAxis,
-        valueYField: valueField,
-        categoryXField: categoryField,
+        xAxis,
+        yAxis,
+        valueYField: "value",
+        categoryXField: "category",
       })
     );
 
-    series.columns.template.adapters.add("fill", function (_, target) {
-      return chart.get("colors").getIndex(series.columns.indexOf(target));
-    });
+    series.columns.template.adapters.add("fill", (_, target) =>
+      chart.get("colors").getIndex(series.columns.indexOf(target))
+    );
 
     // 컬럼 내부 텍스트 레이블 추가
-    series.bullets.push(() => {
+    series.bullets.push((_, series, dataItem) => {
+      const index = series.dataItems.indexOf(dataItem);
+      const fill = am5.Color.alternative(
+        am5.color(colorList[index]),
+        am5.color("#FFF"),
+        am5.color("#000")
+      );
+
       return am5.Bullet.new(root, {
         locationY: 1,
         sprite: am5.Label.new(root, {
@@ -130,7 +136,7 @@ export default function DataSortingColumnChart() {
           centerX: am5.p50,
           populateText: true,
           text: "{valueYWorking.formatNumber('#.')}",
-          fill: root.interfaceColors.get("alternativeText"),
+          fill,
         }),
       });
     });

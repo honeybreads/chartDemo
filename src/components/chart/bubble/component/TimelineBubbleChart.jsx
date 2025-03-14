@@ -34,6 +34,7 @@ for (let year = firstYear; year <= lastYear; year++) {
   yearlyData[year] = yearEntries;
 }
 
+// TimelineBubbleChart
 export default function TimelineBubbleChart() {
   const id = "motion-bubble";
   const { theme, colorTheme } = useTheme();
@@ -41,8 +42,8 @@ export default function TimelineBubbleChart() {
   useLayoutEffect(() => {
     // Root 객체 생성 및 테마 불러오기
     const root = am5.Root.new(id);
-    const { colorSet } = themes[colorTheme];
-    const colorList = colorSet(5);
+    const { primary } = themes[colorTheme];
+    const colorList = primary;
     const myTheme = themes.myThemeRule(root, colorList, theme);
     root.setThemes([am5themes_Animated.new(root), myTheme]);
 
@@ -135,7 +136,6 @@ export default function TimelineBubbleChart() {
 
     areaData.map((item) => createAreaSeries(item.color, item.pos));
 
-    // move grid forward
     chart.plotContainer.children.moveValue(
       chart.gridContainer,
       chart.plotContainer.children.length - 1
@@ -183,13 +183,12 @@ export default function TimelineBubbleChart() {
     ]);
 
     // cursor 생성
-    chart.set(
+    const cursor = chart.set(
       "cursor",
-      am5xy.XYCursor.new(root, {
-        xAxis,
-        yAxis,
-      })
+      am5xy.XYCursor.new(root, { xAxis, yAxis })
     );
+    cursor.lineX.setAll({ stroke: themes.chartVariables[theme].base });
+    cursor.lineY.setAll({ stroke: themes.chartVariables[theme].base });
 
     // Label(연도) 생성
     const label = chart.plotContainer.children.push(
@@ -260,7 +259,7 @@ export default function TimelineBubbleChart() {
         const data = yearlyData[year];
 
         let i = 0;
-        am5.array.each(data, function (item) {
+        am5.array.each(data, (item) => {
           series.data.setIndex(i, item);
           i++;
         });

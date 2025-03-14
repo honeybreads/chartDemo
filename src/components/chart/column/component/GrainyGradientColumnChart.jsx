@@ -38,9 +38,10 @@ const data = [
   {
     category: "Spain",
     value: 711,
-  }
+  },
 ];
 
+// GrainyGradientColumnChart
 export default function GrainyGradientColumnChart() {
   const id = "gradientgrainy-column";
   const { theme, colorTheme } = useTheme();
@@ -48,14 +49,10 @@ export default function GrainyGradientColumnChart() {
   useLayoutEffect(() => {
     // Root 객체 생성 및 테마 불러오기
     const root = am5.Root.new(id);
-    const { colorSet } = themes[colorTheme];
-    const colorList = colorSet(data.length);
+    const { primary } = themes[colorTheme];
+    const colorList = primary;
     const myTheme = themes.myThemeRule(root, colorList, theme);
     root.setThemes([am5themes_Animated.new(root), myTheme]);
-
-    // 카테고리, 값 필드 지정
-    const categoryField = Object.keys(data[0])[0];
-    const valueField = Object.keys(data[0])[1];
 
     // XYChart 생성
     const chart = root.container.children.push(
@@ -71,15 +68,12 @@ export default function GrainyGradientColumnChart() {
     );
 
     // x,y축 생성
-    const xRenderer = am5xy.AxisRendererX.new(root, {});
-    xRenderer.grid.template.setAll({ location: 1 });
-
     const xAxis = chart.xAxes.push(
       am5xy.CategoryAxis.new(root, {
-        categoryField,
+        categoryField: "category",
         maxDeviation: 0.3,
-        renderer: xRenderer,
         tooltip: am5.Tooltip.new(root, {}),
+        renderer: am5xy.AxisRendererX.new(root, {minGridDistance:20}),
       })
     );
 
@@ -90,15 +84,19 @@ export default function GrainyGradientColumnChart() {
         renderer: am5xy.AxisRendererY.new(root, {}),
       })
     );
-
+    xAxis.get("renderer").grid.template.setAll({ location: 1 });
+    xAxis.get("renderer").labels.template.setAll({ textAlign: "center" });
+    xAxis.get("renderer").labels.template.adapters.add("width", (_, target) => {
+      return themes.axisLabelSetWidth(xAxis, target);
+    });
 
     // series(그래프) 생성
     const series = chart.series.push(
       am5xy.ColumnSeries.new(root, {
-        xAxis: xAxis,
-        yAxis: yAxis,
-        valueYField: valueField,
-        categoryXField: categoryField,
+        xAxis,
+        yAxis,
+        valueYField: "value",
+        categoryXField: "category",
       })
     );
 
@@ -114,24 +112,24 @@ export default function GrainyGradientColumnChart() {
 
     series.columns.template.setAll({
       tooltipY: 0,
-      tooltipText: "{categoryX}: {valueY}",
-      shadowOpacity: 0.1,
-      shadowOffsetX: 2,
-      shadowOffsetY: 2,
-      shadowBlur: 1,
       strokeWidth: 2,
       strokeOpacity: 1,
-      stroke: am5.color(0xffffff),
-      shadowColor: am5.color(0x000000),
+      shadowBlur: 1,
+      shadowOffsetX: 2,
+      shadowOffsetY: 2,
+      shadowOpacity: 0.1,
       cornerRadiusTL: 50,
       cornerRadiusTR: 50,
-      fillGradient: seriesGradient,
       fillPattern: seriesPattern,
+      fillGradient: seriesGradient,
+      shadowColor: am5.color(0x000000),
+      tooltipText: "{categoryX}: {valueY}",
+      stroke: themes.chartVariables[theme].grid,
     });
 
-    series.columns.template.adapters.add("fill", function (_, target) {
-      return chart.get("colors").getIndex(series.columns.indexOf(target));
-    });
+    series.columns.template.adapters.add("fill", (_, target) =>
+      chart.get("colors").getIndex(series.columns.indexOf(target))
+    );
 
     series.columns.template.states.create("hover", {
       shadowBlur: 10,

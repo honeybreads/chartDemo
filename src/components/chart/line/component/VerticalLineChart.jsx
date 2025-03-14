@@ -6,7 +6,7 @@ import * as themes from "@/assets/chartTheme";
 import { useTheme } from "@/components/Theme";
 
 // 샘플 데이터
-var data = [
+const data = [
   {
     date: "2012-12-24",
     value: 55,
@@ -169,8 +169,8 @@ export default function VerticalLineChart() {
   useLayoutEffect(() => {
     // Root 객체 생성 및 테마 불러오기
     const root = am5.Root.new(id);
-    const { lineColors } = themes[colorTheme];
-    const colorList = lineColors.lineStroke;
+    const { state } = themes[colorTheme];
+    const colorList = [state.positive, state.negative];
     const myTheme = themes.myThemeRule(root, colorList, theme);
     root.setThemes([am5themes_Animated.new(root), myTheme]);
     root.dateFormatter.setAll({ dateFormat: "yyyy", dateFields: ["valueY"] });
@@ -202,6 +202,12 @@ export default function VerticalLineChart() {
         renderer: am5xy.AxisRendererX.new(root, { minGridDistance: 50 }),
       })
     );
+    
+    xAxis.get("renderer").grid.template.setAll({
+      fill:themes.chartVariables[theme].base,
+      fillOpacity:0,
+    })
+    
 
     // series 생성
     const series = chart.series.push(
@@ -223,8 +229,8 @@ export default function VerticalLineChart() {
     );
 
     series.data.processor = am5.DataProcessor.new(root, {
-      dateFormat: "yyyy-MM-dd",
       dateFields: ["date"],
+      dateFormat: "yyyy-MM-dd",
     });
 
     series.strokes.template.setAll({ strokeDasharray: [4, 2], strokeWidth: 2 });
@@ -247,7 +253,7 @@ export default function VerticalLineChart() {
 
     range0DataItem.get("axisFill").setAll({
       visible: true,
-      fillOpacity: 1,
+      opacity: 0.7,
       fill: colorList[0],
     });
 
@@ -259,8 +265,8 @@ export default function VerticalLineChart() {
     xAxis.createAxisRange(range1DataItem);
 
     range1DataItem.get("axisFill").setAll({
+      opacity: 0.7,
       visible: true,
-      fillOpacity: 1,
       fill: colorList[1],
     });
 

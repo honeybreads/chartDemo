@@ -99,6 +99,7 @@ const data = [
   },
 ];
 
+// ValueLineBubbleChart
 export default function ValueLineBubbleChart() {
   const id = "valueline-bubble";
   const { theme, colorTheme } = useTheme();
@@ -106,8 +107,8 @@ export default function ValueLineBubbleChart() {
   useLayoutEffect(() => {
     // Root 객체 생성 및 테마 불러오기
     const root = am5.Root.new(id);
-    const { colorSet } = themes[colorTheme];
-    const colorList = colorSet(2);
+    const { primary } = themes[colorTheme];
+    const colorList = primary;
     const myTheme = themes.myThemeRule(root, colorList, theme);
     root.setThemes([am5themes_Animated.new(root), myTheme]);
 
@@ -137,102 +138,80 @@ export default function ValueLineBubbleChart() {
       })
     );
 
-    // series(0) 생성
-    const series0 = chart.series.push(
-      am5xy.LineSeries.new(root, {
-        calculateAggregates: true,
-        xAxis: xAxis,
-        yAxis: yAxis,
-        valueYField: "ay",
-        valueXField: "x",
-        valueField: "aValue",
-        tooltip: am5.Tooltip.new(root, {
-          labelText: "x: {valueX}, y: {valueY}, value: {value}",
-        }),
-      })
-    );
-
-    // bullet 생성
-    const circleTemplate = am5.Template.new({});
-    series0.bullets.push(() => {
-      const graphics = am5.Circle.new(
-        root,
-        { fill: series0.get("fill") },
-        circleTemplate
+    // series 생성 함수
+    const createSeries = (y, value, type) => {
+      const series = chart.series.push(
+        am5xy.LineSeries.new(root, {
+          xAxis,
+          yAxis,
+          valueYField: y,
+          valueXField: "x",
+          valueField: value,
+          calculateAggregates: true,
+          tooltip: am5.Tooltip.new(root, {
+            labelText: "x: {valueX}, y: {valueY}, value: {value}",
+          }),
+        })
       );
-      return am5.Bullet.new(root, { sprite: graphics });
-    });
 
-    series0.set("heatRules", [
-      {
-        target: circleTemplate,
-        min: 3,
-        max: 35,
-        key: "radius",
-        dataField: "value",
-      },
-    ]);
+      // bullets 생성
+      const newTemp = am5.Template.new({});
+      series.bullets.push(() => {
+        let graphics;
+        if (type === "circle") {
+          // 구 타입
+          graphics = am5.Circle.new(
+            root,
+            { fill: series.get("fill") },
+            newTemp
+          );
+        } else if (type === "star") {
+          // 별 타입
+          graphics = am5.Star.new(
+            root,
+            {
+              spikes: 12,
+              fill: series.get("fill"),
+              innerRadius: am5.percent(75),
+            },
+            newTemp
+          );
+        }
+        return am5.Bullet.new(root, { sprite: graphics });
+      });
 
-    // series(1) 생성
-    const starTemplate = am5.Template.new({});
-    var series1 = chart.series.push(
-      am5xy.LineSeries.new(root, {
-        calculateAggregates: true,
-        xAxis: xAxis,
-        yAxis: yAxis,
-        valueYField: "by",
-        valueXField: "x",
-        valueField: "bValue",
-        tooltip: am5.Tooltip.new(root, {
-          labelText: "x: {valueX}, y: {valueY}, value: {value}",
-        }),
-      })
-    );
-
-    // bullet 생성
-    series1.bullets.push(() => {
-      var graphics = am5.Star.new(
-        root,
+      series.set("heatRules", [
         {
-          spikes: 12,
-          fill: series1.get("fill"),
-          innerRadius: am5.percent(90),
+          target: newTemp,
+          min: 5,
+          max: 30,
+          key: "radius",
+          dataField: "value",
         },
-        starTemplate
-      );
-      return am5.Bullet.new(root, {sprite: graphics});
-    });
+      ]);
 
-    series1.set("heatRules", [
-      {
-        target: starTemplate,
-        min: 3,
-        max: 50,
-        key: "radius",
-        dataField: "value",
-      },
-    ]);
+      series.appear(1000);
+      series.data.setAll(data);
+      return series;
+    };
 
-    // series0.strokes.template.set("opacity",0)
-    // series1.strokes.template.set("opacity",0)
+    // series 생성
+    createSeries("ay", "aValue", "circle");
+    createSeries("by", "bValue", "star");
 
     // cursor 생성
-    chart.set(
+    const cursor = chart.set(
       "cursor",
       am5xy.XYCursor.new(root, {
-        xAxis: xAxis,
-        yAxis: yAxis,
+        xAxis,
+        yAxis,
         behavior: "zoomXY",
       })
     );
-
-    // 데이터 적용
-    series0.data.setAll(data);
-    series1.data.setAll(data);
+    cursor.lineX.setAll({ stroke: themes.chartVariables[theme].base });
+    cursor.lineY.setAll({ stroke: themes.chartVariables[theme].base });
 
     // 애니메이션 적용
-    series0.appear(1000);
-    series1.appear(1000);
     chart.appear(1000, 100);
 
     return () => root.dispose();

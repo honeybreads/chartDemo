@@ -59,6 +59,10 @@ const data = [
   },
 ];
 
+// data 컬러 샘플
+const color = ["#1C8BFF", "#FF2B67"];
+
+// NegativeStackBarChart
 export default function NegativeStackBarChart() {
   const id = "negativestack-bar";
   const { theme, colorTheme } = useTheme();
@@ -66,8 +70,7 @@ export default function NegativeStackBarChart() {
   useLayoutEffect(() => {
     // Root 객체 생성 및 테마 불러오기
     const root = am5.Root.new(id);
-    const { colorSet } = themes[colorTheme];
-    const colorList = colorSet(2);
+    const colorList = color;
     const myTheme = themes.myThemeRule(root, colorList, theme);
     root.setThemes([am5themes_Animated.new(root), myTheme]);
 
@@ -79,27 +82,25 @@ export default function NegativeStackBarChart() {
         wheelX: "panX",
         wheelY: "zoomX",
         paddingLeft: 0,
-        paddingRight: 10,
         arrangeTooltips: false,
         layout: root.verticalLayout,
       })
     );
+
     chart.getNumberFormatter().set("numberFormat", "#.#s");
 
     // legend 생성
     chart.children.push(
       am5.Legend.new(root, {
-        centerX: am5.p50,
         x: am5.p50,
+        centerX: am5.p50,
       })
     );
 
     // cursor 생성
     const cursor = chart.set(
       "cursor",
-      am5xy.XYCursor.new(root, {
-        behavior: "zoomY",
-      })
+      am5xy.XYCursor.new(root, { behavior: "zoomY" })
     );
     cursor.lineY.set("forceHidden", true);
     cursor.lineX.set("forceHidden", true);
@@ -110,9 +111,9 @@ export default function NegativeStackBarChart() {
         categoryField: "age",
         renderer: am5xy.AxisRendererY.new(root, {
           inversed: true,
+          minGridDistance: 20,
           cellEndLocation: 0.9,
           cellStartLocation: 0.1,
-          minGridDistance: 20,
           minorGridEnabled: true,
         }),
       })
@@ -131,8 +132,8 @@ export default function NegativeStackBarChart() {
     const createSeries = (field, labelCenterX, orientation, rangeValue) => {
       const series = chart.series.push(
         am5xy.ColumnSeries.new(root, {
-          xAxis: xAxis,
-          yAxis: yAxis,
+          xAxis,
+          yAxis,
           clustered: false,
           valueXField: field,
           categoryYField: "age",
@@ -145,6 +146,7 @@ export default function NegativeStackBarChart() {
       );
 
       series.columns.template.setAll({
+        opacity: 0.8,
         height: am5.p100,
         strokeOpacity: 0,
         cornerRadiusBL: 0,
@@ -153,7 +155,7 @@ export default function NegativeStackBarChart() {
         cornerRadiusTR: 0,
       });
 
-      series.bullets.push(function () {
+      series.bullets.push(() => {
         return am5.Bullet.new(root, {
           locationX: 1,
           locationY: 0.5,
@@ -178,6 +180,7 @@ export default function NegativeStackBarChart() {
       const label = rangeDataItem.get("label");
       label.setAll({
         paddingTop: 10,
+        fontWeight: 600,
         maxWidth: "auto",
         fontSize: "1.1em",
         isMeasured: false,
@@ -186,12 +189,8 @@ export default function NegativeStackBarChart() {
         text: field.toUpperCase(),
       });
 
-      label.adapters.add("dy", function () {
-        return -chart.plotContainer.height();
-      });
-
+      label.adapters.add("dy", () => -chart.plotContainer.height());
       series.data.setAll(data);
-
       return series;
     };
 

@@ -17,7 +17,7 @@ const createData = (count) => {
     return value;
   };
 
-  for (var i = 0; i < count; ++i) {
+  for (let i = 0; i < count; ++i) {
     am5.time.add(date, "day", 1);
     data.push({ date: date.getTime(), value: randomValue() });
   }
@@ -34,8 +34,8 @@ export default function DifferentStrokeLineChart() {
   useLayoutEffect(() => {
     // Root 객체 생성 및 테마 불러오기
     const root = am5.Root.new(id);
-    const { colorSet, lineColors } = themes[colorTheme];
-    const colorList = colorSet(0);
+    const { state } = themes[colorTheme];
+    const colorList = [state.positive, state.negative];
     const myTheme = themes.myThemeRule(root, colorList, theme);
     root.setThemes([am5themes_Animated.new(root), myTheme]);
 
@@ -44,7 +44,7 @@ export default function DifferentStrokeLineChart() {
       if (index !== 0) {
         const colorNum = data[index - 1].value >= item.value ? 0 : 1;
         data[index - 1].strokeSettings = {
-          stroke: lineColors.lineStroke[colorNum],
+          stroke: colorList[colorNum],
         };
       }
     });
@@ -74,8 +74,8 @@ export default function DifferentStrokeLineChart() {
         tooltip: am5.Tooltip.new(root, {}),
         baseInterval: { timeUnit: "day", count: 1 },
         renderer: am5xy.AxisRendererX.new(root, {
-          minorGridEnabled: true,
           minGridDistance: 70,
+          minorGridEnabled: true,
         }),
       })
     );
@@ -88,11 +88,11 @@ export default function DifferentStrokeLineChart() {
     // series 생성
     const series = chart.series.push(
       am5xy.LineSeries.new(root, {
+        xAxis,
+        yAxis,
         name: "Series",
-        xAxis: xAxis,
-        yAxis: yAxis,
-        valueYField: "value",
         valueXField: "date",
+        valueYField: "value",
         tooltip: am5.Tooltip.new(root, { labelText: "{valueY}" }),
       })
     );
