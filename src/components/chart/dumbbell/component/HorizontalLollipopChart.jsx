@@ -64,7 +64,7 @@ export default function HorizontalLollipopChart() {
 
     const yAxis = chart.yAxes.push(
       am5xy.CategoryAxis.new(root, {
-        maxDeviation: 0.3,
+        maxDeviation: 0.3 ,
         categoryField: "category",
         renderer: am5xy.AxisRendererY.new(root, {
           minGridDistance: 20,
