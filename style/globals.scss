@@ -55,11 +55,13 @@ html {
   &-group {
     @apply flex gap-2;
 
-    & > button {
+    & > button,
+    & > a {
       @apply p-1.5;
-      @apply border;
       @apply rounded-md;
       @apply duration-300;
+      @apply content-center;
+      @apply border border-solid border-border;
 
       &:hover {
         @apply bg-foreground;

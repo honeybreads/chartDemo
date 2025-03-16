@@ -1,8 +1,6 @@
-# React + Vite
+# amcharts5 Demo
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+본 데모 페이지는 amCharts 5를 기반으로 다양한 차트를 각각 프로젝트 디자인에 맞춰 빠르고 일관성 있게 구현하기 위하여 만들어졌습니다. 
 
-Currently, two official plugins are available:
+자세한 내용은 [데모 페이지](https://chart-demos.vercel.app/)에서 확인 부탁드립니다. 
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
