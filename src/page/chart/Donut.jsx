@@ -5,7 +5,6 @@ import {
   LinkedDonutChart,
   NestedDonutChart,
   DraggingDonutChart,
-  // TimelineDonutChart,
   RadiusNestedDonutChart,
   GrainyGradientDonutChart,
   RadialGradientDonutChart,
@@ -24,13 +23,6 @@ const Donut = memo(function Donut() {
             <BasicDonutChart />
           </div>
         </div>
-        {/* 타임라인 도넛 차트 */}
-        {/* <div className="chart-layout-box">
-          <p className="chart-layout-title">Timeline Donut Chart</p>
-          <div className="chart-con" style={{ width: "100%", height: 340 }}>
-            <TimelineDonutChart />
-          </div>
-        </div> */}
         {/* 거친 그라디언트 도넛 차트 */}
         <div className="chart-layout-box">
           <p className="chart-layout-title">Grainy Gradient Donut Chart</p>
