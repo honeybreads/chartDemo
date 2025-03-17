@@ -57,6 +57,7 @@ export default function TimelineBubbleChart() {
         pinchZoomY: true,
       })
     );
+    chart.plotContainer.get("background").setAll({ stroke: 0 });
 
     // X,Y축 생성
     const xAxis = chart.xAxes.push(
@@ -76,6 +77,14 @@ export default function TimelineBubbleChart() {
         renderer: am5xy.AxisRendererY.new(root, {}),
       })
     );
+
+    [xAxis, yAxis].map((axis) => {
+      axis.get("renderer").grid.template.setAll({
+        opacity: 0.5,
+        stroke: themes.chartVariables[theme].line,
+      });
+      axis.get("renderer").adapters.add("stroke", () => false);
+    });
 
     // series(4개 영영역) 생성
     const areaData = [

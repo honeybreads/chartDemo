@@ -146,7 +146,7 @@ export default function StripPlotBubbleChart() {
             radius: 5,
             strokeWidth: 1,
             fillOpacity: 0.8,
-            stroke: am5.color(0xffffff),
+            stroke: themes.chartVariables[theme].line,
             templateField: "bulletSettings",
             tooltipText: "{valueX}: [bold]{value}[/]",
           },

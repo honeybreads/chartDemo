@@ -6,13 +6,6 @@ import { useLayoutEffect } from "react";
 import * as themes from "@/assets/chartTheme";
 import { useTheme } from "@/components/Theme";
 
-// 샘플 데이터 생성 (500개의 랜덤 데이터)
-const data = Array.from({ length: 100 }, () => ({
-  x: am5.math.round(Math.random() * 50 - Math.random() * 50, 2),
-  y: 0, // y는 초기값 0으로 설정
-  value: Math.round(Math.random() * 10),
-}));
-
 // 시뮬레이션 업데이트 함수
 const updateNodePositions = () => {
   nodes.forEach((node) => {
@@ -35,7 +28,7 @@ const addNode = (dataItem) => {
   if (bullet) {
     nodes.push({ y: bullet.y(), fx: bullet.x(), circle: bullet });
   }
-}
+};
 
 // 시뮬레이션 물리 적용
 const updateForces = () => {
@@ -54,6 +47,13 @@ export default function BeaswarmBubbleChart() {
     const colorList = primary;
     const myTheme = themes.myThemeRule(root, colorList, theme);
     root.setThemes([am5themes_Animated.new(root), myTheme]);
+
+    // 샘플 데이터 생성 (500개의 랜덤 데이터)
+    const data = Array.from({ length: 100 }, () => ({
+      x: am5.math.round(Math.random() * 50 - Math.random() * 50, 2),
+      y: 0, // y는 초기값 0으로 설정
+      value: Math.round(Math.random() * 10),
+    }));
 
     // XYChart 생성
     const chart = root.container.children.push(
@@ -111,16 +111,13 @@ export default function BeaswarmBubbleChart() {
           fillOpacity: 1,
           tooltipText: "{x}",
           fill: series.get("fill"),
-          stroke: am5.color("#fff"),
           stateAnimationDuration: 0,
+          stroke: themes.chartVariables[theme].line,
         },
         circleTemplate
       );
 
-      bulletCircle.states.create("hover", {
-        fill: chart.get("colors").getIndex(1),
-      });
-
+      bulletCircle.states.create("hover", { fillOpacity: 0.8 });
       return am5.Bullet.new(root, { sprite: bulletCircle });
     });
 
