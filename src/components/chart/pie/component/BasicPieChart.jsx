@@ -64,25 +64,9 @@ export default function BasicPieChart() {
     // legend 생성
     const legend = chart.children.push(
       am5.Legend.new(root, {
-        marginBottom: 2,
-        paddingTop: 4,
-        paddingLeft: 4,
-        paddingRight: 4,
-        paddingBottom: 4,
+        ...themes.legnedBackground(root, theme),
         x: am5.percent(50),
         centerX: am5.percent(50),
-
-        // 배경 생성
-        background: am5.RoundedRectangle.new(root, {
-          cornerRadiusTR: 4,
-          cornerRadiusTL: 4,
-          cornerRadiusBR: 4,
-          cornerRadiusBL: 4,
-          shadowBlur: 4,
-          fillOpacity: 1,
-          fill: themes.chartVariables[theme].bg,
-          shadowColor: am5.color(themes.chartVariables[theme].bg),
-        }),
       })
     );
 

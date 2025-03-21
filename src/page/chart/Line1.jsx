@@ -1,14 +1,15 @@
 import { memo } from "react";
 import {
   BasicLineChart,
-  DifferentStrokeLineChart,
-  EvenlySpacedAxesLineChart,
   LegendHoverLineChart,
-  MultipleDateAxesLineChart,
-  MultipleValueAxesLineChart,
-  PercentageChangeLineChart,
+  ReversedValueLineChart,
+  DifferentStrokeLineChart,
   MouseManipulateLineChart,
   MarkingMultipleLineChart,
+  PercentageChangeLineChart,
+  EvenlySpacedAxesLineChart,
+  MultipleDateAxesLineChart,
+  MultipleValueAxesLineChart,
   DateLabelsNearGridLineChart,
   ComparingDiffrentDateLineChart,
 } from "@/components/chart/line/LineChart";
@@ -17,13 +18,23 @@ import { LineChart } from "lucide-react";
 const Line1 = memo(function Line1() {
   return (
     <>
-      <h2 className="chart-title"><LineChart/>라인 차트</h2>
+      <h2 className="chart-title">
+        <LineChart />
+        라인 차트
+      </h2>
       <div className="chart-layout">
         {/* 기본 라인 차트 */}
         <div className="chart-layout-box">
           <p className="chart-layout-title">Basic Line Chart</p>
           <div className="chart-con" style={{ width: "100%", height: 340 }}>
             <BasicLineChart />
+          </div>
+        </div>
+        {/* 값 반전 라인 차트 */}
+        <div className="chart-layout-box">
+          <p className="chart-layout-title">Reverser Value Line Chart</p>
+          <div className="chart-con" style={{ width: "100%", height: 340 }}>
+            <ReversedValueLineChart />
           </div>
         </div>
         {/* 상,하 다른 컬러의 라인 차트 */}

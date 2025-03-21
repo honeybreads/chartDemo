@@ -5,9 +5,9 @@ import {
   ClusteredColumnChart,
   MovingBulletColumnChart,
   GroupedStacksColumnChart,
+  CombineMultipleColumnChart,
   StackedClusteredColumnChart,
   StackedWaterfallColumnChart,
-  CombineMultipleColumnChart,
 } from "@/components/chart/column/ColumnChart";
 import { BarChart3 } from "lucide-react";
 

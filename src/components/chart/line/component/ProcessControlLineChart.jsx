@@ -7,6 +7,7 @@ import { useTheme } from "@/components/Theme";
 
 // 샘플 데이터
 const data = [
+  
   { x: 1, value: 14 },
   { x: 2, value: 11 },
   { x: 3, value: 12 },
@@ -58,9 +59,8 @@ export default function ProcessControlLineChart() {
     // X,Y축 생성
     const xAxis = chart.xAxes.push(
       am5xy.ValueAxis.new(root, {
-        tooltip: am5.Tooltip.new(root, {}),
         renderer: am5xy.AxisRendererX.new(root, {
-          minGridDistance: 50,
+          minGridDistance: 60,
         }),
       })
     );
@@ -104,7 +104,6 @@ export default function ProcessControlLineChart() {
       const color = endValue ? colorList[0] : colorList[1];
       const rangeDataItem = yAxis.makeDataItem({ value, endValue });
       const range = yAxis.createAxisRange(rangeDataItem);
-
       if (endValue) {
         range.get("axisFill").setAll({
           fill: color,
@@ -130,6 +129,7 @@ export default function ProcessControlLineChart() {
           inside: true,
           centerX: am5.p0,
           centerY: am5.p100,
+          layer:999
         });
       }
     };
@@ -139,14 +139,14 @@ export default function ProcessControlLineChart() {
       createRange(lower, upper, undefined);
       createRange(lower, undefined, "제어 하한 한계");
       createRange(upper, undefined, "제어 상한 한계");
-      createRange(
-        lower + (upper - lower) / 2,
-        undefined,
-        "평균",
-        true
-      );
+      createRange(lower + (upper - lower) / 2, undefined, "평균", true);
     };
     addLimits(10, 20);
+
+    // 커서 추가
+    const cursor = chart.set("cursor", am5xy.XYCursor.new(root, {}));
+    cursor.lineY.set("forceHidden", true);
+    cursor.lineX.set("stroke", themes.chartVariables[theme].base);
 
     // data 적용
     series.data.setAll(data);

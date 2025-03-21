@@ -127,7 +127,6 @@ export default function ViolinChart() {
       multiLocation: 0.5,
     });
 
-
     // categories 설정
     let combinedValues = [];
     Object.keys(sourceData).map((category) => {
@@ -146,7 +145,7 @@ export default function ViolinChart() {
           renderer: am5xy.AxisRendererY.new(root, {}),
         })
       );
-      yAxis.get("renderer").adapters.add("stroke",()=>false);
+      yAxis.get("renderer").adapters.add("stroke", () => false);
       yAxis.get("renderer").labels.template.setAll({ forceHidden: true });
 
       const series = chart.series.push(
@@ -174,7 +173,7 @@ export default function ViolinChart() {
           text: category,
           centerX: am5.p50,
           fontWeight: "500",
-          fill: am5.color(0xffffff),
+          fill: themes.createAlternative(series.get("fill")),
           background: am5.RoundedRectangle.new(root, {
             fill: series.get("fill"),
           }),
@@ -191,6 +190,7 @@ export default function ViolinChart() {
     // cursor 생성
     const cursor = chart.set("cursor", am5xy.XYCursor.new(root, { xAxis }));
     cursor.lineY.set("visible", false);
+    cursor.lineX.set("stroke", themes.chartVariables[theme].base);
 
     // 데이터 적용
     xAxis.data.setAll(calculateData(combinedValues, 2));

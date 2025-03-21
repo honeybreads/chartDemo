@@ -71,6 +71,8 @@ export default function BasicMekkoChart() {
       am5.Legend.new(root, { centerX: am5.p50, x: am5.p50 })
     );
 
+    legend.valueLabels.template.set("width",0)
+
     // X축 및 Y축 생성 함수
     const xAxis = chart.xAxes.push(
       am5xy.ValueAxis.new(root, {

@@ -34,7 +34,7 @@ export default function BasicFillLineChart() {
   useLayoutEffect(() => {
     // Root 객체 생성 및 테마 불러오기
     const root = am5.Root.new(id);
-    const {  primary } = themes[colorTheme];
+    const { primary } = themes[colorTheme];
     const colorList = primary;
     const myTheme = themes.myThemeRule(root, colorList, theme);
     root.setThemes([am5themes_Animated.new(root), myTheme]);
@@ -57,6 +57,7 @@ export default function BasicFillLineChart() {
       am5xy.XYCursor.new(root, { behavior: "none" })
     );
     cursor.lineY.set("visible", false);
+    cursor.lineX.set("stroke", themes.chartVariables[theme].base);
 
     // X,Y축 생성
     const xAxis = chart.xAxes.push(

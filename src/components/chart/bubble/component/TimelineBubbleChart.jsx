@@ -80,8 +80,8 @@ export default function TimelineBubbleChart() {
 
     [xAxis, yAxis].map((axis) => {
       axis.get("renderer").grid.template.setAll({
-        opacity: 0.5,
-        stroke: themes.chartVariables[theme].line,
+        strokeOpacity:0.2,
+        stroke: am5.color("#fff"),
       });
       axis.get("renderer").adapters.add("stroke", () => false);
     });

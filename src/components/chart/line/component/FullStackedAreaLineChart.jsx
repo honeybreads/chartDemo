@@ -155,6 +155,7 @@ export default function FullStackedAreaLineChart() {
       am5xy.XYCursor.new(root, { behavior: "none" })
     );
     cursor.lineY.set("visible", false);
+    cursor.lineX.set("stroke", themes.chartVariables[theme].base);
 
     // X,Y축 생성
     const xAxis = chart.xAxes.push(
@@ -164,7 +165,7 @@ export default function FullStackedAreaLineChart() {
         categoryField: "year",
         tooltip: am5.Tooltip.new(root, {}),
         renderer: am5xy.AxisRendererX.new(root, {
-          minGridDistance: 80,
+          minGridDistance: 40,
           minorGridEnabled: true,
         }),
       })
@@ -181,7 +182,7 @@ export default function FullStackedAreaLineChart() {
     );
 
     // series 생성 함수
-    const createSeries = ( field) => {
+    const createSeries = (field) => {
       const series = chart.series.push(
         am5xy.LineSeries.new(root, {
           xAxis,
@@ -211,11 +212,12 @@ export default function FullStackedAreaLineChart() {
 
     // series 생성
     category.map((item) => createSeries(item));
-    
+
     // legend 생성성
     const legend = chart.children.push(
       am5.Legend.new(root, { x: am5.p50, centerX: am5.p50 })
     );
+    legend.valueLabels.template.adapters.add("fill",()=>themes.chartVariables[theme].base)
 
     // 데이터 적용
     xAxis.data.setAll(data);

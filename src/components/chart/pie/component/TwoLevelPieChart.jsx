@@ -86,13 +86,7 @@ export default function TwoLevelPieChart() {
 
     series1.labels.template.adapters.add("fill", (_, target) => {
       const fill = target.dataItem?._settings.fill.hex;
-      return fill
-        ? am5.Color.alternative(
-            am5.color(fill),
-            am5.color("#FFF"),
-            am5.color("#000")
-          )
-        : am5.color("#222");
+      return fill ? themes.createAlternative(fill) : am5.color("#222");
     });
 
     series1.labels.template.adapters.add("radius", (_, target) => {

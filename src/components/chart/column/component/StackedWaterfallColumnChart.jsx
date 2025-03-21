@@ -96,7 +96,7 @@ export default function StackedWaterfallColumnChart() {
         categoryField: "category",
         tooltip: am5.Tooltip.new(root, {}),
         renderer: am5xy.AxisRendererX.new(root, {
-          minGridDistance:20,
+          minGridDistance: 20,
           cellEndLocation: 0.9,
           cellStartLocation: 0.1,
         }),
@@ -133,6 +133,7 @@ export default function StackedWaterfallColumnChart() {
 
       series.columns.template.setAll({
         tooltipY: 0,
+        strokeOpacity: 1,
         cornerRadiusTR: 0,
         cornerRadiusTL: 0,
         width: am5.percent(95),
@@ -144,12 +145,7 @@ export default function StackedWaterfallColumnChart() {
 
       // bullet 생성
       series.bullets.push((root, cols) => {
-        const fill = am5.Color.alternative(
-          cols.get("fill"),
-          am5.color("#fff"),
-          am5.color("#000")
-        );
-
+        const fill = themes.createAlternative(cols.get("fill")); 
         const label = am5.Label.new(root, {
           fill,
           text: "{valueY}",

@@ -72,7 +72,7 @@ export default function MovingBulletColumnChart() {
         wheelX: "none",
         wheelY: "none",
         paddingLeft: 0,
-        paddingTop: 40,
+        paddingTop: 42,
       })
     );
     chart.plotContainer.get("background").set("strokeOpacity", 0);

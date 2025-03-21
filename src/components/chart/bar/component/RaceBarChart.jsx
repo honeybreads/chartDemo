@@ -469,6 +469,7 @@ export default function RaceBarChart() {
       });
     });
 
+
     const label = chart.plotContainer.children.push(
       am5.Label.new(root, {
         text: "2002",

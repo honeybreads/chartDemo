@@ -74,6 +74,7 @@ export default function ClusteredBarChart() {
         centerX: am5.p50,
       })
     );
+    legend.valueLabels.template.setAll({ width: 0 });
 
     // X,Y축 생성
     const yAxis = chart.yAxes.push(
@@ -135,12 +136,7 @@ export default function ClusteredBarChart() {
       });
 
       series.bullets.push((_, cols) => {
-        const fill = am5.Color.alternative(
-          cols.get("fill"),
-          am5.color("#fff"),
-          am5.color("#000")
-        );
-
+        const fill = themes.createAlternative(cols.get("fill"));
         return am5.Bullet.new(root, {
           locationX: 1,
           locationY: 0.5,

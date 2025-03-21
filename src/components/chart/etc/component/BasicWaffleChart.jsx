@@ -89,6 +89,8 @@ export default function BasicWaffleChart() {
       })
     );
 
+    legend.valueLabels.template.set("width", 0);
+
     // X축 및 Y축 생성 함수
     const createAxes = (type) => {
       const axisOption = type === "x" ? chart.xAxes : chart.yAxes;
@@ -145,7 +147,7 @@ export default function BasicWaffleChart() {
         width: am5.percent(100),
         height: am5.percent(100),
         stroke: am5.color("#fff"),
-        strokeOpacity: 0.5,
+        strokeOpacity: 0.2,
         fill: colorList[index],
         cornerRadiusTL: 0,
         cornerRadiusTR: 0,

@@ -242,7 +242,6 @@ export default function PartitionedBarChart() {
     const legendData = [];
     const legend = chart.children.push(
       am5.Legend.new(root, {
-        width: 100,
         nameField: "name",
         fillField: "color",
         strokeField: "color",
@@ -250,6 +249,9 @@ export default function PartitionedBarChart() {
         layout: root.verticalLayout,
       })
     );
+    legend.valueLabels.template.setAll({width:0})
+
+    
 
     // X,Y축 생성
     const yAxis = chart.yAxes.push(

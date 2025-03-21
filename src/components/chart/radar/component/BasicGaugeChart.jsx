@@ -96,9 +96,14 @@ export default function BasicGaugeChart() {
     const axisRenderer = am5radar.AxisRendererCircular.new(root, {
       innerRadius: -40,
       minGridDistance: 60,
+      stroke: 0,
     });
 
     axisRenderer.grid.template.setAll({ opacity: 0 });
+    axisRenderer.axisFills.template.adapters.add("fill", (fill, target) => {
+      target.set("stroke", fill);
+      return fill;
+    });
 
     const xAxis = chart.xAxes.push(
       am5xy.ValueAxis.new(root, {
@@ -122,6 +127,7 @@ export default function BasicGaugeChart() {
       "bullet",
       am5xy.AxisBullet.new(root, { sprite: clockHand })
     );
+    
     xAxis.createAxisRange(axisDataItem);
 
     // 중앙 라벨 생성
@@ -129,9 +135,9 @@ export default function BasicGaugeChart() {
       am5.Label.new(root, {
         fontSize: 24,
         textAlign: "center",
+        fill: am5.color("#fff"),
         centerX: am5.percent(50),
         centerY: am5.percent(50),
-        fill: am5.color(0xffffff),
       })
     );
 
@@ -149,7 +155,10 @@ export default function BasicGaugeChart() {
       });
 
       // 값에 따른 라벨 변화
-      label.set("text", Math.round(value).toString());
+      label.setAll({
+        text: Math.round(value).toString(),
+        fill:themes.createAlternative(fill) 
+      });
 
       // 화살표 아이콘 색상 변경
       ["pin", "hand"].forEach((part) => {
@@ -179,11 +188,7 @@ export default function BasicGaugeChart() {
     // 데이터에 따른 축 생성
     const axisRanges = data.map((newData, index) => {
       const axisRange = xAxis.createAxisRange(xAxis.makeDataItem({}));
-      const textFill = am5.Color.alternative(
-        am5.color(colorList[index]),
-        am5.color("#fff"),
-        am5.color("#000")
-      );
+      const textFill = themes.createAlternative(colorList[index])
 
       axisRange.setAll({
         value: newData.lowScore,
@@ -196,6 +201,7 @@ export default function BasicGaugeChart() {
       });
 
       axisRange.get("label").setAll({
+        layer: 999,
         radius: 15,
         inside: true,
         fontSize: 10,

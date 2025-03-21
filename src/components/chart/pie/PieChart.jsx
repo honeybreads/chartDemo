@@ -4,6 +4,7 @@ import BrokenPieChart from "./component/BrokenPieChart";
 import NestedPieChart from "./component/NestedPieChart";
 import TwoLevelPieChart from "./component/TwoLevelPieChart";
 import ExplodingPieChart from "./component/ExplodingPieChart";
+import VariableRadiusPieChart from "./component/VariableRadiusPieChart";
 
 export {
   SemiPieChart,
@@ -11,5 +12,6 @@ export {
   BrokenPieChart,
   NestedPieChart,
   TwoLevelPieChart,
-  ExplodingPieChart
+  ExplodingPieChart,
+  VariableRadiusPieChart
 };

@@ -59,6 +59,8 @@ export default function DraggableRangeLineChart() {
     // X,Y축 생성
     const xAxis = chart.xAxes.push(
       am5xy.DateAxis.new(root, {
+        endLocation:0.5,
+        startLocation:0.5,
         baseInterval: { timeUnit: "day", count: 1 },
         renderer: am5xy.AxisRendererX.new(root, {
           minGridDistance: 90,

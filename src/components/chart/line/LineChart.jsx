@@ -20,6 +20,7 @@ import LiveOrderBookLineChart from "./component/LiveOrderBookLineChart";
 import DrawingSeriesLineChart from "./component/DrawingSeriesLineChart";
 import DurationValueLineChart from "./component/DurationValueLineChart";
 import ChartWithGapsLineChart from "./component/ChartWithGapsLineChart";
+import ReversedValueLineChart from "./component/ReversedValueLineChart";
 import DraggableRangeLineChart from "./component/DraggableRangeLineChart";
 import ProcessControlLineChart from "./component/ProcessControlLineChart";
 import SmoothedStackedLineChart from "./component/SmoothedStackedLineChart";
@@ -60,6 +61,7 @@ export {
   DrawingSeriesLineChart,
   DurationValueLineChart,
   ChartWithGapsLineChart,
+  ReversedValueLineChart,
   DraggableRangeLineChart,
   ProcessControlLineChart,
   DifferentStrokeLineChart,

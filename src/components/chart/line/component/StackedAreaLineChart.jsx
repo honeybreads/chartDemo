@@ -156,6 +156,7 @@ export default function StackedAreaLineChart() {
       am5xy.XYCursor.new(root, { behavior: "none" })
     );
     cursor.lineY.set("visible", false);
+    cursor.lineX.set("stroke", themes.chartVariables[theme].base)
 
     // X,Y축 생성
     const xAxis = chart.xAxes.push(
@@ -164,7 +165,7 @@ export default function StackedAreaLineChart() {
         startLocation: 0.5,
         categoryField: "year",
         renderer: am5xy.AxisRendererX.new(root, {
-          minGridDistance: 70,
+          minGridDistance: 40,
           minorGridEnabled: true,
         }),
         tooltip: am5.Tooltip.new(root, {}),

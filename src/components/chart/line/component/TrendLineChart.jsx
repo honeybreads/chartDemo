@@ -203,13 +203,14 @@ export default function TrendLineChart() {
       series.appear(1000, 100);
     };
 
-    // trendSeries 생성 
+    // trendSeries 생성
     createTrendLine([data[1], data[10]], colorList[1]);
     createTrendLine([data[16], data[20]], colorList[2]);
 
     // cursor 생성성
     const cursor = chart.set("cursor", am5xy.XYCursor.new(root, { xAxis }));
     cursor.lineY.set("visible", false);
+    cursor.lineX.set("stroke", themes.chartVariables[theme].base);
 
     // data 적용
     series.data.setAll(data);

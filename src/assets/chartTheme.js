@@ -1,4 +1,5 @@
 import * as am5 from "@amcharts/amcharts5";
+import * as am5plugins_exporting from "@amcharts/amcharts5/plugins/exporting";
 
 // 컬러 설정
 // 컬러 테마 생성 함수
@@ -38,7 +39,7 @@ export const basicTheme = createTheme(
     "#e372ff",
     "#f3a4ff",
   ],
-  "#214f9e"
+  "#ad1af0"
 );
 
 // violetTheme
@@ -65,32 +66,35 @@ export const violetTheme = createTheme(
     "#5cdcff",
     "#38e1d7",
   ],
-  "#0086CC"
+  "#0086cc"
 );
 
 // pastelTheme
-export const pastelTheme = createTheme([
-  "#ff9794",
-  "#ffb663",
-  "#ffd900",
-  "#acdf20",
-  "#80d929",
-  "#72d7d0",
-  "#a7d2ff",
-  "#a8a9ff",
-  "#e5abff",
-  "#ffa7eb",
-  "#c39d91",
-  "#b5b864",
-  "#11af09",
-  "#008290",
-  "#0086cc",
-  "#779cbe",
-  "#6893ff",
-  "#8968ff",
-  "#be5dff",
-  "#ff47ac",
-]);
+export const pastelTheme = createTheme(
+  [
+    "#ff9794",
+    "#ffb663",
+    "#ffd900",
+    "#acdf20",
+    "#80d929",
+    "#72d7d0",
+    "#a7d2ff",
+    "#a8a9ff",
+    "#e5abff",
+    "#ffa7eb",
+    "#c39d91",
+    "#b5b864",
+    "#11af09",
+    "#008290",
+    "#0086cc",
+    "#779cbe",
+    "#6893ff",
+    "#8968ff",
+    "#be5dff",
+    "#ff47ac",
+  ],
+  "#aeafff"
+);
 
 // 다크모드, 라이트모드 컬러(테마 컬러와 관계 없음)
 export const chartVariables = {
@@ -103,6 +107,7 @@ export const chartVariables = {
     grid: "#D1DBE1",
     bg: "#FFF",
     shadow: "#ccc",
+    disabled: "#ccc",
   },
   dark: {
     base: "#ccc",
@@ -110,6 +115,7 @@ export const chartVariables = {
     grid: "#666",
     bg: "#222",
     shadow: "#222",
+    disabled: "#444",
   },
 };
 
@@ -163,14 +169,13 @@ const themeCommon = (myTheme, theme) => {
         fill: series.get("fill"),
       });
     });
-    
 };
 
 // Pie 그래프 옵션
 const themePie = (myTheme, colorSet) => {
   myTheme.rule("PieSeries").set("colors", colorSet);
   myTheme.rule("Slice", ["pie", "series"]).states.create("active", {
-    shiftRadius: 10,
+    shiftRadius: 5,
   });
 };
 
@@ -241,7 +246,7 @@ export const createBulletSpriet = (root, fill, stroke, options) => {
 export const seriesSetMaxWidth = (root, target) => {
   const percent = target.dataItem?.get("valuePercentTotal");
   const baseWidth = root.width();
-  target.set("maxWidth",(baseWidth * percent) / 100 - 15)
+  target.set("maxWidth", (baseWidth * percent) / 100 - 15);
 };
 
 // x,y axis label width 구하는 함수
@@ -249,6 +254,51 @@ export const axisLabelSetWidth = (xAxis, target) => {
   const x0 = xAxis.getDataItemCoordinateY(xAxis.dataItems[0], "category", 0);
   const x1 = xAxis.getDataItemCoordinateY(xAxis.dataItems[0], "category", 1);
   target.set("maxWidth", x1 - x0);
+};
+
+// 다운로드 버튼 생성 함수
+export const createExportButton = (root) => {
+  const exportBtn = am5plugins_exporting.Exporting.new(root, {
+    menu: am5plugins_exporting.ExportingMenu.new(root, {}),
+  });
+  const exportBtnBg = document.querySelector(".am5exporting-icon");
+  const exportBtnPath = document.querySelector(".am5exporting-menu path");
+  exportBtnBg.style.background = chartVariables.dark.base;
+  exportBtnPath.style.fill = chartVariables.dark.line;
+
+  return exportBtn;
+};
+
+// 범례 배경색 생성 함수
+export const legnedBackground = (root, theme) => {
+  const option = {
+    paddingTop: 4,
+    paddingLeft: 4,
+    paddingRight: 4,
+    paddingBottom: 4,
+    marginBottom: 2,
+    background: am5.RoundedRectangle.new(root, {
+      shadowBlur: 4,
+      fillOpacity: 1,
+      cornerRadiusTR: 4,
+      cornerRadiusTL: 4,
+      cornerRadiusBR: 4,
+      cornerRadiusBL: 4,
+      fill: chartVariables[theme].bg,
+      shadowColor: am5.color(chartVariables[theme].bg),
+    }),
+  };
+
+  return option;
+};
+
+// 색상 대비 생성 함수
+export const createAlternative = (color) => {
+  return am5.Color.alternative(
+    am5.color(color),
+    am5.color(chartVariables.light.bg),
+    am5.color(chartVariables.dark.bg)
+  );
 };
 
 // 커스텀 테마 생성
@@ -262,12 +312,15 @@ export const myThemeRule = (root, colorList, theme) => {
   // 루트 컬러 체인지
   const primaryCol = am5.color(colorList[0]);
   const primaryLightCol = am5.Color.lighten(primaryCol, 0.5);
-  root.interfaceColors.set("stroke", chartVariables[theme].base);
-  root.interfaceColors.set("grid", chartVariables[theme].grid);
-  root.interfaceColors.set("primaryButton", primaryCol);
-  root.interfaceColors.set("primaryButtonHover", primaryCol);
-  root.interfaceColors.set("primaryButtonActive", primaryCol);
-  root.interfaceColors.set("primaryButtonDown", primaryLightCol);
+  root.interfaceColors.setAll({
+    stroke: chartVariables[theme].base,
+    grid: chartVariables[theme].grid,
+    primaryButton: primaryCol,
+    primaryButtonHover: primaryCol,
+    primaryButtonActive: primaryCol,
+    primaryButtonDown: primaryLightCol,
+    primaryButtonStroke: "transparent",
+  });
 
   // 각 차트 옵션
   themeCommon(myTheme, theme);

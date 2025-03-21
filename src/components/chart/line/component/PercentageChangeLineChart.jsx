@@ -64,6 +64,7 @@ export default function PercentageChangeLineChart() {
       am5xy.XYCursor.new(root, { behavior: "none" })
     );
     cursor.lineY.set("visible", false);
+    cursor.lineX.set("stroke", themes.chartVariables[theme].base);
 
     // X,Y축 생성
     const xAxis = chart.xAxes.push(
@@ -87,19 +88,28 @@ export default function PercentageChangeLineChart() {
     xAxis.get("renderer").labels.template.setAll({ maxWidth: "auto" });
 
     // series 생성
+    const textColor = themes.chartVariables[theme].base;
+    const labelText =
+      "[" +
+      textColor +
+      "]${valueY} {valueYChangeSelectionPercent.formatNumber('[" +
+      state.positive +
+      "]+0.00|[" +
+      state.negative +
+      "]0.00|[" +
+      textColor +
+      "]0.00')}%";
+
     const createSeries = (name) => {
       const tooltip = am5.Tooltip.new(root, {
         getFillFromSprite: false,
         getStrokeFromSprite: true,
-        labelText:
-          "[#000]${valueY} {valueYChangeSelectionPercent.formatNumber('[" +
-          state.positive +
-          "]+0.00|[" +
-          state.negative +
-          "]0.00|[#000]0.00')}%",
+        labelText,
       });
 
-      tooltip.get("background").setAll({ fill: am5.color(0xffffff) });
+      tooltip
+        .get("background")
+        .setAll({ fill: themes.chartVariables[theme].bg });
 
       // series 생성
       const series = chart.series.push(
@@ -111,12 +121,7 @@ export default function PercentageChangeLineChart() {
           valueYField: "value",
           calculateAggregates: true,
           valueYShow: "valueYChangeSelectionPercent",
-          legendValueText:
-            "[#000]${valueY} {valueYChangeSelectionPercent.formatNumber('[" +
-            state.positive +
-            "]+0.00|[" +
-            state.negative +
-            "]0.00|[#000]0.00')}%",
+          legendValueText: labelText,
           tooltip: tooltip,
         })
       );
@@ -158,20 +163,19 @@ export default function PercentageChangeLineChart() {
       let valueYShow, valueText;
       if (!switchButton.get("active")) {
         valueYShow = "valueYChangeSelectionPercent";
-        valueText =
-          "[#000]${valueY} {valueYChangeSelectionPercent.formatNumber('[" +
-          state.positive +
-          "]+0.00|[" +
-          state.negative +
-          "]0.00|[#000]0.00')}%";
+        valueText = labelText;
       } else {
         valueYShow = "valueYChangePercent";
         valueText =
-          "[#000]${valueY} {valueYChangePercent.formatNumber('[" +
+          "[" +
+          textColor +
+          "]${valueY} {valueYChangePercent.formatNumber('[" +
           state.positive +
           "]+0.00|[" +
           state.negative +
-          "]0.00|[#000]0.00')}%";
+          "]0.00|[" +
+          textColor +
+          "]0.00')}%";
       }
 
       chart.series.each((series) => {

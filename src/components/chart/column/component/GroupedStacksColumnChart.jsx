@@ -120,6 +120,7 @@ export default function GroupedStacksColumnChart() {
         centerX: am5.p50,
       })
     );
+    legend.valueLabels.template.setAll({width:0})
 
     // x,y축 생성
     const xAxis = chart.xAxes.push(
@@ -166,6 +167,7 @@ export default function GroupedStacksColumnChart() {
 
       series.columns.template.setAll({
         tooltipY: 0,
+        strokeOpacity:1,
         cornerRadiusTL: 0,
         cornerRadiusTR: 0,
         width: am5.percent(85),

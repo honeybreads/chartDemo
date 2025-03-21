@@ -123,12 +123,8 @@ export default function DataSortingColumnChart() {
     // 컬럼 내부 텍스트 레이블 추가
     series.bullets.push((_, series, dataItem) => {
       const index = series.dataItems.indexOf(dataItem);
-      const fill = am5.Color.alternative(
-        am5.color(colorList[index]),
-        am5.color("#FFF"),
-        am5.color("#000")
-      );
-
+      const fill = themes.createAlternative(colorList[index]);
+  
       return am5.Bullet.new(root, {
         locationY: 1,
         sprite: am5.Label.new(root, {

@@ -122,12 +122,6 @@ const data = [
   {
     date: "2012-01-15",
   },
-  {
-    date: "2012-01-16",
-  },
-  {
-    date: "2012-01-17",
-  },
 ];
 
 // DurationValueLineChart
@@ -265,13 +259,15 @@ export default function DurationValueLineChart() {
     });
 
     // cursor 생성
-    chart.set(
+    const cursor = chart.set(
       "cursor",
       am5xy.XYCursor.new(root, {
         xAxis,
         yAxis: distanceAxis,
       })
     );
+    cursor.lineX.set("stroke",themes.chartVariables[theme].base);
+    cursor.lineY.set("stroke",themes.chartVariables[theme].base);
 
     // 데이터 적용
     distanceSeries.data.setAll(data);

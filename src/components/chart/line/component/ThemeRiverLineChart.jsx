@@ -56,8 +56,8 @@ export default function ThemeRiverLineChart() {
         chart.setAll({ layout: root.horizontalLayout });
         legend.setAll({
           y: am5.p50,
-          x:false,
-          centerX:false,
+          x: false,
+          centerX: false,
           centerY: am5.p50,
           layout: root.verticalLayout,
         });
@@ -83,11 +83,10 @@ export default function ThemeRiverLineChart() {
         centerY: am5.p50,
         clickTarget: "none",
         layout: root.verticalLayout,
-        
       })
     );
-    legend.markers.template.setAll({width:10,height:10})
-    legend.valueLabels.template.set("forceHidden", true);
+    legend.markers.template.setAll({ width: 10, height: 10 });
+    legend.valueLabels.template.setAll({ forceHidden: true, width: 0 });
 
     // X축 생성 (연도)
     const xAxis = chart.xAxes.push(
@@ -178,10 +177,12 @@ export default function ThemeRiverLineChart() {
     xAxis.data.setAll(processedData);
 
     // 커서 추가
-    chart.set(
+    const cursor = chart.set(
       "cursor",
       am5xy.XYCursor.new(root, { behavior: "zoomXY", xAxis })
     );
+    cursor.lineX.set("stroke", themes.chartVariables[theme].base);
+    cursor.lineY.set("stroke", themes.chartVariables[theme].base);
 
     // 애니메이션 적용
     chart.appear(1000, 100);

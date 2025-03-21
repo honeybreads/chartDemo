@@ -233,6 +233,7 @@ export default function LiveOrderBookLineChart() {
     // cursor 생성
     const cursor = chart.set("cursor", am5xy.XYCursor.new(root, { xAxis }));
     cursor.lineY.set("visible", false);
+    cursor.lineX.set("stroke",themes.chartVariables[theme].base);
 
     // Data 변환
     const processData = (list, type, desc, res) => {

@@ -183,6 +183,8 @@ export default function VerticalLineChart() {
       })
     );
 
+    chart.plotContainer.get("background").setAll({ stroke: 0 });
+
     // X,Y축 생성
     const yAxis = chart.yAxes.push(
       am5xy.DateAxis.new(root, {
@@ -199,15 +201,16 @@ export default function VerticalLineChart() {
     const xAxis = chart.xAxes.push(
       am5xy.ValueAxis.new(root, {
         maxDeviation: 0,
-        renderer: am5xy.AxisRendererX.new(root, { minGridDistance: 50 }),
+        renderer: am5xy.AxisRendererX.new(root, {}),
       })
     );
-    
-    xAxis.get("renderer").grid.template.setAll({
-      fill:themes.chartVariables[theme].base,
-      fillOpacity:0,
-    })
-    
+
+    [xAxis, yAxis].map((axis) => {
+      axis
+        .get("renderer")
+        .grid.template.adapters.add("stroke", () => am5.color("#fff"));
+      axis.get("renderer").adapters.add("stroke", () => false);
+    });
 
     // series 생성
     const series = chart.series.push(
@@ -278,6 +281,7 @@ export default function VerticalLineChart() {
       am5xy.XYCursor.new(root, { yAxis, behavior: "none" })
     );
     cursor.lineX.set("visible", false);
+    cursor.lineY.set("stroke", themes.chartVariables[theme].base);
 
     // 데이터 적용
     series.data.setAll(data);

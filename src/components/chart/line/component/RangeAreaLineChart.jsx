@@ -62,6 +62,7 @@ export default function RangeAreaLineChart() {
       am5xy.XYCursor.new(root, { behavior: "none" })
     );
     cursor.lineY.set("visible", false);
+    cursor.lineX.set("stroke", themes.chartVariables[theme].base);
 
     // X,Y축 생성
     const xAxis = chart.xAxes.push(
@@ -71,6 +72,7 @@ export default function RangeAreaLineChart() {
         baseInterval: { count: 1, timeUnit: "day" },
         renderer: am5xy.AxisRendererX.new(root, {
           minorGridEnabled: true,
+          minGridDistance: 80,
         }),
       })
     );
@@ -103,6 +105,12 @@ export default function RangeAreaLineChart() {
         .get("tooltip")
         .get("background")
         .adapters.add("fill", () => colorList[0]);
+
+      series
+        .get("tooltip")
+        .label.adapters.add("fill", () =>
+          themes.createAlternative(colorList[0])
+        );
       return series;
     };
 

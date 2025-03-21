@@ -42,15 +42,8 @@ export default function DifferentNegativeLineChart() {
 
     // XYChart 생성
     const chart = root.container.children.push(
-      am5xy.XYChart.new(root, { wheelY: "zoomX" })
+      am5xy.XYChart.new(root, { wheelY: "zoomX",paddingLeft:24 })
     );
-
-    // 커서 추가
-    const cursor = chart.set(
-      "cursor",
-      am5xy.XYCursor.new(root, { behavior: "none" })
-    );
-    cursor.lineY.set("visible", false);
 
     // X,Y축 생성
     const yAxis = chart.yAxes.push(
@@ -102,7 +95,10 @@ export default function DifferentNegativeLineChart() {
     });
 
     // cursor 생성
-    chart.set("cursor", am5xy.XYCursor.new(root, { behavior: "zoomX", xAxis }));
+    const cursor = chart.set("cursor", am5xy.XYCursor.new(root, { xAxis }));
+    cursor.lineY.set("visible", false);
+    cursor.lineX.set("stroke", themes.chartVariables[theme].base);
+
 
     // 애니메이션 적용
     series.appear(1000);

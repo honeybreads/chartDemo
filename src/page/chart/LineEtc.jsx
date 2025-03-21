@@ -1,15 +1,15 @@
 import { memo } from "react";
 import {
-  DrawingSeriesLineChart,
-  VerticalLineChart,
-  AddingDataLineChart,
   TrendLineChart,
-  DivergentLineChart,
   ErrorLineChart,
-  DurationValueLineChart,
+  VerticalLineChart,
   NoGapDateLineChart,
-  ProcessControlLineChart,
+  DivergentLineChart,
   ThemeRiverLineChart,
+  AddingDataLineChart,
+  DurationValueLineChart,
+  DrawingSeriesLineChart,
+  ProcessControlLineChart,
   EndSeriesAnimatedBulletLineChart,
 } from "@/components/chart/line/LineChart";
 import { LineChart } from "lucide-react";
@@ -35,7 +35,7 @@ const LineEtc = memo(function LineEtc() {
         </div>
         {/* 끝 라인 애니메이션 불렛 라인 차트 */}
         <div className="chart-layout-box">
-          <p className="chart-layout-title">Adding Data Line Chart</p>
+          <p className="chart-layout-title">End Series Animated Bullet Line Chart</p>
           <div className="chart-con" style={{ width: "100%", height: 340 }}>
             <EndSeriesAnimatedBulletLineChart />
           </div>

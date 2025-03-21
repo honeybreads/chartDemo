@@ -68,6 +68,7 @@ export default function StackedClusteredColumnChart() {
         centerX: am5.p50,
       })
     );
+    legend.valueLabels.template.setAll({width:0})
 
     // x,y축 생성
     const xAxis = chart.xAxes.push(
@@ -107,19 +108,16 @@ export default function StackedClusteredColumnChart() {
       );
 
       series.columns.template.setAll({
-        width: am5.percent(90),
-        tooltipY: am5.percent(10),
+        strokeOpacity:1,
         cornerRadiusTL: 0,
         cornerRadiusTR: 0,
+        width: am5.percent(90),
+        tooltipY: am5.percent(10),
         tooltipText: "{name}, {categoryX}:{valueY}",
       });
 
       series.bullets.push((root, cols) => {
-        const fill = am5.Color.alternative(
-          cols.get("fill"),
-          am5.color("#fff"),
-          am5.color("#000")
-        );
+        const fill = themes.createAlternative(cols.get("fill")); 
 
         return am5.Bullet.new(root, {
           locationY: 0.5,
@@ -129,6 +127,7 @@ export default function StackedClusteredColumnChart() {
             centerY: am5.percent(50),
             centerX: am5.percent(50),
             populateText: true,
+            oversizedBehavior: "hide",
           }),
         });
       });

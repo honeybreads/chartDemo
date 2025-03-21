@@ -1,24 +1,27 @@
 import { memo } from "react";
 import {
+  RaceBarChart,
   BasicBarChart,
+  LineAndBarChart,
   StackedBarChart,
   FloatingBarChart,
   ClusteredBarChart,
   GanttDateBarChart,
+  PartitionedBarChart,
   DataSortingBarChart,
+  MovingBulletBarChart,
   DragOrderingBarChart,
   NegativeStackBarChart,
   DivergentStackedBarChart,
-  RaceBarChart,
-  MovingBulletBarChart,
-  PartitionedBarChart,
 } from "@/components/chart/bar/BarChart";
 import { BarChartHorizontal } from "lucide-react";
 
 const Bar = memo(function Bar() {
   return (
     <>
-      <h2 className="chart-title"><BarChartHorizontal/> 바 차트</h2>
+      <h2 className="chart-title">
+        <BarChartHorizontal /> 바 차트
+      </h2>
       <div className="chart-layout">
         {/* 기본 바 차트 */}
         <div className="chart-layout-box">
@@ -41,11 +44,11 @@ const Bar = memo(function Bar() {
             <DragOrderingBarChart />
           </div>
         </div>
-        {/* 간트(?) 날짜 바 차트 */}
+        {/* 라인, 바 차트 */}
         <div className="chart-layout-box">
-          <p className="chart-layout-title">Gantt Date bar Chart</p>
+          <p className="chart-layout-title">Line And bar Chart</p>
           <div className="chart-con" style={{ width: "100%", height: 420 }}>
-            <GanttDateBarChart />
+            <LineAndBarChart />
           </div>
         </div>
         {/*  다발성(?) 바 차트 */}
@@ -53,6 +56,20 @@ const Bar = memo(function Bar() {
           <p className="chart-layout-title">Clustered bar Chart</p>
           <div className="chart-con" style={{ width: "100%", height: 420 }}>
             <ClusteredBarChart />
+          </div>
+        </div>
+        {/* 간트(?) 날짜 바 차트 */}
+        <div className="chart-layout-box">
+          <p className="chart-layout-title">Gantt Date bar Chart</p>
+          <div className="chart-con" style={{ width: "100%", height: 420 }}>
+            <GanttDateBarChart />
+          </div>
+        </div>
+        {/*  떠 있는 바 차트 */}
+        <div className="chart-layout-box">
+          <p className="chart-layout-title">Floating bar Chart</p>
+          <div className="chart-con" style={{ width: "100%", height: 420 }}>
+            <FloatingBarChart />
           </div>
         </div>
         {/*  스택 바 차트 */}
@@ -67,13 +84,6 @@ const Bar = memo(function Bar() {
           <p className="chart-layout-title">Negative Stacked bar Chart</p>
           <div className="chart-con" style={{ width: "100%", height: 420 }}>
             <NegativeStackBarChart />
-          </div>
-        </div>
-        {/*  떠 있는 바 차트 */}
-        <div className="chart-layout-box">
-          <p className="chart-layout-title">Floating bar Chart</p>
-          <div className="chart-con" style={{ width: "100%", height: 420 }}>
-            <FloatingBarChart />
           </div>
         </div>
         {/*  분기 스택 바 차트 */}

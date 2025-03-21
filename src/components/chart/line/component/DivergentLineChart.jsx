@@ -106,6 +106,7 @@ export default function DivergentLineChart() {
     // 커서 추가
     const cursor = chart.set("cursor", am5xy.XYCursor.new(root, {}));
     cursor.lineY.set("visible", false);
+    cursor.lineX.set("stroke", themes.chartVariables[theme].base);
 
     // X,Y축 생성
     const xAxis = chart.xAxes.push(
@@ -152,10 +153,13 @@ export default function DivergentLineChart() {
         pointerBaseWidth: 0,
       });
 
+      series
+        .get("tooltip")
+        .label.adapters.add("fill", () => themes.createAlternative(color));
+
       dashed && series.strokes.template.set("strokeDasharray", [5, 3]);
       series.data.setAll(data);
       series.appear(1000);
-
       return series;
     };
 
@@ -173,6 +177,7 @@ export default function DivergentLineChart() {
     const legend = chart.children.push(
       am5.Legend.new(root, { centerX: am5.p50, x: am5.p50 })
     );
+    legend.valueLabels.template.set("width", 0);
     legend.data.setAll(chart.series.values);
 
     // 애니메이션 적용

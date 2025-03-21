@@ -62,6 +62,7 @@ export default function BasicDonutChart() {
       am5.Legend.new(root, {
         x: am5.percent(50),
         centerX: am5.percent(50),
+        ...themes.legnedBackground(root, theme),
       })
     );
 

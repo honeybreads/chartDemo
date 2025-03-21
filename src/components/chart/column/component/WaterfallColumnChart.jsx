@@ -119,12 +119,8 @@ export default function WaterfallColumnChart() {
       const values = dataItem.dataContext;
       const text = Math.abs(values.start - values.end);
       const index = series.dataItems.indexOf(dataItem);
-      const fill = am5.Color.alternative(
-        am5.color(colorList[index]),
-        am5.color("#FFF"),
-        am5.color("#000")
-      );
-
+      const fill = themes.createAlternative(colorList[index]);
+  
       return am5.Bullet.new(root, {
         sprite: am5.Label.new(root, {
           text,

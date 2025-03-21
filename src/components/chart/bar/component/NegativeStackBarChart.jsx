@@ -70,10 +70,14 @@ export default function NegativeStackBarChart() {
   useLayoutEffect(() => {
     // Root 객체 생성 및 테마 불러오기
     const root = am5.Root.new(id);
-    const colorList = color;
+    const { primary } = themes[colorTheme];
+    const colorList = primary;
     const myTheme = themes.myThemeRule(root, colorList, theme);
     root.setThemes([am5themes_Animated.new(root), myTheme]);
-
+    const colorSet = am5.ColorSet.new(root, {
+      colors: color.map((color) => am5.color(color)),
+    });
+    
     // XYChart 생성
     const chart = root.container.children.push(
       am5xy.XYChart.new(root, {
@@ -87,6 +91,7 @@ export default function NegativeStackBarChart() {
       })
     );
 
+    chart.set("colors", colorSet);
     chart.getNumberFormatter().set("numberFormat", "#.#s");
 
     // legend 생성

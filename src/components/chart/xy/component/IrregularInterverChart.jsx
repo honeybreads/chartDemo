@@ -83,9 +83,9 @@ export default function IrregularInterverChart() {
       am5xy.XYChart.new(root, {
         panX: false,
         panY: false,
-        wheelX: "panX",
-        wheelY: "zoomX",
-        paddingBottom:8,
+        wheelX: false,
+        wheelY: false,
+        paddingBottom: 8,
         layout: root.verticalLayout,
       })
     );
@@ -127,19 +127,18 @@ export default function IrregularInterverChart() {
       })
     );
 
-    series
-      .get("tooltip")
-      .label.adapters.add("fill", () => themes.chartVariables[theme].line);
-    series
-      .get("tooltip")
-      .get("background")
-      .adapters.add("fill", () => themes.chartVariables[theme].base);
     series.strokes.template.setAll({ visible: false });
     series.fills.template.setAll({
       visible: true,
       fillOpacity: 1,
       templateField: "fillSettings",
     });
+
+    series.get("tooltip").label.adapters.add("fill", () => am5.color("#fff"));
+    series
+      .get("tooltip")
+      .get("background")
+      .adapters.add("fill", () => am5.color("#000"));
 
     // x axis 간격별 그리드, 라벨 생성
     for (let i = 0; i < data.length; i++) {
@@ -160,10 +159,12 @@ export default function IrregularInterverChart() {
     }
 
     // cursor 생성
-    chart.set(
+    const cursor = chart.set(
       "cursor",
       am5xy.XYCursor.new(root, { xAxis, yAxis, snapToSeries: [series] })
     );
+    cursor.lineX.set("stroke",themes.chartVariables[theme].base);
+    cursor.lineY.set("stroke",themes.chartVariables[theme].base);
 
     // 데이터 적용
     series.data.setAll(data);

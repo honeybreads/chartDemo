@@ -113,6 +113,7 @@ export default function MultipleValueAxesLineChart() {
       am5xy.XYCursor.new(root, { xAxis, behavior: "none" })
     );
     cursor.lineY.set("visible", false);
+    cursor.lineX.set("stroke", themes.chartVariables[theme].base);
 
     // 애니메이션 적용
     chart.appear(1000, 100);

@@ -69,7 +69,6 @@ export default function ErrorLineChart() {
       am5xy.XYChart.new(root, {
         panX: true,
         panY: true,
-        paddingLeft: 0,
         pinchZoomX: true,
         pinchZoomY: true,
         wheelY: "zoomXY",
@@ -166,7 +165,7 @@ export default function ErrorLineChart() {
     });
 
     // cursor 생성
-    chart.set(
+    const cursor = chart.set(
       "cursor",
       am5xy.XYCursor.new(root, {
         xAxis,
@@ -174,6 +173,8 @@ export default function ErrorLineChart() {
         snapToSeries: [series],
       })
     );
+    cursor.lineY.set("stroke",themes.chartVariables[theme].base);
+    cursor.lineX.set("stroke",themes.chartVariables[theme].base);
 
     // data 적용
     series.data.setAll(data);

@@ -124,18 +124,18 @@ export default function NestedPieChart() {
 
     series0.ticks.template.setAll({ forceHidden: true });
     series0.labels.template.setAll({
-      fill: "#222",
       radius: -10,
       text: "{category}",
       textType: "radial",
       centerX: am5.percent(100),
+      fill: themes.chartVariables[theme].base,
     });
 
     series0.slices.template.setAll({
       strokeWidth: 2,
-      stroke: themes.chartVariables[theme].line,
       toggleKey: "none",
-      fill: am5.color("#E5EAF5"),
+      fill: themes.chartVariables[theme].grid,
+      stroke: themes.chartVariables[theme].line,
     });
 
     series0.slices.template.states.create("hover", { scale: 1 });

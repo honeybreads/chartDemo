@@ -211,7 +211,7 @@ export default function ChartWithGapsLineChart() {
   useLayoutEffect(() => {
     // Root 객체 생성 및 테마 불러오기
     const root = am5.Root.new(id);
-    const {  primary,lineColors } = themes[colorTheme];
+    const { primary, lineColors } = themes[colorTheme];
     const colorList = primary;
     const myTheme = themes.myThemeRule(root, colorList, theme);
     root.setThemes([am5themes_Animated.new(root), myTheme]);
@@ -270,7 +270,7 @@ export default function ChartWithGapsLineChart() {
         }),
       })
     );
-    
+
     series.fills.template.setAll({ fillOpacity: 0.3, visible: true });
     series.data.processor = am5.DataProcessor.new(root, {
       dateFormat: "yyyy",
@@ -288,6 +288,7 @@ export default function ChartWithGapsLineChart() {
     // cursor 추가
     const cursor = chart.set("cursor", am5xy.XYCursor.new(root, { xAxis }));
     cursor.lineY.set("visible", false);
+    cursor.lineX.set("stroke", themes.chartVariables[theme].base);
 
     // 데이터 적용
     series.data.setAll(data);

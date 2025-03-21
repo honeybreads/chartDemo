@@ -16,7 +16,7 @@ const createData = (count) => {
     value = Math.round(Math.random() * 10 - 5 + value);
     if (value <= 20) value += Math.random() * 10;
     if (value > 80 || value > 50) value -= Math.random() * 10;
-    return value;
+    return Math.round(value);
   };
 
   for (let i = 0; i < count; ++i) {
@@ -62,8 +62,11 @@ export default function HorizontalTargetLineChart() {
     const xAxis = chart.xAxes.push(
       am5xy.DateAxis.new(root, {
         baseInterval: { count: 1, timeUnit: "day" },
+        endLocation: 0.5,
+        startLocation: 0.5,
+        tooltip: am5.Tooltip.new(root, {}),
         renderer: am5xy.AxisRendererX.new(root, {
-          minGridDistance: 80,
+          minGridDistance: 60,
           minorGridEnabled: true,
         }),
       })
@@ -86,21 +89,21 @@ export default function HorizontalTargetLineChart() {
     );
     series.fills.template.setAll({ fillOpacity: 0.3, visible: true });
 
-    const rangeDate = new Date();
-    am5.time.add(rangeDate, "day", Math.round(series.dataItems.length / 2));
-
     // range series 생성
+    const rangeValue = 40;
+    const rangeEndValue = -100;
+    const rangeColor = am5.color("#aaa");
     const seriesRangeDataItem = yAxis.makeDataItem({
-      value: 40,
-      endValue: -100,
+      value: rangeValue,
+      endValue: rangeEndValue,
     });
     const seriesRange = series.createAxisRange(seriesRangeDataItem);
 
-    seriesRange.strokes.template.set("stroke", am5.color("#aaa"));
+    seriesRange.strokes.template.set("stroke", rangeColor);
     seriesRange.fills.template.setAll({
       visible: true,
+      fill: rangeColor,
       fillOpacity: 0.5,
-      fill: am5.color("#aaa"),
     });
 
     seriesRangeDataItem.get("grid").setAll({
@@ -120,6 +123,22 @@ export default function HorizontalTargetLineChart() {
       text: "Target",
       centerY: am5.p100,
       fontWeight: "bold",
+    });
+
+    // range 툴팁 배경 색상 처리
+    series.get("tooltip").events.on("dataitemchanged", (e) => {
+      const value = e.newDataItem.dataContext.value;
+      if (value < rangeValue) {
+        series
+          .get("tooltip")
+          .get("background")
+          .adapters.add("fill", () => rangeColor);
+      } else {
+        series
+          .get("tooltip")
+          .get("background")
+          .adapters.add("fill", () => series.get("fill"));
+      }
     });
 
     // 데이터 적용

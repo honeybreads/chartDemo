@@ -59,6 +59,7 @@ export default function MarkingMultipleLineChart() {
       })
     );
     cursor.lineY.set("visible", false);
+    cursor.lineX.set("stroke", themes.chartVariables[theme].base)
 
     // 커서 이벤트
     let selectStatedX;

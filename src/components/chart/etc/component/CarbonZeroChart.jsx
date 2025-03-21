@@ -196,6 +196,7 @@ export default function CarbonZeroChart() {
             centerX: am5.p50,
             populateText: true,
             text: dataItem.get("categoryX"),
+            fill:am5.color("#000"),
             background: am5.RoundedRectangle.new(root, {
               cornerRadiusTL: 20,
               cornerRadiusTR: 20,

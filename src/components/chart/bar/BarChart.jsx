@@ -1,6 +1,7 @@
 import RaceBarChart from "./component/RaceBarChart";
 import BasicBarChart from "./component/BasicBarChart";
 import StackedBarChart from "./component/StackedBarChart";
+import LineAndBarChart from "./component/LineAndBarChart";
 import FloatingBarChart from "./component/FloatingBarChart";
 import GanttDateBarChart from "./component/GanttDateBarChart";
 import ClusteredBarChart from "./component/ClusteredBarChart";
@@ -15,6 +16,7 @@ export {
   RaceBarChart,
   BasicBarChart,
   StackedBarChart,
+  LineAndBarChart,
   FloatingBarChart,
   GanttDateBarChart,
   ClusteredBarChart,

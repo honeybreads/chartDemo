@@ -192,7 +192,7 @@ export default function ScatterChart() {
     );
 
     // Add cursor
-    chart.set(
+    const cursor = chart.set(
       "cursor",
       am5xy.XYCursor.new(root, {
         xAxis,
@@ -200,6 +200,8 @@ export default function ScatterChart() {
         snapToSeries: [series0, series1],
       })
     );
+    cursor.lineX.set("stroke", themes.chartVariables[theme].base);
+    cursor.lineY.set("stroke", themes.chartVariables[theme].base);
 
     // 데이터 적용
     series0.data.setAll(data);

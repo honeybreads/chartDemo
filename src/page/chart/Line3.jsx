@@ -1,10 +1,10 @@
 import { memo } from "react";
 import {
   StepLineChart,
-  DraggableRangeLineChart,
-  LiveOrderBookLineChart,
   SmoothedLineChart,
   NoRisersStepLineChart,
+  LiveOrderBookLineChart,
+  DraggableRangeLineChart,
   SmoothedStackedLineChart,
 } from "@/components/chart/line/LineChart";
 import { LineChart } from "lucide-react";
@@ -51,7 +51,7 @@ const Line3 = memo(function Line3() {
         </div>
         {/* 옆이 없는 계단형 라인 차트 */}
         <div className="chart-layout-box">
-          <p className="chart-layout-title">Step Line Chart</p>
+          <p className="chart-layout-title">No Riser Step Line Chart</p>
           <div className="chart-con" style={{width:"100%",height:340}}>
             <NoRisersStepLineChart />
           </div>

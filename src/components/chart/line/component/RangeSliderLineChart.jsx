@@ -117,13 +117,14 @@ export default function RangeSliderLineChart() {
     const range = xAxis.createAxisRange(xAxis.makeDataItem({}));
     range.set("value", rangeDate.getTime());
     range.get("grid").setAll({
-      strokeWidth: 2,
+      strokeWidth: 4,
       strokeOpacity: 1,
       stroke: colorList[0],
     });
 
     // range 핸들 생성
     const rangeHandle = am5.Button.new(root, {
+      layer: 999,
       themeTags: ["resize", "horizontal"],
       icon: am5.Graphics.new(root, { themeTags: ["icon"] }),
     });

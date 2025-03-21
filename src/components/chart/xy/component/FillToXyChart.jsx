@@ -100,7 +100,7 @@ export default function FillToXyChart() {
         panX: false,
         panY: false,
         wheelY: "none",
-        paddingBottom:8,
+        paddingBottom: 8,
       })
     );
 
@@ -157,7 +157,7 @@ export default function FillToXyChart() {
     const series1 = createSeries("bx", "by", yAxis);
 
     // cursor 생성
-    chart.set(
+    const cursor = chart.set(
       "cursor",
       am5xy.XYCursor.new(root, {
         xAxis,
@@ -165,6 +165,9 @@ export default function FillToXyChart() {
         snapToSeries: [series0, series1],
       })
     );
+
+    cursor.lineX.set("stroke", themes.chartVariables[theme].base);
+    cursor.lineY.set("stroke", themes.chartVariables[theme].base);
 
     // 데이터 적용
     series0.data.setAll(data);

@@ -56,7 +56,7 @@ export default function StackedColumnChart() {
         panY: false,
         wheelX: "panX",
         wheelY: "zoomX",
-        paddingTop:24,
+        paddingTop: 24,
         paddingLeft: 0,
         layout: root.verticalLayout,
       })
@@ -85,6 +85,7 @@ export default function StackedColumnChart() {
     const legend = chart.children.push(
       am5.Legend.new(root, { centerX: am5.p50, x: am5.p50 })
     );
+    legend.valueLabels.template.setAll({width:0})
 
     // series(막대 그래프) 생성 함수
     const makeSeries = (name) => {
@@ -100,6 +101,7 @@ export default function StackedColumnChart() {
       );
 
       series.columns.template.setAll({
+        strokeOpacity:1,
         cornerRadiusTL: 0,
         cornerRadiusTR: 0,
         tooltipY: am5.percent(10),
@@ -107,12 +109,7 @@ export default function StackedColumnChart() {
       });
 
       series.bullets.push((root, cols) => {
-        const fill = am5.Color.alternative(
-          cols.get("fill"),
-          am5.color("#fff"),
-          am5.color("#000")
-        );
-
+        const fill = themes.createAlternative(cols.get("fill"));
         return am5.Bullet.new(root, {
           sprite: am5.Label.new(root, {
             text: "{valueY}",
@@ -120,6 +117,7 @@ export default function StackedColumnChart() {
             centerY: am5.p50,
             centerX: am5.p50,
             populateText: true,
+            oversizedBehavior: "hide",
           }),
         });
       });

@@ -87,7 +87,7 @@ export default function InfograpicChart() {
         legend.setAll({
           x: false,
           y: am5.p50,
-          paddingLeft: 40,
+          paddingLeft: 24,
           centerX: false,
           centerY: am5.p50,
           layout: root.verticalLayout,
@@ -117,8 +117,7 @@ export default function InfograpicChart() {
       am5.Legend.new(root, {
         y: am5.p50,
         centerY: am5.p50,
-        width: 140,
-        paddingLeft: 40,
+        paddingLeft: 24,
         layout: root.verticalLayout,
       })
     );
@@ -133,6 +132,8 @@ export default function InfograpicChart() {
       width: iconSize.w,
       height: iconSize.h,
     });
+
+    legend.valueLabels.template.set("width",0)
 
     // X,Y축 생성
     const yAxis = chart.yAxes.push(

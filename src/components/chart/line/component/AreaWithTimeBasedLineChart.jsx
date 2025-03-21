@@ -46,7 +46,7 @@ export default function AreaWithTimeBasedLineChart() {
         panY: true,
         wheelY: "zoomX",
         pinchZoomX: true,
-        paddingLeft: 0,
+        paddingLeft: 16,
         layout: root.verticalLayout,
       })
     );
@@ -104,6 +104,9 @@ export default function AreaWithTimeBasedLineChart() {
       height: 50,
       orientation: "horizontal",
     });
+    scrollbarX
+      .get("background")
+      .setAll({ fill: themes.chartVariables[theme].shadow });
     chart.set("scrollbarX", scrollbarX);
 
     // x,y축(scrollbar) 생성
@@ -141,6 +144,7 @@ export default function AreaWithTimeBasedLineChart() {
       am5xy.XYCursor.new(root, { behavior: "none", xAxis })
     );
     cursor.lineY.set("visible", false);
+    cursor.lineX.set("stroke", themes.chartVariables[theme].base);
 
     // data 적용
     series.data.setAll(data);

@@ -108,7 +108,7 @@ export default function BrokenPieChart() {
       const series = ev.target.dataItem;
       const gradient = am5.RadialGradient.new(root, {
         stops: [
-          { color: series.get("fill"), opacity: 0.5 },
+          { color: series.get("fill"), opacity: 0.6 },
           { color: series.get("fill") },
         ],
       });

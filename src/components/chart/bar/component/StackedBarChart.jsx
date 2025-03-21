@@ -90,6 +90,7 @@ export default function StackedBarChart() {
         centerX: am5.p50,
       })
     );
+    legend.valueLabels.template.setAll({width:0})
 
     // series 생성 함수
     const makeSeries = (name, fieldName) => {
@@ -106,6 +107,7 @@ export default function StackedBarChart() {
       );
 
       series.columns.template.setAll({
+        strokeOpacity:1,
         cornerRadiusBL: 0,
         cornerRadiusBR: 0,
         cornerRadiusTL: 0,
@@ -115,12 +117,7 @@ export default function StackedBarChart() {
       });
 
       series.bullets.push((_, cols) => {
-        const fill = am5.Color.alternative(
-          cols.get("fill"),
-          am5.color("#fff"),
-          am5.color("#000")
-        );
-
+        const fill = themes.createAlternative(cols.get("fill"));
         return am5.Bullet.new(root, {
           sprite: am5.Label.new(root, {
             fill,

@@ -34,18 +34,18 @@ export default function DifferentStrokeLineChart() {
   useLayoutEffect(() => {
     // Root 객체 생성 및 테마 불러오기
     const root = am5.Root.new(id);
-    const { state } = themes[colorTheme];
-    const colorList = [state.positive, state.negative];
+    const { state, primary } = themes[colorTheme];
+    const colorList = primary;
+    const colorSet = [state.positive, state.negative];
     const myTheme = themes.myThemeRule(root, colorList, theme);
     root.setThemes([am5themes_Animated.new(root), myTheme]);
-
+    
     // 데이터 값의 상,하에 따라 색상 적용
     data.map((item, index) => {
       if (index !== 0) {
         const colorNum = data[index - 1].value >= item.value ? 0 : 1;
-        data[index - 1].strokeSettings = {
-          stroke: colorList[colorNum],
-        };
+        data[index - 1].strokeSettings = { stroke: colorSet[colorNum] };
+        data[index].strokeSettings = { stroke: colorSet[colorNum] };
       }
     });
 
@@ -67,6 +67,7 @@ export default function DifferentStrokeLineChart() {
       am5xy.XYCursor.new(root, { behavior: "none" })
     );
     cursor.lineY.set("visible", false);
+    cursor.lineX.set("stroke", themes.chartVariables[theme].base);
 
     // X,Y축 생성
     const xAxis = chart.xAxes.push(
@@ -103,7 +104,7 @@ export default function DifferentStrokeLineChart() {
     tooltip.label.adapters.add("fill", () => "#fff");
     tooltip.get("background").adapters.add("fill", (fill) => {
       if (tooltip.dataItem) {
-        return tooltip.dataItem.dataContext.strokeSettings.stroke;
+        return tooltip.dataItem.dataContext.strokeSettings?.stroke;
       }
       return fill;
     });

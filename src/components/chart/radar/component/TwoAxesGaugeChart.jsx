@@ -52,7 +52,7 @@ export default function TwoAxesGaugeChart() {
       const color = colorList[index];
       const inside = index === 1; // 0이면 바깥쪽, 1이면 안쪽
       const pinRadius = inside ? 10 : 14;
-      const labelPosition = inside ? -70 : 70;
+      const labelPosition = inside ? 70 : -70;
 
       // 축 렌더러 생성
       const axisRenderer = am5radar.AxisRendererCircular.new(root, {
@@ -82,6 +82,7 @@ export default function TwoAxesGaugeChart() {
         am5.Label.new(root, {
           y: -60,
           text: "0",
+          layer: 999,
           width: 70,
           fontSize: 24,
           x: labelPosition,
@@ -129,6 +130,8 @@ export default function TwoAxesGaugeChart() {
       am5.Legend.new(root, { x: am5.p50, centerX: am5.p50 })
     );
     legend.data.setAll([axisDataItem1, axisDataItem2]);
+    legend.labels.template.setAll({ textAlign: "center" });
+    legend.valueLabels.template.setAll({width:0})
 
     // 애니메이션 함수
     const animateChart = (axisDataItem, data, label) => {

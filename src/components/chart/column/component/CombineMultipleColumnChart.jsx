@@ -172,12 +172,12 @@ export default function CombineMultipleColumnChart() {
     );
     yAxisLine.get("renderer").grid.template.set("forceHidden", true);
 
-    // column(sales1) series
-    const columnSeries1 = chart.series.push(
+    // column(out) series
+    const columnSeriesOuter = chart.series.push(
       am5xy.ColumnSeries.new(root, {
-        name: "sales1",
         xAxis,
         yAxis: yAxisBar,
+        name: "sales1",
         clustered: false,
         valueXField: "date",
         valueYField: "sales1",
@@ -188,19 +188,17 @@ export default function CombineMultipleColumnChart() {
       })
     );
 
-    columnSeries1.data.processor = am5.DataProcessor.new(root, {
-      dateFields: ["date"],
-      dateFormat: "yyyy-MM-dd",
+    columnSeriesOuter.columns.template.setAll({
+      fillOpacity: 0.8,
+      width: am5.percent(60),
     });
 
-    columnSeries1.columns.template.set("width", am5.percent(40));
-
-    // column(sales2) series
-    const columnSeries2 = chart.series.push(
+    // column(in) series
+    const columnSeriesInner = chart.series.push(
       am5xy.ColumnSeries.new(root, {
-        name: "sales2",
         xAxis,
         yAxis: yAxisBar,
+        name: "sales2",
         clustered: false,
         valueXField: "date",
         valueYField: "sales2",
@@ -211,11 +209,12 @@ export default function CombineMultipleColumnChart() {
       })
     );
 
-    columnSeries2.columns.template.setAll({
-      fillOpacity: 0.5,
-      strokeOpacity: 0,
-      width: am5.percent(60),
+    columnSeriesInner.data.processor = am5.DataProcessor.new(root, {
+      dateFields: ["date"],
+      dateFormat: "yyyy-MM-dd",
     });
+
+    columnSeriesInner.columns.template.set("width", am5.percent(40));
 
     // line(market days all) series
     const lineSeires1 = chart.series.push(
@@ -265,8 +264,8 @@ export default function CombineMultipleColumnChart() {
         }),
       })
     );
-    lineSeries2.strokes.template.setAll({ strokeWidth: 2 });
 
+    lineSeries2.strokes.template.setAll({ strokeWidth: 2 });
     lineSeries2.bullets.push((root, series) => {
       return am5.Bullet.new(root, {
         sprite: am5.Circle.new(root, {
@@ -346,11 +345,12 @@ export default function CombineMultipleColumnChart() {
         centerX: am5.p50,
       })
     );
+    legend.valueLabels.template.setAll({width:0})
     legend.data.setAll(chart.series.values);
 
     // 데이터 적용
-    columnSeries1.data.setAll(data);
-    columnSeries2.data.setAll(data);
+    columnSeriesInner.data.setAll(data);
+    columnSeriesOuter.data.setAll(data);
     lineSeires1.data.setAll(data);
     lineSeries2.data.setAll(data);
     scrollbarSeriesLine.data.setAll(data);

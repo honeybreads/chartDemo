@@ -6,19 +6,30 @@ import {
   NestedPieChart,
   TwoLevelPieChart,
   ExplodingPieChart,
+  VariableRadiusPieChart,
 } from "@/components/chart/pie/PieChart";
 import { PieChart } from "lucide-react";
 
 const Pie = memo(function Pie() {
   return (
     <>
-      <h2 className="chart-title"><PieChart/>파이 차트</h2>
+      <h2 className="chart-title">
+        <PieChart />
+        파이 차트
+      </h2>
       <div className="chart-layout">
         {/* 기본 파이 차트 */}
         <div className="chart-layout-box">
           <p className="chart-layout-title">Basic Pie Chart</p>
           <div className="chart-con" style={{ width: "100%", height: 340 }}>
             <BasicPieChart />
+          </div>
+        </div>
+        {/* 둘레가 다르 파이 차트 */}
+        <div className="chart-layout-box">
+          <p className="chart-layout-title">Variable Radius Pie Chart</p>
+          <div className="chart-con" style={{ width: "100%", height: 340 }}>
+            <VariableRadiusPieChart />
           </div>
         </div>
         {/* 반쪽 파이 차트 */}

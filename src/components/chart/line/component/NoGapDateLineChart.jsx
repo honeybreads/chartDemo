@@ -62,6 +62,7 @@ export default function NoGapDateLineChart() {
       am5xy.XYCursor.new(root, { behavior: "none" })
     );
     cursor.lineY.set("visible", false);
+    cursor.lineX.set("stroke",themes.chartVariables[theme].base);
 
     // X,Y축 생성
     const xAxis = chart.xAxes.push(
@@ -97,19 +98,6 @@ export default function NoGapDateLineChart() {
     volumeAxis.get("renderer").labels.template.set("forceHidden", true);
 
     // series 생성
-    const series = chart.series.push(
-      am5xy.LineSeries.new(root, {
-        xAxis,
-        yAxis,
-        name: "Series",
-        valueXField: "date",
-        valueYField: "value",
-        tooltip: am5.Tooltip.new(root, {
-          labelText: "{valueY}",
-        }),
-      })
-    );
-
     const volumeSeries = chart.series.push(
       am5xy.ColumnSeries.new(root, {
         xAxis,
@@ -123,10 +111,23 @@ export default function NoGapDateLineChart() {
 
     volumeSeries.columns.template.setAll({
       fillOpacity: 1,
-      cornerRadiusTL:2,
-      cornerRadiusTR:2,
-      width: am5.percent(60)
+      cornerRadiusTL: 2,
+      cornerRadiusTR: 2,
+      width: am5.percent(60),
     });
+
+    const series = chart.series.push(
+      am5xy.LineSeries.new(root, {
+        xAxis,
+        yAxis,
+        name: "Series",
+        valueXField: "date",
+        valueYField: "value",
+        tooltip: am5.Tooltip.new(root, {
+          labelText: "{valueY}",
+        }),
+      })
+    );
 
     // data 적용
     series.data.setAll(data);

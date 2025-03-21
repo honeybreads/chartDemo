@@ -172,6 +172,7 @@ export default function LineMixColumnChart() {
     const legend = chart.children.push(
       am5.Legend.new(root, { centerX: am5.p50, x: am5.p50 })
     );
+    legend.valueLabels.template.setAll({width:0})
 
     // 데이터 적용
     xAxis.data.setAll(data);

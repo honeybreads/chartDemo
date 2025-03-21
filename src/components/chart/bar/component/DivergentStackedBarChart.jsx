@@ -144,10 +144,11 @@ export default function DivergentStackedBarChart() {
       am5.Legend.new(root, {
         y: am5.p50,
         centerY: am5.p50,
-        marginLeft: 20,
+        marginLeft:8,
         layout: root.verticalLayout,
       })
     );
+    legend.valueLabels.template.setAll({width:0})
 
     // X,Y축 생성
     const yAxis = chart.yAxes.push(

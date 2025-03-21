@@ -92,6 +92,7 @@ export default function ClusteredColumnChart() {
         centerX: am5.p50,
       })
     );
+    legend.valueLabels.template.setAll({width:0})
 
     // series(막대 그래프) 생성 함수
     const makeSeries = (name) => {
