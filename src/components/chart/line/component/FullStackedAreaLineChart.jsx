@@ -145,6 +145,7 @@ export default function FullStackedAreaLineChart() {
         wheelX: "panX",
         wheelY: "zoomX",
         pinchZoomX: true,
+        paddingBottom:0,
         layout: root.verticalLayout,
       })
     );
@@ -215,9 +216,12 @@ export default function FullStackedAreaLineChart() {
 
     // legend 생성성
     const legend = chart.children.push(
-      am5.Legend.new(root, { x: am5.p50, centerX: am5.p50 })
+      am5.Legend.new(root, { x: am5.p50, centerX: am5.p50, marginTop:8 })
     );
-    legend.valueLabels.template.adapters.add("fill",()=>themes.chartVariables[theme].base)
+    legend.valueLabels.template.adapters.add(
+      "fill",
+      () => themes.chartVariables[theme].base
+    );
 
     // 데이터 적용
     xAxis.data.setAll(data);

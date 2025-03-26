@@ -27,28 +27,7 @@ export default function SemiPieChart() {
     const { primary } = themes[colorTheme];
     const colorList = primary;
     const myTheme = themes.myThemeRule(root, colorList, theme);
-
-    // 반응형 정의
     const responsive = am5themes_Responsive.newEmpty(root);
-    responsive.addRule({
-      relevant: am5themes_Responsive.widthL,
-      applying: () => {
-        series.labels.template.setAll({
-          textType: "circular",
-          oversizedBehavior: "truncate",
-        });
-        series.ticks.template.setAll({ forceHidden: true });
-      },
-      removing: () => {
-        series.labels.template.setAll({
-          textType: "adjusted",
-          oversizedBehavior: "none",
-        });
-        series.ticks.template.setAll({ forceHidden: false });
-      },
-    });
-
-    // 테마 및 반응형 적용
     root.setThemes([am5themes_Animated.new(root), myTheme, responsive]);
 
     //  PieChart 생성
@@ -75,12 +54,11 @@ export default function SemiPieChart() {
       })
     );
 
-    series.ticks.template.setAll({ forceHidden: true });
     series.slices.template.states.create("hover", { scale: 1 });
     series.slices.template.setAll({ cornerRadius: 4 });
     series.states.create("hidden", { endAngle: 180, startAngle: 180 });
     series.labels.template.adapters.add("width", (_, target) => {
-      return themes.seriesSetMaxWidth(root, target);
+      return themes.seriesSetMaxWidth(target);
     });
 
     // 데이터 적용
@@ -89,6 +67,26 @@ export default function SemiPieChart() {
     // 애니메이션 적용
     series.appear(1000, 100);
 
+    // 반응형 적용
+    responsive.addRule({
+      relevant: am5themes_Responsive.widthL,
+      applying: () => {
+        series.labels.template.setAll({
+          textType: "circular",
+          oversizedBehavior: "truncate",
+        });
+        series.ticks.template.setAll({ forceHidden: true });
+      },
+      removing: () => {
+        series.labels.template.setAll({
+          textType: "adjusted",
+          oversizedBehavior: "none",
+        });
+        series.ticks.template.setAll({ forceHidden: false });
+      },
+    });
+
+    // 초기화
     return () => root.dispose();
   }, [theme, colorTheme]);
 

@@ -41,22 +41,7 @@ export default function GrainyGradientDonutChart() {
     const { primary } = themes[colorTheme];
     const colorList = primary;
     const myTheme = themes.myThemeRule(root, colorList, theme);
-
-    // 반응형 정의
     const responsive = am5themes_Responsive.newEmpty(root);
-    responsive.addRule({
-      relevant: am5themes_Responsive.widthM,
-      applying: () => {
-        series.labels.template.setAll({ forceHidden: true });
-        series.ticks.template.setAll({ forceHidden: true });
-      },
-      removing: () => {
-        series.labels.template.setAll({ forceHidden: false });
-        series.ticks.template.setAll({ forceHidden: false });
-      },
-    });
-
-    // 테마 및 반응형 적용
     root.setThemes([am5themes_Animated.new(root), myTheme, responsive]);
 
     // PieChart 생성
@@ -127,6 +112,20 @@ export default function GrainyGradientDonutChart() {
     legend.appear(1000, 100);
     series.appear(1000, 100);
 
+    // 반응형
+    responsive.addRule({
+      relevant: am5themes_Responsive.widthM,
+      applying: () => {
+        series.labels.template.setAll({ forceHidden: true });
+        series.ticks.template.setAll({ forceHidden: true });
+      },
+      removing: () => {
+        series.labels.template.setAll({ forceHidden: false });
+        series.ticks.template.setAll({ forceHidden: false });
+      },
+    });
+
+    // 초기화
     return () => root.dispose();
   }, [theme, colorTheme]);
 

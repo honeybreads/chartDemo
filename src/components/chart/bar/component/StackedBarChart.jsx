@@ -57,6 +57,7 @@ export default function StackedBarChart() {
         wheelX: "panY",
         wheelY: "zoomY",
         paddingLeft: 0,
+        paddingBottom: 0,
         layout: root.verticalLayout,
       })
     );
@@ -80,17 +81,14 @@ export default function StackedBarChart() {
         }),
       })
     );
-    
+
     yAxis.get("renderer").grid.template.setAll({ location: 1 });
 
     // legend 생성
     const legend = chart.children.push(
-      am5.Legend.new(root, {
-        x: am5.p50,
-        centerX: am5.p50,
-      })
+      am5.Legend.new(root, { x: am5.p50, centerX: am5.p50, marginTop: 8 })
     );
-    legend.valueLabels.template.setAll({width:0})
+    legend.valueLabels.template.setAll({ width: 0 });
 
     // series 생성 함수
     const makeSeries = (name, fieldName) => {
@@ -107,7 +105,7 @@ export default function StackedBarChart() {
       );
 
       series.columns.template.setAll({
-        strokeOpacity:1,
+        strokeOpacity: 1,
         cornerRadiusBL: 0,
         cornerRadiusBR: 0,
         cornerRadiusTL: 0,

@@ -54,16 +54,14 @@ export default function LineAndBarChart() {
         panY: false,
         wheelX: "panX",
         wheelY: "zoomX",
+        paddingBottom: 0,
         layout: root.verticalLayout,
       })
     );
 
     // legend 생성
     const legend = chart.children.push(
-      am5.Legend.new(root, {
-        centerX: am5.p50,
-        x: am5.p50,
-      })
+      am5.Legend.new(root, { marginTop: 8, centerX: am5.p50, x: am5.p50 })
     );
     legend.valueLabels.template.set("width", 0);
 

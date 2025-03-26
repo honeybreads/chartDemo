@@ -60,24 +60,22 @@ export default function BasicPieChart() {
         categoryField: "numbers",
       })
     );
+    series.data.setAll(data);
+    series.appear(1000, 100);
 
     // legend 생성
     const legend = chart.children.push(
       am5.Legend.new(root, {
-        ...themes.legnedBackground(root, theme),
         x: am5.percent(50),
         centerX: am5.percent(50),
+        ...themes.legnedBackground(root, theme),
       })
     );
 
-    // 데이터 적용
-    series.data.setAll(data);
     legend.data.setAll(series.dataItems);
-
-    // 애니메이션 적용
-    series.appear(1000, 100);
     legend.appear(1000, 100);
 
+    // 초기화
     return () => root.dispose();
   }, [theme, colorTheme]);
 

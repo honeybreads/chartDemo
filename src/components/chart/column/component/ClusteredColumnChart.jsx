@@ -56,8 +56,8 @@ export default function ClusteredColumnChart() {
         panY: false,
         wheelX: "panX",
         wheelY: "zoomX",
-        paddingTop:24,
         paddingLeft:0,
+        paddingBottom:0,
         layout: root.verticalLayout,
       })
     );
@@ -90,6 +90,7 @@ export default function ClusteredColumnChart() {
       am5.Legend.new(root, {
         x: am5.p50,
         centerX: am5.p50,
+        marginTop:8,
       })
     );
     legend.valueLabels.template.setAll({width:0})

@@ -98,6 +98,7 @@ export default function DivergentLineChart() {
         wheelX: "panX",
         wheelY: "zoomX",
         paddingLeft: 0,
+        paddingBottom:0,
         pinchZoomX: true,
         layout: root.verticalLayout,
       })
@@ -175,7 +176,7 @@ export default function DivergentLineChart() {
 
     // legend 생성
     const legend = chart.children.push(
-      am5.Legend.new(root, { centerX: am5.p50, x: am5.p50 })
+      am5.Legend.new(root, { centerX: am5.p50, x: am5.p50, marginTop: 8 })
     );
     legend.valueLabels.template.set("width", 0);
     legend.data.setAll(chart.series.values);

@@ -61,9 +61,10 @@ const Pie = memo(function Pie() {
           </div>
         </div>
         {/* 폭발하는(?) 파이 차트 */}
+        {/* 넓이에 따라 높이가 변경되는 차트 */}
         <div className="chart-layout-box">
           <p className="chart-layout-title">Exploding Pie Chart</p>
-          <div className="chart-con" style={{ width: "100%", height: 340 }}>
+          <div className="chart-con" style={{ width: "100%", minHeight: 340 }}>
             <ExplodingPieChart />
           </div>
         </div>

@@ -2,7 +2,7 @@ import * as am5 from "@amcharts/amcharts5";
 import * as am5percent from "@amcharts/amcharts5/percent";
 import am5themes_Animated from "@amcharts/amcharts5/themes/Animated";
 import am5themes_Responsive from "@amcharts/amcharts5/themes/Responsive";
-import { useLayoutEffect, useState } from "react";
+import { useLayoutEffect } from "react";
 import * as themes from "@/assets/chartTheme";
 import { useTheme } from "@/components/Theme";
 
@@ -38,7 +38,6 @@ const data = [
 export default function DragginDonutChart() {
   const id = "draggin-donut";
   const { theme, colorTheme } = useTheme();
-  const [height, setHeight] = useState();
 
   useLayoutEffect(() => {
     // Root 객체 생성 및 테마 불러오기
@@ -46,35 +45,14 @@ export default function DragginDonutChart() {
     const { primary } = themes[colorTheme];
     const colorList = ["#fff", ...primary];
     const myTheme = themes.myThemeRule(root, colorList, theme);
-    const baseHeight = root.dom.clientHeight;
-    setHeight(baseHeight);
-
-    // 반응형 정의
-    let mobileCheck = false;
     const responsive = am5themes_Responsive.newEmpty(root);
-    responsive.addRule({
-      relevant: (width) => width < baseHeight * 2,
-      applying: () => {
-        mobileCheck = true;
-        setHeight(baseHeight * 2.2);
-        label.setAll({ rotation: 0 });
-        line.setAll({ width: am5.percent(60), height: 0 });
-        container.setAll({ layout: root.verticalLayout, width: baseHeight });
-      },
-      removing: () => {
-        mobileCheck = false;
-        setHeight(baseHeight);
-        label.setAll({ rotation: -90 });
-        line.setAll({ width: 0, height: am5.percent(60) });
-        container.setAll({
-          layout: root.horizontalLayout,
-          width: baseHeight * 2.2,
-        });
-      },
-    });
-
-    // 테마 및 반응형 적용
     root.setThemes([am5themes_Animated.new(root), myTheme, responsive]);
+
+    // height 설정
+    let mobileCheck = false;
+    const minHeight = root.dom.parentElement.style.minHeight;
+    const baseHeight = Number(minHeight.split("px")[0]);
+    root.dom.style.height = baseHeight + "px";
 
     // 데이터 생성
     const newData = [
@@ -157,7 +135,7 @@ export default function DragginDonutChart() {
         centerX: am5.p50,
         centerY: am5.p50,
         height: am5.percent(60),
-        stroke: themes.chartVariables[theme].grid
+        stroke: themes.chartVariables[theme].grid,
       })
     );
 
@@ -188,7 +166,6 @@ export default function DragginDonutChart() {
       am5.array.each(series.dataItems, (dataItem) => {
         if (!dataItem.isHidden()) visibleCount++;
       });
-      // if all hidden, show dummy
       if (visibleCount == 0) series.dataItems[0].show();
       else series.dataItems[0].hide();
     };
@@ -234,7 +211,7 @@ export default function DragginDonutChart() {
       setTimeout(() => {
         [prev, next].map((series) => {
           series.labels.template.adapters.add("width", (_, target) => {
-            return themes.seriesSetMaxWidth(root, target);
+            return themes.seriesSetMaxWidth( target);
           });
         });
       }, 500);
@@ -252,7 +229,7 @@ export default function DragginDonutChart() {
     // 드롭 이벤트 체크
     [series1, series2].map((series) => {
       series.labels.template.adapters.add("width", (_, target) => {
-        return themes.seriesSetMaxWidth(root, target);
+        return themes.seriesSetMaxWidth( target);
       });
     });
 
@@ -263,9 +240,7 @@ export default function DragginDonutChart() {
     // 숨기 보임 처리 초기화
     series1.dataItems[0].hide(0);
     am5.array.each(series2.dataItems, (dataItem) => {
-      if (dataItem.get("category") != "Dummy") {
-        dataItem.hide(0);
-      }
+      if (dataItem.get("category") != "Dummy") dataItem.hide(0);
     });
 
     // 애니메이션 적용
@@ -273,8 +248,30 @@ export default function DragginDonutChart() {
     series2.appear(1000, 100);
     container.appear(1000, 100);
 
+    // 반응형 설정
+    responsive.addRule({
+      relevant: (width) => width < baseHeight * 2,
+      applying: () => {
+        mobileCheck = true;
+        root.dom.style.height = baseHeight * 2.2 + "px";
+        label.setAll({ rotation: 0 });
+        line.setAll({ width: am5.percent(60), height: 0 });
+        container.setAll({ layout: root.verticalLayout, width: baseHeight });
+      },
+      removing: () => {
+        mobileCheck = false;
+        root.dom.style.height = baseHeight + "px";
+        label.setAll({ rotation: -90 });
+        line.setAll({ width: 0, height: am5.percent(60) });
+        container.setAll({
+          layout: root.horizontalLayout,
+          width: baseHeight * 2.2,
+        });
+      },
+    });
+
     return () => root.dispose();
   }, [theme, colorTheme]);
 
-  return <div id={id} style={{ width: "100%", minHeight: "100%", height }} />;
+  return <div id={id} style={{ width: "100%", minHeight: "100%" }} />;
 }

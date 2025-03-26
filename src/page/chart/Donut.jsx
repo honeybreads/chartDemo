@@ -14,7 +14,10 @@ import { DonutIcon } from "lucide-react";
 const Donut = memo(function Donut() {
   return (
     <>
-      <h2 className="chart-title"> <DonutIcon/>파이 - 도넛 차트</h2>
+      <h2 className="chart-title">
+        <DonutIcon />
+        파이 - 도넛 차트
+      </h2>
       <div className="chart-layout">
         {/* 기본 도넛 차트 */}
         <div className="chart-layout-box">
@@ -45,47 +48,26 @@ const Donut = memo(function Donut() {
           </div>
         </div>
         {/* 원형 그라데이션 도넛 차트 */}
-        {/* 반응형에 따라 높이가 변경되는 차트 */}
+        {/* 넓이에 따라 높이가 변경되는 차트 */}
         <div className="chart-layout-box">
           <p className="chart-layout-title">RadialGradient Donut Chart</p>
-          <div
-            className="chart-con"
-            style={{
-              width: "100%",
-              height: "calc(100% - 2em)", // padding 값 제외
-              minHeight: 340,
-            }}
-          >
+          <div className="chart-con" style={{ width: "100%", minHeight: 340 }}>
             <RadialGradientDonutChart />
           </div>
         </div>
         {/* 링크 도넛 차트 */}
-        {/* 반응형에 따라 높이가 변경되는 차트 */}
+        {/* 넓이에 따라 높이가 변경되는 차트 */}
         <div className="chart-layout-box">
           <p className="chart-layout-title">Linked Donut Chart</p>
-          <div
-            className="chart-con"
-            style={{
-              width: "100%",
-              height: "calc(100% - 2em)", // padding 값 제외
-              minHeight: 340,
-            }}
-          >
+          <div className="chart-con" style={{ width: "100%", minHeight: 340 }}>
             <LinkedDonutChart />
           </div>
         </div>
         {/* 드래깅 도넛 차트 */}
-        {/* 반응형에 따라 높이가 변경되는 차트 */}
+        {/* 넓이에 따라 높이가 변경되는 차트 */}
         <div className="chart-layout-box">
           <p className="chart-layout-title">Draggin Donut Chart</p>
-          <div
-            className="chart-con"
-            style={{
-              width: "100%",
-              height: "calc(100% - 2em)", // padding 값 제외
-              minHeight: 340,
-            }}
-          >
+          <div className="chart-con" style={{ width: "100%", minHeight: 340 }}>
             <DraggingDonutChart />
           </div>
         </div>

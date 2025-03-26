@@ -136,6 +136,7 @@ export default function CombineMultipleColumnChart() {
         wheelY: false,
         paddingLeft: 0,
         paddingRight: 0,
+        paddingBottom:0,
         layout: root.verticalLayout,
       })
     );
@@ -281,14 +282,13 @@ export default function CombineMultipleColumnChart() {
     const scrollbar = chart.set(
       "scrollbarX",
       am5xy.XYChartScrollbar.new(root, {
-        height: 40,
+        height: 50,
         orientation: "horizontal",
       })
     );
 
     scrollbar.get("background").setAll({
-      opacity: 0.5,
-      fill: themes.chartVariables[theme].shadow,
+      fill: themes.chartVariables[theme].scrollbar,
     });
 
     // 스크롤(상단) 차트 x,y축 생성
@@ -299,30 +299,19 @@ export default function CombineMultipleColumnChart() {
       })
     );
 
-    const scrollbarYAxisLine = scrollbar.chart.yAxes.push(
-      am5xy.ValueAxis.new(root, {
-        renderer: am5xy.AxisRendererY.new(root, {}),
-      })
-    );
-
     const scrollbarYAxisBar = scrollbar.chart.yAxes.push(
       am5xy.ValueAxis.new(root, {
         renderer: am5xy.AxisRendererY.new(root, {}),
       })
     );
-
-    scrollbarXAxis.get("renderer").setAll({ stroke: 0 });
-    scrollbarYAxisLine.get("renderer").setAll({ stroke: 0 });
-
-    // 스크롤 line series 생성
-    const scrollbarSeriesLine = scrollbar.chart.series.push(
-      am5xy.LineSeries.new(root, {
-        valueYField: "sales1",
-        valueXField: "date",
-        xAxis: scrollbarXAxis,
-        yAxis: scrollbarYAxisLine,
+    const scrollbarYAxisLine = scrollbar.chart.yAxes.push(
+      am5xy.ValueAxis.new(root, {
+        renderer: am5xy.AxisRendererY.new(root, {}),
       })
     );
+    scrollbarXAxis.get("renderer").setAll({ stroke: 0 });
+    scrollbarYAxisBar.get("renderer").setAll({ stroke: 0 });
+    scrollbarYAxisLine.get("renderer").setAll({ stroke: 0 });
 
     // 스크롤 column series 생성
     const scrollbarSeriesBar = scrollbar.chart.series.push(
@@ -335,17 +324,30 @@ export default function CombineMultipleColumnChart() {
     );
 
     scrollbarSeriesBar.columns.template.setAll({
-      fillOpacity: 0.6,
+      opacity: 0.8,
+      fill: themes.chartVariables[theme].scrollChart,
     });
+
+    // 스크롤 line series 생성
+    const scrollbarSeriesLine = scrollbar.chart.series.push(
+      am5xy.LineSeries.new(root, {
+        valueYField: "sales1",
+        valueXField: "date",
+        xAxis: scrollbarXAxis,
+        yAxis: scrollbarYAxisLine,
+        stroke: themes.chartVariables[theme].scrollChart,
+      })
+    );
 
     // 범례 생성
     const legend = chart.children.push(
       am5.Legend.new(root, {
         x: am5.p50,
         centerX: am5.p50,
+        marginTop:8
       })
     );
-    legend.valueLabels.template.setAll({width:0})
+    legend.valueLabels.template.setAll({ width: 0 });
     legend.data.setAll(chart.series.values);
 
     // 데이터 적용

@@ -56,8 +56,8 @@ export default function StackedColumnChart() {
         panY: false,
         wheelX: "panX",
         wheelY: "zoomX",
-        paddingTop: 24,
         paddingLeft: 0,
+        paddingBottom:0,
         layout: root.verticalLayout,
       })
     );
@@ -83,7 +83,7 @@ export default function StackedColumnChart() {
 
     //  legend 생성
     const legend = chart.children.push(
-      am5.Legend.new(root, { centerX: am5.p50, x: am5.p50 })
+      am5.Legend.new(root, { marginTop:8, centerX: am5.p50, x: am5.p50 })
     );
     legend.valueLabels.template.setAll({width:0})
 

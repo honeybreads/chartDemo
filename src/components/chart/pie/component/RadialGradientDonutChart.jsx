@@ -66,51 +66,26 @@ export default function RadialGradientDonutChart() {
     const { primary } = themes[colorTheme];
     const colorList = primary;
     const myTheme = themes.myThemeRule(root, colorList, theme);
-    // height 설정 반응형 맞춰 변경
-    const minHeight = root.dom.parentElement.style.minHeight;
-    const baseHeight = Number(minHeight.split("px")[0]);
-
-    // 반응형 설정
     const responsive = am5themes_Responsive.newEmpty(root);
-    responsive.addRule({
-      relevant: am5themes_Responsive.widthL,
-      applying: () => {
-        root.dom.style.height = baseHeight * 2 + "px";
-        chart.setAll({ layout: root.verticalLayout, width: baseHeight });
-        legend.setAll({
-          y: undefined,
-          centerY: undefined,
-          x: am5.percent(50),
-          centerX: am5.percent(50),
-        });
-      },
-      removing: () => {
-        root.dom.style.height = baseHeight + "px";
-        chart.setAll({
-          width: baseHeight * 1.8,
-          layout: root.horizontalLayout,
-        });
-        legend.setAll({
-          x: undefined,
-          centerX: undefined,
-          y: am5.percent(50),
-          centerY: am5.percent(50),
-        });
-      },
-    });
-
-    // 테마 및 반응형 적용
     root.setThemes([am5themes_Animated.new(root), myTheme, responsive]);
 
+    // height 설정
+    const minHeight = root.dom.parentElement.style.minHeight;
+    const baseHeight = Number(minHeight.split("px")[0]);
+    root.dom.style.height = baseHeight + "px";
+
     // PieChart 생성
+    const chartOptions = {
+      x: am5.percent(50),
+      width: baseHeight * 1.8,
+      radius: am5.percent(90),
+      centerX: am5.percent(50),
+      innerRadius: am5.percent(50),
+      layout: root.horizontalLayout,
+    };
     const chart = root.container.children.push(
       am5percent.PieChart.new(root, {
-        x: am5.percent(50),
-        width: baseHeight * 1.8,
-        radius: am5.percent(90),
-        centerX: am5.percent(50),
-        innerRadius: am5.percent(50),
-        layout: root.horizontalLayout,
+        ...chartOptions,
       })
     );
 
@@ -141,24 +116,18 @@ export default function RadialGradientDonutChart() {
     });
 
     // legend 생성
+    const legendOptions = {
+      x: undefined,
+      centerX: undefined,
+      y: am5.percent(50),
+      centerY: am5.percent(50),
+      layout: root.verticalLayout,
+    };
+    
     const legend = chart.children.push(
       am5.Legend.new(root, {
-        marginTop: 10,
-        marginBottom: 10,
-        y: am5.percent(50),
-        centerY: am5.percent(50),
-        layout: root.verticalLayout,
-        // 배경 생성
-        background: am5.RoundedRectangle.new(root, {
-          shadowBlur: 10,
-          fillOpacity: 1,
-          cornerRadiusTR: 4,
-          cornerRadiusTL: 4,
-          cornerRadiusBR: 4,
-          cornerRadiusBL: 4,
-          fill: themes.chartVariables[theme].bg,
-          shadowColor: am5.color(themes.chartVariables[theme].bg),
-        }),
+        ...legendOptions,
+        ...themes.legnedBackground(root, theme),
       })
     );
 
@@ -176,10 +145,28 @@ export default function RadialGradientDonutChart() {
     series.appear(1000, 100);
     legend.appear(1000, 100);
 
+    // 반응형
+    responsive.addRule({
+      relevant: (width) => width < baseHeight * 2,
+      applying: () => {
+        root.dom.style.height = baseHeight * 1.8 + "px";
+        chart.setAll({ layout: root.verticalLayout, width: baseHeight });
+        legend.setAll({
+          y: undefined,
+          centerY: undefined,
+          x: am5.percent(50),
+          centerX: am5.percent(50),
+        });
+      },
+      removing: () => {
+        root.dom.style.height = baseHeight + "px";
+        chart.setAll({ ...chartOptions });
+        legend.setAll({ ...legendOptions });
+      },
+    });
+
     return () => root.dispose();
   }, [theme, colorTheme]);
 
-  return (
-    <div id={id} style={{ width: "100%", minHeight: "100%", height: "auto" }} />
-  );
+  return <div id={id} style={{ width: "100%", minHeight: "100%" }} />;
 }

@@ -127,11 +127,16 @@ export default function TwoAxesGaugeChart() {
 
     // 범례 생성
     const legend = chart.children.push(
-      am5.Legend.new(root, { x: am5.p50, centerX: am5.p50 })
+      am5.Legend.new(root, {
+        x: am5.p50,
+        centerX: am5.p50,
+        marginTop:12,
+        ...themes.legnedBackground(root, theme),
+      })
     );
     legend.data.setAll([axisDataItem1, axisDataItem2]);
     legend.labels.template.setAll({ textAlign: "center" });
-    legend.valueLabels.template.setAll({width:0})
+    legend.valueLabels.template.setAll({ width: 0 });
 
     // 애니메이션 함수
     const animateChart = (axisDataItem, data, label) => {

@@ -80,6 +80,7 @@ export default function LineMixColumnChart() {
         wheelX: "panX",
         wheelY: "zoomX",
         paddingLeft: 0,
+        paddingBottom:0,
         layout: root.verticalLayout,
       })
     );
@@ -87,7 +88,7 @@ export default function LineMixColumnChart() {
     // x,y축 생성
     const xAxis = chart.xAxes.push(
       am5xy.CategoryAxis.new(root, {
-        categoryField:"year",
+        categoryField: "year",
         tooltip: am5.Tooltip.new(root, {}),
         renderer: am5xy.AxisRendererX.new(root, {}),
       })
@@ -165,14 +166,14 @@ export default function LineMixColumnChart() {
 
     // cursor 생성
     const cursor = chart.set("cursor", am5xy.XYCursor.new(root, {}));
-    cursor.lineX.set("stroke",themes.chartVariables[theme].base )
-    cursor.lineY.set("stroke",themes.chartVariables[theme].base )
+    cursor.lineX.set("stroke", themes.chartVariables[theme].base);
+    cursor.lineY.set("stroke", themes.chartVariables[theme].base);
 
     // legend 생성
     const legend = chart.children.push(
-      am5.Legend.new(root, { centerX: am5.p50, x: am5.p50 })
+      am5.Legend.new(root, { centerX: am5.p50, x: am5.p50, marginTop: 8 })
     );
-    legend.valueLabels.template.setAll({width:0})
+    legend.valueLabels.template.setAll({ width: 0 });
 
     // 데이터 적용
     xAxis.data.setAll(data);

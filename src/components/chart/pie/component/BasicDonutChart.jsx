@@ -54,7 +54,7 @@ export default function BasicDonutChart() {
     });
 
     series.labels.template.adapters.add("width", (_, target) => {
-      return themes.seriesSetMaxWidth(root, target);
+      return themes.seriesSetMaxWidth(target);
     });
 
     // legend 생성

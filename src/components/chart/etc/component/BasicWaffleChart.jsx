@@ -85,6 +85,7 @@ export default function BasicWaffleChart() {
       am5.Legend.new(root, {
         centerX: am5.p50,
         x: am5.p50,
+        marginTop:8,
         stateAnimationDuration: 0,
       })
     );

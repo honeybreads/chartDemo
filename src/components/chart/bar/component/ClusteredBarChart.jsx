@@ -55,6 +55,7 @@ export default function ClusteredBarChart() {
         wheelX: "panX",
         wheelY: "zoomX",
         paddingLeft: 0,
+        paddingBottom: 0,
         layout: root.verticalLayout,
       })
     );
@@ -69,10 +70,7 @@ export default function ClusteredBarChart() {
 
     // legend 생성
     const legend = chart.children.push(
-      am5.Legend.new(root, {
-        x: am5.p50,
-        centerX: am5.p50,
-      })
+      am5.Legend.new(root, { marginTop: 8, x: am5.p50, centerX: am5.p50 })
     );
     legend.valueLabels.template.setAll({ width: 0 });
 

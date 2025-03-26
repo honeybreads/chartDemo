@@ -108,6 +108,8 @@ export const chartVariables = {
     bg: "#FFF",
     shadow: "#ccc",
     disabled: "#ccc",
+    scrollbar: "#ddd",
+    scrollChart: "#aaa",
   },
   dark: {
     base: "#ccc",
@@ -116,6 +118,8 @@ export const chartVariables = {
     bg: "#222",
     shadow: "#222",
     disabled: "#444",
+    scrollbar: "#222",
+    scrollChart: "#666",
   },
 };
 
@@ -148,8 +152,15 @@ const themeCommon = (myTheme, theme) => {
     paddingBottom: 5,
   });
 
+  myTheme.rule("Container", ["legend", "item", "itemcontainer"]).setAll({
+    paddingTop: 2,
+    paddingLeft: 2,
+    paddingRight: 2,
+    paddingBottom: 2,
+  });
+
   myTheme.rule("Label", ["legend"]).setAll({
-    fontSize: 14,
+    fontSize: 13,
     fontWeight: 300,
   });
 
@@ -157,8 +168,9 @@ const themeCommon = (myTheme, theme) => {
     width: 12,
     height: 12,
     y: am5.percent(50),
-    x: am5.percent(40),
+    x: am5.percent(30),
     centerY: am5.percent(50),
+    strokeDasharray: [0, 1],
   });
 
   myTheme
@@ -182,7 +194,7 @@ const themePie = (myTheme, colorSet) => {
 // xy 그래프 옵션
 const themeXy = (myTheme, theme) => {
   myTheme.rule("XYChart").setAll({
-    paddingTop: 12,
+    paddingTop: 16,
     paddingLeft: 16,
     paddingRight: 16,
     paddingBottom: 8,
@@ -243,10 +255,10 @@ export const createBulletSpriet = (root, fill, stroke, options) => {
 };
 
 // Pie Series maxWidth 구하는 함수
-export const seriesSetMaxWidth = (root, target) => {
+export const seriesSetMaxWidth = (target) => {
   const percent = target.dataItem?.get("valuePercentTotal");
-  const baseWidth = root.width();
-  target.set("maxWidth", (baseWidth * percent) / 100 - 15);
+  const baseHeight = target.parent.parent.parent._prevHeight;
+  target.set("maxWidth", (baseHeight * percent) / 36 - 8);
 };
 
 // x,y axis label width 구하는 함수
@@ -272,11 +284,10 @@ export const createExportButton = (root) => {
 // 범례 배경색 생성 함수
 export const legnedBackground = (root, theme) => {
   const option = {
-    paddingTop: 4,
+    paddingTop: 6,
     paddingLeft: 4,
     paddingRight: 4,
-    paddingBottom: 4,
-    marginBottom: 2,
+    paddingBottom: 6,
     background: am5.RoundedRectangle.new(root, {
       shadowBlur: 4,
       fillOpacity: 1,

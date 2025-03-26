@@ -1,6 +1,7 @@
 import * as am5 from "@amcharts/amcharts5";
 import * as am5percent from "@amcharts/amcharts5/percent";
 import am5themes_Animated from "@amcharts/amcharts5/themes/Animated";
+import am5themes_Responsive from "@amcharts/amcharts5/themes/Responsive";
 import { useLayoutEffect } from "react";
 import * as themes from "@/assets/chartTheme";
 import { useTheme } from "@/components/Theme";
@@ -78,9 +79,14 @@ export default function ExplodingPieChart() {
     const { primary } = themes[colorTheme];
     const colorList = primary;
     const myTheme = themes.myThemeRule(root, colorList, theme);
+    const responsive = am5themes_Responsive.newEmpty(root);
+    root.setThemes([am5themes_Animated.new(root), myTheme, responsive]);
 
-    // 테마 및 반응형 적용
-    root.setThemes([am5themes_Animated.new(root), myTheme]);
+    // height 설정
+    let mobileCheck = false;
+    const minHeight = root.dom.parentElement.style.minHeight;
+    const baseHeight = Number(minHeight.split("px")[0]);
+    root.dom.style.height = baseHeight + "px";
 
     // container 생성
     const container = root.container.children.push(
@@ -112,7 +118,7 @@ export default function ExplodingPieChart() {
     // PieSeries(대) 스타일 적용
     series.ticks.template.set("visible", false);
     series.labels.template.setAll({
-      radius: 4,
+      radius: 8,
       textType: "circular",
       oversizedBehavior: "truncate",
     });
@@ -167,8 +173,14 @@ export default function ExplodingPieChart() {
       const point00 = calculateGlobalPoint(series, startAngle, radius);
       const point10 = calculateGlobalPoint(series, startAngle + arc, radius);
       const subRadius = subSeries.slices.getIndex(0).get("radius");
-      const point01 = subSeries.toGlobal({ x: 0, y: -subRadius });
-      const point11 = subSeries.toGlobal({ x: 0, y: subRadius });
+      const point01 = subSeries.toGlobal({
+        x: mobileCheck ? subRadius : 0,
+        y: mobileCheck ? 0 : -subRadius,
+      });
+      const point11 = subSeries.toGlobal({
+        x: mobileCheck ? -subRadius : 0,
+        y: mobileCheck ? 0 : subRadius,
+      });
 
       // 라인 값 적용
       line0.set("points", [point00, point01]);
@@ -202,23 +214,25 @@ export default function ExplodingPieChart() {
       }
       const middleAngle = slice.get("startAngle") + slice.get("arc") / 2;
       const firstAngle = series.dataItems[0].get("slice").get("startAngle");
+      const mobileAngle = mobileCheck ? 90 : 0;
 
       series.animate({
         key: "startAngle",
-        to: firstAngle - middleAngle,
+        to: firstAngle - middleAngle + mobileAngle,
         duration: 1000,
         easing: am5.ease.out(am5.ease.cubic),
       });
+
       series.animate({
         key: "endAngle",
-        to: firstAngle - middleAngle + 360,
+        to: firstAngle - middleAngle + 360 + mobileAngle,
         duration: 1000,
         easing: am5.ease.out(am5.ease.cubic),
       });
     };
 
     series.labels.template.adapters.add("width", (_, target) => {
-      return themes.seriesSetMaxWidth(root, target);
+      return themes.seriesSetMaxWidth( target);
     });
 
     // series 클릭 이벤트
@@ -238,10 +252,25 @@ export default function ExplodingPieChart() {
     // 애니메이션 적용
     container.appear(1000, 10);
 
+    // 반응형
+    responsive.addRule({
+      relevant: (width) => width < baseHeight * 2,
+      applying: () => {
+        mobileCheck = true;
+        root.dom.style.height = baseHeight * 2 + "px";
+        container.setAll({ layout: root.verticalLayout });
+        selectSlice(series.slices.getIndex(0));
+      },
+      removing: () => {
+        mobileCheck = false;
+        root.dom.style.height = baseHeight + "px";
+        container.setAll({ layout: root.horizontalLayout });
+        selectSlice(series.slices.getIndex(0));
+      },
+    });
+
     return () => root.dispose();
   }, [theme, colorTheme]);
 
-  return (
-    <div id={id} style={{ width: "100%", height: "100%", minWidth: 600 }} />
-  );
+  return <div id={id} style={{ width: "100%", minHeight: "100%" }} />;
 }

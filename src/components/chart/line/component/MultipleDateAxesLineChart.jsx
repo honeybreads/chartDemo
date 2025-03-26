@@ -50,7 +50,6 @@ export default function MultipleDateAxesLineChart() {
     );
     cursor.lineY.set("visible", false);
     cursor.lineX.set("stroke", themes.chartVariables[theme].base);
-  
 
     // X,Y축 생성
     const createXaxis = () => {
@@ -98,14 +97,14 @@ export default function MultipleDateAxesLineChart() {
     const scrollbar = chart.set(
       "scrollbarX",
       am5xy.XYChartScrollbar.new(root, {
-        height: 60,
+        height: 50,
         orientation: "horizontal",
       })
     );
 
-    scrollbar
-      .get("background")
-      .setAll({ fill: themes.chartVariables[theme].shadow });
+    scrollbar.get("background").setAll({
+      fill: themes.chartVariables[theme].scrollbar,
+    });
 
     // scrollbar x,y축 생성
     const sbDateAxis = scrollbar.chart.xAxes.push(
@@ -130,6 +129,7 @@ export default function MultipleDateAxesLineChart() {
         yAxis: sbValueAxis,
         valueXField: "date",
         valueYField: "price",
+        stroke: themes.chartVariables[theme].scrollChart,
       })
     );
 

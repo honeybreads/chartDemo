@@ -98,30 +98,7 @@ export default function DivergentStackedBarChart() {
     const { primary } = themes[colorTheme];
     const colorList = primary;
     const myTheme = themes.myThemeRule(root, colorList, theme);
-
-    // 개별 반응형 설정 
     const responsive = am5themes_Responsive.newEmpty(root);
-    responsive.addRule({
-      relevant: am5themes_Responsive.widthL,
-      applying: () => {
-        chart.setAll({ layout: root.verticalLayout });
-        legend.setAll({
-          y: am5.p100,
-          centerY: am5.p100,
-          marginLeft: 0,
-          layout: root.horizontalLayout,
-        });
-      },
-      removing: () => {
-        chart.setAll({ layout: root.horizontalLayout });
-        legend.setAll({
-          y: am5.p50,
-          centerY: am5.p50,
-          marginLeft: 20,
-          layout: root.verticalLayout,
-        });
-      },
-    });
     root.setThemes([am5themes_Animated.new(root), myTheme, responsive]);
 
     // XYChart 생성
@@ -140,15 +117,16 @@ export default function DivergentStackedBarChart() {
     root.numberFormatter.set("numberFormat", "#.#s'%");
 
     // legend 생성
+    const legendOptions = {
+      y: 14,
+      centerY: 0,
+      marginLeft: 8,
+      layout: root.verticalLayout,
+    };
     const legend = chart.children.push(
-      am5.Legend.new(root, {
-        y: am5.p50,
-        centerY: am5.p50,
-        marginLeft:8,
-        layout: root.verticalLayout,
-      })
+      am5.Legend.new(root, { ...legendOptions })
     );
-    legend.valueLabels.template.setAll({width:0})
+    legend.valueLabels.template.setAll({ width: 0 });
 
     // X,Y축 생성
     const yAxis = chart.yAxes.push(
@@ -185,9 +163,9 @@ export default function DivergentStackedBarChart() {
     const createSeries = (field, name, color) => {
       const series = chart.series.push(
         am5xy.ColumnSeries.new(root, {
+          name,
           xAxis,
           yAxis,
-          name: name,
           fill: color,
           stroke: color,
           stacked: true,
@@ -200,6 +178,8 @@ export default function DivergentStackedBarChart() {
 
       series.columns.template.setAll({
         height: am5.p100,
+        strokeWidth:1,
+        strokeOpacity:1,
         cornerRadiusBL: 0,
         cornerRadiusBR: 0,
         cornerRadiusTL: 0,
@@ -236,6 +216,27 @@ export default function DivergentStackedBarChart() {
 
     // 애니메이션 적용
     chart.appear(1000, 100);
+
+    // 반응형 설정
+    responsive.addRule({
+      relevant: am5themes_Responsive.widthL,
+      applying: () => {
+        chart.setAll({ layout: root.verticalLayout });
+        legend.setAll({
+          y: am5.p100,
+          centerY: am5.p100,
+          x: am5.p100,
+          centerX: am5.p100,
+          marginLeft: 0,
+          background: false,
+          layout: root.horizontalLayout,
+        });
+      },
+      removing: () => {
+        chart.setAll({ layout: root.horizontalLayout });
+        legend.setAll({ ...legendOptions });
+      },
+    });
 
     return () => root.dispose();
   }, [theme, colorTheme]);

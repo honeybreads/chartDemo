@@ -34,7 +34,7 @@ export default function ZoomableValueLineChart() {
   useLayoutEffect(() => {
     // Root 객체 생성 및 테마 불러오기
     const root = am5.Root.new(id);
-    const {  primary } = themes[colorTheme];
+    const { primary } = themes[colorTheme];
     const colorList = primary;
     const myTheme = themes.myThemeRule(root, colorList, theme);
     root.setThemes([am5themes_Animated.new(root), myTheme]);
@@ -73,7 +73,7 @@ export default function ZoomableValueLineChart() {
         }),
       })
     );
-    xAxis.get("renderer").labels.template.setAll({maxWidth:"auto"})
+    xAxis.get("renderer").labels.template.setAll({ maxWidth: "auto" });
 
     const yAxis = chart.yAxes.push(
       am5xy.ValueAxis.new(root, { renderer: am5xy.AxisRendererY.new(root, {}) })
@@ -93,10 +93,16 @@ export default function ZoomableValueLineChart() {
     series.fills.template.setAll({ fillOpacity: 0.3, visible: true });
 
     // scrollbar 생성
-    chart.set(
+    const scrollbar = chart.set(
       "scrollbarY",
       am5.Scrollbar.new(root, { orientation: "vertical" })
     );
+
+    scrollbar
+      .get("background")
+      .setAll({ fill: themes.chartVariables[theme].scrollbar });
+
+    scrollbar.thumb.setAll({ fill: themes.chartVariables[theme].scrollChart });
 
     // 데이터 적용
     series.data.setAll(data);

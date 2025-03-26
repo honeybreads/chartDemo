@@ -1,6 +1,7 @@
 import * as am5 from "@amcharts/amcharts5";
 import * as am5xy from "@amcharts/amcharts5/xy";
 import am5themes_Animated from "@amcharts/amcharts5/themes/Animated";
+import am5themes_Responsive from "@amcharts/amcharts5/themes/Responsive";
 import { useLayoutEffect } from "react";
 import * as themes from "@/assets/chartTheme";
 import { useTheme } from "@/components/Theme";
@@ -223,8 +224,8 @@ export default function PartitionedBarChart() {
     const { primary } = themes[colorTheme];
     const colorList = primary;
     const myTheme = themes.myThemeRule(root, colorList, theme);
-    // 개별 반응형 설정
-    root.setThemes([am5themes_Animated.new(root), myTheme]);
+    const responsive = am5themes_Responsive.newEmpty(root);
+    root.setThemes([am5themes_Animated.new(root), myTheme, responsive]);
 
     // XYChart 생성
     const chart = root.container.children.push(
@@ -246,12 +247,12 @@ export default function PartitionedBarChart() {
         fillField: "color",
         strokeField: "color",
         clickTarget: "none",
+        y: 12,
+        centerY: 0,
         layout: root.verticalLayout,
       })
     );
-    legend.valueLabels.template.setAll({width:0})
-
-    
+    legend.valueLabels.template.setAll({ width: 0 });
 
     // X,Y축 생성
     const yAxis = chart.yAxes.push(
@@ -368,6 +369,30 @@ export default function PartitionedBarChart() {
     // 애니메이션 적용
     series.appear();
     chart.appear(1000, 100);
+
+    // 반응형 설정
+    responsive.addRule({
+      relevant: am5themes_Responsive.widthL,
+      applying: () => {
+        chart.setAll({ layout: root.verticalLayout });
+        legend.setAll({
+          y: am5.p100,
+          centerY: am5.p100,
+          x: am5.p100,
+          centerX: am5.p100,
+          marginLeft: 0,
+          layout: root.horizontalLayout,
+        });
+      },
+      removing: () => {
+        chart.setAll({ layout: root.horizontalLayout });
+        legend.setAll({
+          y: 12,
+          centerY: 0,
+          layout: root.verticalLayout,
+        });
+      },
+    });
 
     return () => root.dispose();
   }, [theme, colorTheme]);

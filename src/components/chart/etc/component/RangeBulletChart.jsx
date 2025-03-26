@@ -140,13 +140,16 @@ export default function RangeBulletChart() {
     // Add legend
     const legend = chart.children.push(
       am5.Legend.new(root, {
+        marginTop: 8,
         x: am5.p50,
         centerX: am5.p50,
         clickTarget: "none",
         layout: root.horizontalLayout,
+        ...themes.legnedBackground(root, theme),
       })
     );
     legend.valueLabels.template.set("width", 0);
+    legend.markers.template.setAll({ scale: 0.5 });
 
     // 데이터 적용
     rangeSeries.data.setAll(data);

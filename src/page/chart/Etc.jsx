@@ -33,13 +33,6 @@ const Etc = memo(function Etc() {
         <div className="chart-layout-box">
           <p className="chart-layout-title">Basic Heat Map Chart</p>
           <div className="chart-con" style={{ width: "100%", height: 340 }}>
-            <BasicTreemapChart />
-          </div>
-        </div>
-        {/* 기본 히트맵 차트 */}
-        <div className="chart-layout-box">
-          <p className="chart-layout-title">Basic Heat Map Chart</p>
-          <div className="chart-con" style={{ width: "100%", height: 340 }}>
             <BasicHeatMapChart />
           </div>
         </div>
@@ -95,7 +88,7 @@ const Etc = memo(function Etc() {
         </div>
         {/* 피라미드 차트 */}
         <div className="chart-layout-box">
-          <p className="chart-layout-title">Pyramid Chart</p>
+          <p className="chart-layout-title">Basic Pyramid Chart</p>
           <div className="chart-con" style={{ width: "100%", height: 340 }}>
             <BasicPyramidChart />
           </div>
@@ -135,10 +128,17 @@ const Etc = memo(function Etc() {
             <ForceDirectedTreeChart />
           </div>
         </div>
+        {/* 기본 트리 맵 차트 */}
+        <div className="chart-layout-box">
+          <p className="chart-layout-title">Basic Tree Map Chart</p>
+          <div className="chart-con" style={{ width: "100%", height: 340 }}>
+            <BasicTreemapChart />
+          </div>
+        </div>
         {/* 범위 불렛 차트 */}
         <div className="chart-layout-box">
           <p className="chart-layout-title">Range Bullet Chart</p>
-          <div className="chart-con" style={{ width: "100%", height: 340 }}>
+          <div className="chart-con" style={{ width: "100%", height: 240 }}>
             <RangeBulletChart />
           </div>
         </div>

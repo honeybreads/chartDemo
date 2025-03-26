@@ -110,6 +110,7 @@ export default function GroupedStacksColumnChart() {
         wheelY: "zoomX",
         layout: root.verticalLayout,
         paddingLeft: 0,
+        paddingBottom:0,
       })
     );
 
@@ -118,9 +119,10 @@ export default function GroupedStacksColumnChart() {
       am5.Legend.new(root, {
         x: am5.p50,
         centerX: am5.p50,
+        marginTop:8,
       })
     );
-    legend.valueLabels.template.setAll({width:0})
+    legend.valueLabels.template.setAll({ width: 0 });
 
     // x,y축 생성
     const xAxis = chart.xAxes.push(
@@ -135,6 +137,7 @@ export default function GroupedStacksColumnChart() {
       })
     );
 
+    xAxis.get("renderer").grid.template.set("forceHidden", true);
     xAxis
       .get("renderer")
       .labels.template.adapters.add("text", (text, target) => {
@@ -143,8 +146,9 @@ export default function GroupedStacksColumnChart() {
         }
         return text;
       });
-
-    xAxis.get("renderer").grid.template.set("forceHidden", true);
+    xAxis.get("renderer").labels.template.adapters.add("width", (_, target) => {
+      return themes.axisLabelSetWidth(xAxis, target);
+    });
 
     const yAxis = chart.yAxes.push(
       am5xy.ValueAxis.new(root, {
@@ -167,11 +171,11 @@ export default function GroupedStacksColumnChart() {
 
       series.columns.template.setAll({
         tooltipY: 0,
-        strokeOpacity:1,
+        strokeOpacity: 1,
         cornerRadiusTL: 0,
         cornerRadiusTR: 0,
         width: am5.percent(85),
-        tooltipText: "{name}, {categoryX}:{valueY}",
+        tooltipText: "{name} {categoryX} : {valueY}",
       });
 
       series.appear();

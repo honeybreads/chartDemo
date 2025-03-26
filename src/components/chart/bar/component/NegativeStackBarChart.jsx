@@ -77,7 +77,7 @@ export default function NegativeStackBarChart() {
     const colorSet = am5.ColorSet.new(root, {
       colors: color.map((color) => am5.color(color)),
     });
-    
+
     // XYChart 생성
     const chart = root.container.children.push(
       am5xy.XYChart.new(root, {
@@ -95,12 +95,7 @@ export default function NegativeStackBarChart() {
     chart.getNumberFormatter().set("numberFormat", "#.#s");
 
     // legend 생성
-    chart.children.push(
-      am5.Legend.new(root, {
-        x: am5.p50,
-        centerX: am5.p50,
-      })
-    );
+    chart.children.push(am5.Legend.new(root, { x: am5.p50, centerX: am5.p50 }));
 
     // cursor 생성
     const cursor = chart.set(
@@ -153,7 +148,8 @@ export default function NegativeStackBarChart() {
       series.columns.template.setAll({
         opacity: 0.8,
         height: am5.p100,
-        strokeOpacity: 0,
+        strokeWidth:1,
+        strokeOpacity:1,
         cornerRadiusBL: 0,
         cornerRadiusBR: 0,
         cornerRadiusTL: 0,

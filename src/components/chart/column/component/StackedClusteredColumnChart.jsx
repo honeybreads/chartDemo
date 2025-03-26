@@ -57,18 +57,16 @@ export default function StackedClusteredColumnChart() {
         wheelX: "panX",
         wheelY: "zoomX",
         paddingLeft: 0,
+        paddingBottom: 0,
         layout: root.verticalLayout,
       })
     );
 
     // legend 생성
     const legend = chart.children.push(
-      am5.Legend.new(root, {
-        x: am5.p50,
-        centerX: am5.p50,
-      })
+      am5.Legend.new(root, { x: am5.p50, centerX: am5.p50, marginTop: 8 })
     );
-    legend.valueLabels.template.setAll({width:0})
+    legend.valueLabels.template.setAll({ width: 0 });
 
     // x,y축 생성
     const xAxis = chart.xAxes.push(
@@ -108,7 +106,7 @@ export default function StackedClusteredColumnChart() {
       );
 
       series.columns.template.setAll({
-        strokeOpacity:1,
+        strokeOpacity: 1,
         cornerRadiusTL: 0,
         cornerRadiusTR: 0,
         width: am5.percent(90),
@@ -117,7 +115,7 @@ export default function StackedClusteredColumnChart() {
       });
 
       series.bullets.push((root, cols) => {
-        const fill = themes.createAlternative(cols.get("fill")); 
+        const fill = themes.createAlternative(cols.get("fill"));
 
         return am5.Bullet.new(root, {
           locationY: 0.5,
@@ -139,7 +137,7 @@ export default function StackedClusteredColumnChart() {
 
     // 데이터의 각 필드로부터 series 생성 (첫 번째 필드는 카테고리 필드이므로 제외)
     Object.keys(data[0]).forEach((item, index) => {
-      const stacked = index !== 3;  // 3단에서 스택처리
+      const stacked = index !== 3; // 3단에서 스택처리
       index > 0 && makeSeries(item, stacked);
     });
 

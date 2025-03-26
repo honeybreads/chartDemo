@@ -42,7 +42,6 @@ export default function VennDiagramChart() {
         valueField: "value",
         categoryField: "name",
         intersectionsField: "sets",
-        paddingBottom: 12,
       })
     );
 
@@ -75,6 +74,8 @@ export default function VennDiagramChart() {
       am5.Legend.new(root, {
         x: am5.p50,
         centerX: am5.p50,
+        marginTop: 12,
+        ...themes.legnedBackground(root, theme),
       })
     );
     legend.valueLabels.template.setAll({ width: "auto" });

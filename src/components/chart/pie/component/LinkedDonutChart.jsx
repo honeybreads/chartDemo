@@ -2,7 +2,7 @@ import * as am5 from "@amcharts/amcharts5";
 import * as am5percent from "@amcharts/amcharts5/percent";
 import am5themes_Animated from "@amcharts/amcharts5/themes/Animated";
 import am5themes_Responsive from "@amcharts/amcharts5/themes/Responsive";
-import { useLayoutEffect, useState } from "react";
+import { useLayoutEffect } from "react";
 import * as themes from "@/assets/chartTheme";
 import { useTheme } from "@/components/Theme";
 
@@ -50,7 +50,6 @@ const data = {
 export default function LinkedDonutChart() {
   const id = "linked-donut";
   const { theme, colorTheme } = useTheme();
-  const [height, setHeight] = useState();
 
   useLayoutEffect(() => {
     // Root 객체 생성 및 테마 불러오기
@@ -58,31 +57,13 @@ export default function LinkedDonutChart() {
     const { primary } = themes[colorTheme];
     const colorList = primary;
     const myTheme = themes.myThemeRule(root, colorList, theme);
-    const baseHeight = root.dom.clientHeight;
-    setHeight(baseHeight);
-
-    // 반응형 정의
     const responsive = am5themes_Responsive.newEmpty(root);
-    responsive.addRule({
-      relevant: (width) => width < baseHeight * 2,
-      applying: () => {
-        setHeight(baseHeight * 2);
-        chartContainer.setAll({
-          width: baseHeight,
-          layout: root.verticalLayout,
-        });
-      },
-      removing: () => {
-        setHeight(baseHeight);
-        chartContainer.setAll({
-          width: baseHeight * 2,
-          layout: root.horizontalLayout,
-        });
-      },
-    });
-
-    // 테마 및 반응형 적용
     root.setThemes([am5themes_Animated.new(root), myTheme, responsive]);
+
+    // height 설정
+    const minHeight = root.dom.parentElement.style.minHeight;
+    const baseHeight = Number(minHeight.split("px")[0]);
+    root.dom.style.height = baseHeight + "px";
 
     // root 레이아웃 설정
     root.container.set("layout", root.verticalLayout);
@@ -96,7 +77,7 @@ export default function LinkedDonutChart() {
         height: am5.percent(100),
         layout: root.horizontalLayout,
       })
-    );  
+    );
 
     // 파이 차트 생성 함수
     const createPieChart = (container, options) =>
@@ -153,7 +134,7 @@ export default function LinkedDonutChart() {
 
     [series1, series2].map((series) => {
       series.labels.template.adapters.add("width", (_, target) => {
-        return themes.seriesSetMaxWidth(root, target);
+        return themes.seriesSetMaxWidth( target);
       });
     });
 
@@ -196,6 +177,7 @@ export default function LinkedDonutChart() {
       am5.Legend.new(root, {
         x: am5.percent(50),
         centerX: am5.percent(50),
+        ...themes.legnedBackground(root, theme),
       })
     );
 
@@ -226,8 +208,27 @@ export default function LinkedDonutChart() {
     series1.appear(1000, 100);
     series2.appear(1000, 100);
 
+    // 반응형 정의
+    responsive.addRule({
+      relevant: (width) => width < baseHeight * 2,
+      applying: () => {
+        root.dom.style.height = baseHeight * 2 + "px";
+        chartContainer.setAll({
+          width: baseHeight,
+          layout: root.verticalLayout,
+        });
+      },
+      removing: () => {
+        root.dom.style.height = baseHeight + "px";
+        chartContainer.setAll({
+          width: baseHeight * 2,
+          layout: root.horizontalLayout,
+        });
+      },
+    });
+
     return () => root.dispose();
   }, [theme, colorTheme]);
 
-  return <div id={id} style={{ width: "100%", minHeight: "100%", height }} />;
+  return <div id={id} style={{ width: "100%", minHeight: "100%" }} />;
 }

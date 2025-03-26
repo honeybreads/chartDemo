@@ -67,22 +67,7 @@ export default function NestedDonutChart() {
     const { primary } = themes[colorTheme];
     const colorList = primary;
     const myTheme = myThemeRule(root, colorList, theme);
-
-    // 반응형 설정
     const responsive = am5themes_Responsive.newEmpty(root);
-    responsive.addRule({
-      relevant: am5themes_Responsive.widthL,
-      applying: () => {
-        series1.labels.template.setAll({ opacity: 0 });
-        series1.ticks.template.setAll({ forceHidden: true });
-      },
-      removing: () => {
-        series1.labels.template.setAll({ opacity: 1 });
-        series1.ticks.template.setAll({ forceHidden: false });
-      },
-    });
-
-    // 테마 및 반응형 적용
     root.setThemes([am5themes_Animated.new(root), myTheme, responsive]);
 
     // PieChart 생성
@@ -132,6 +117,34 @@ export default function NestedDonutChart() {
       series.appear(1000, 100);
     });
 
+    // legend 생성
+    const legend = chart.children.push(
+      am5.Legend.new(root, {
+        centerX: am5.p50,
+        x: am5.p50,
+        marginTop: 8,
+        visible: false,
+        ...themes.legnedBackground(root, theme),
+      })
+    );
+    legend.data.setAll(series1.dataItems);
+
+    // 반응형
+    responsive.addRule({
+      relevant: am5themes_Responsive.widthL,
+      applying: () => {
+        series1.labels.template.setAll({ forceHidden: true });
+        series1.ticks.template.setAll({ forceHidden: true });
+        legend.setAll({ visible: true });
+      },
+      removing: () => {
+        series1.labels.template.setAll({ forceHidden: false });
+        series1.ticks.template.setAll({ forceHidden: false });
+        legend.setAll({ visible: false });
+      },
+    });
+
+    // 초기화
     return () => root.dispose();
   }, [theme, colorTheme]);
 

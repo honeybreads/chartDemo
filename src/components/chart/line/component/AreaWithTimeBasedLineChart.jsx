@@ -106,7 +106,7 @@ export default function AreaWithTimeBasedLineChart() {
     });
     scrollbarX
       .get("background")
-      .setAll({ fill: themes.chartVariables[theme].shadow });
+      .setAll({ fill: themes.chartVariables[theme].scrollbar });
     chart.set("scrollbarX", scrollbarX);
 
     // x,y축(scrollbar) 생성
@@ -144,7 +144,7 @@ export default function AreaWithTimeBasedLineChart() {
       am5xy.XYCursor.new(root, { behavior: "none", xAxis })
     );
     cursor.lineY.set("visible", false);
-    cursor.lineX.set("stroke", themes.chartVariables[theme].base);
+    cursor.lineX.set("stroke", themes.chartVariables[theme].scrollChart);
 
     // data 적용
     series.data.setAll(data);

@@ -66,23 +66,6 @@ export default function BrokenPieChart() {
 
     // 반응형 정의
     const responsive = am5themes_Responsive.newEmpty(root);
-    responsive.addRule({
-      relevant: am5themes_Responsive.widthL,
-      applying: () => {
-        series.labels.template.setAll({
-          radius: 20,
-          textType: "circular",
-          oversizedBehavior: "truncate",
-        });
-      },
-      removing: () => {
-        series.labels.template.setAll({
-          radius: 20,
-          textType: "adjusted",
-          oversizedBehavior: "none",
-        });
-      },
-    });
 
     // 테마 적용
     root.setThemes([am5themes_Animated.new(root), myTheme, responsive]);
@@ -120,7 +103,7 @@ export default function BrokenPieChart() {
     });
 
     series.labels.template.adapters.add("width", (_, target) => {
-      return themes.seriesSetMaxWidth(root, target);
+      return themes.seriesSetMaxWidth( target);
     });
 
     // series 클릭 이벤트
@@ -156,6 +139,26 @@ export default function BrokenPieChart() {
     series.data.setAll(generateChartData());
     series.appear(1000, 100);
 
+    // 반응형
+    responsive.addRule({
+      relevant: am5themes_Responsive.widthL,
+      applying: () => {
+        series.labels.template.setAll({
+          radius: 10,
+          textType: "circular",
+          oversizedBehavior: "truncate",
+        });
+      },
+      removing: () => {
+        series.labels.template.setAll({
+          radius: 20,
+          textType: "adjusted",
+          oversizedBehavior: "none",
+        });
+      },
+    });
+
+    // 초기화
     return () => root.dispose();
   }, [theme, colorTheme]);
 

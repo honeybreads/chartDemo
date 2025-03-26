@@ -1,5 +1,5 @@
 import { useTheme } from "@/components/Theme";
-import { Lightbulb, Menu, SwatchBook,Github } from "lucide-react";
+import { Lightbulb, Menu, SwatchBook, Github } from "lucide-react";
 import PropTypes from "prop-types";
 
 const colorThemeList = ["basic", "violet", "pastel"];
@@ -21,7 +21,8 @@ export default function Header({ navToggle, setNavToggle }) {
     <header className="header">
       <div className="header-con">
         <h1 className="header-logo" onClick={() => (location.href = "/")}>
-          <SwatchBook size={26}/><span>Chart Demo</span>
+          <SwatchBook size={26} />
+          <span>Chart Demo</span>
         </h1>
         <div className="header-group">
           <select onChange={colorChange} value={colorTheme}>
@@ -36,7 +37,7 @@ export default function Header({ navToggle, setNavToggle }) {
             <Lightbulb className="h-4 w-4" />
           </button>
           <a target="_blank" href="https://github.com/honeybreads/chartDemo">
-            <Github className="h-4 w-4"/>
+            <Github className="h-4 w-4" />
           </a>
           {/* 모바일용 토글 */}
           <button

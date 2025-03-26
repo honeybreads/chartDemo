@@ -105,6 +105,7 @@ export default function FloatingBarChart() {
       height: am5.percent(100),
       templateField: "columnSettings",
       tooltipText: "[bold]{name}[/]\n{categoryY}: {valueX}",
+      tooltipY:am5.p100
     });
 
     series.columns.template.adapters.add("fill", (_, target) =>

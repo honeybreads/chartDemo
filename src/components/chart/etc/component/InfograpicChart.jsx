@@ -55,7 +55,7 @@ const goodIcon =
 const badIcon =
   "M9.49958 12.7238C11.2113 13.2393 14.5559 15.6619 14.2398 21.2287C16.3466 22.1307 19.9282 22.0018 17.4 14.2702C21.0869 14.7857 27.9866 14.5796 26.0905 9.63132C26.6172 7.31182 26.3275 2.28622 20.9552 0.739889C15.5829 -0.806446 11.0797 1.89964 9.49958 3.44598H8.31451V12.7238H9.49958Z";
 
-  //InfograpicChart
+//InfograpicChart
 export default function InfograpicChart() {
   const id = "infograpic-xy";
   const { theme, colorTheme } = useTheme();
@@ -66,34 +66,7 @@ export default function InfograpicChart() {
     const { primary } = themes[colorTheme];
     const colorList = primary;
     const myTheme = themes.myThemeRule(root, colorList, theme);
-
-    // 개별 반응형 설정
     const responsive = am5themes_Responsive.newEmpty(root);
-    responsive.addRule({
-      relevant: am5themes_Responsive.widthL,
-      applying: () => {
-        chart.setAll({ layout: root.verticalLayout });
-        legend.setAll({
-          x: am5.p50,
-          y: am5.p100,
-          paddingLeft: 0,
-          centerX: am5.p50,
-          centerY: am5.p100,
-          layout: root.horizontalLayout,
-        });
-      },
-      removing: () => {
-        chart.setAll({ layout: root.horizontalLayout });
-        legend.setAll({
-          x: false,
-          y: am5.p50,
-          paddingLeft: 24,
-          centerX: false,
-          centerY: am5.p50,
-          layout: root.verticalLayout,
-        });
-      },
-    });
     root.setThemes([am5themes_Animated.new(root), myTheme, responsive]);
 
     // XYChart 생성
@@ -103,8 +76,10 @@ export default function InfograpicChart() {
         panY: false,
         wheelX: "panX",
         wheelY: "zoomX",
+        paddingTop:0,
         paddingLeft: 0,
         paddingRight: 0,
+        paddingBottom:0,
         arrangeTooltips: false,
         layout: root.horizontalLayout,
       })
@@ -113,13 +88,20 @@ export default function InfograpicChart() {
     root.numberFormatter.set("numberFormat", "#.#s'%");
 
     // legend 생성
+    const legendOptions = {
+      ...themes.legnedBackground(root,theme),
+      x: false,
+      y: am5.p50,
+      centerX: false,
+      centerY: am5.p50,
+      marginTop:0,
+      marginLeft: 12,
+      paddingLeft:0,
+      paddingRight:10,
+      layout: root.verticalLayout,
+    }
     const legend = chart.children.push(
-      am5.Legend.new(root, {
-        y: am5.p50,
-        centerY: am5.p50,
-        paddingLeft: 24,
-        layout: root.verticalLayout,
-      })
+      am5.Legend.new(root, {...legendOptions})
     );
 
     legend.markers.template.setAll({
@@ -133,7 +115,7 @@ export default function InfograpicChart() {
       height: iconSize.h,
     });
 
-    legend.valueLabels.template.set("width",0)
+    legend.valueLabels.template.set("width", 0);
 
     // X,Y축 생성
     const yAxis = chart.yAxes.push(
@@ -226,6 +208,27 @@ export default function InfograpicChart() {
 
     // 애니메이션 실행
     chart.appear(1000, 100);
+
+    // 반응형 적용
+    responsive.addRule({
+      relevant: am5themes_Responsive.widthL,
+      applying: () => {
+        chart.setAll({ layout: root.verticalLayout });
+        legend.setAll({
+          x: am5.p100,
+          y: am5.p100,
+          marginLeft:0,
+          marginTop:12,
+          centerX: am5.p100,
+          centerY: am5.p100,
+          layout: root.horizontalLayout,
+        });
+      },
+      removing: () => {
+        chart.setAll({ layout: root.horizontalLayout });
+        legend.setAll({...legendOptions});
+      },
+    });
 
     return () => root.dispose();
   }, [theme, colorTheme]);

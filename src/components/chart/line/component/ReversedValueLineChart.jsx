@@ -98,6 +98,7 @@ export default function ReversedValueLineChart() {
         wheelX: "panX",
         wheelY: "zoomX",
         pinchZoomX: true,
+        paddingBottom: 0,
         layout: root.verticalLayout,
       })
     );
@@ -162,11 +163,9 @@ export default function ReversedValueLineChart() {
 
     // legend 생성
     const legend = chart.children.push(
-      am5.Legend.new(root, {
-        x: am5.p50,
-        centerX: am5.p50,
-      })
+      am5.Legend.new(root, { marginTop: 8, x: am5.p50, centerX: am5.p50 })
     );
+    legend.valueLabels.template.set("width", 0);
 
     // cursor 생성
     const cursor = chart.set("cursor", am5xy.XYCursor.new(root, { xAxis }));

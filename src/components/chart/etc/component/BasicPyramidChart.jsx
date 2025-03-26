@@ -33,6 +33,7 @@ export default function BasicPyramidChart() {
     const chart = root.container.children.push(
       am5percent.SlicedChart.new(root, {
         layout: root.verticalLayout,
+        paddingBottom:0,
       })
     );
 
@@ -58,10 +59,10 @@ export default function BasicPyramidChart() {
 
     const legend = chart.children.push(
       am5.Legend.new(root, {
-        centerX: am5.percent(50),
+        marginTop: 12,
         x: am5.percent(50),
-        marginTop: 15,
-        marginBottom: 15,
+        centerX: am5.percent(50),
+        ...themes.legnedBackground(root,theme)
       })
     );
 

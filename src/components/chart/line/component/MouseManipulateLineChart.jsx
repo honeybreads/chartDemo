@@ -132,8 +132,8 @@ export default function MouseManipulateLineChart() {
       am5.Label.new(root, {
         x: am5.p100,
         centerX: am5.p100,
-        layer:99,
-        text: "그래프 영역에서 마우스를 클릭하고 이동하면 그래프를 변경 할 수 있습니다.",
+        layer: 99,
+        text: "그래프 영역에서 마우스를 클릭하고 이동하면 값을 변경 할 수 있습니다.",
       })
     );
 

@@ -62,13 +62,14 @@ export default function BasicMekkoChart() {
         wheelX: false,
         wheelY: false,
         paddingLeft: 0,
+        paddingBottom:0,
         layout: root.verticalLayout,
       })
     );
 
     // 범례 생성
     const legend = chart.children.push(
-      am5.Legend.new(root, { centerX: am5.p50, x: am5.p50 })
+      am5.Legend.new(root, { centerX: am5.p50, x: am5.p50,marginTop:8 })
     );
 
     legend.valueLabels.template.set("width",0)
@@ -145,6 +146,10 @@ export default function BasicMekkoChart() {
             centerY: am5.p50,
             centerX: am5.p50,
             populateText: true,
+            paddingTop:4,
+            paddingLeft:8,
+            paddingRight:8,
+            paddingBottom:4,
             background: am5.RoundedRectangle.new(root, {
               fill: themes.chartVariables[theme].bg,
             }),

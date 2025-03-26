@@ -118,6 +118,7 @@ export default function RadiusNestedDonutChart() {
       series.labels.template.set("forceHidden", true);
       series.slices.template.setAll({ cornerRadius: 0 });
       series.states.create("hidden", { endAngle: 180, startAngle: 160 });
+      
       // 데이터 적용
       series.data.setAll(data);
       series.appear(1000, 100);

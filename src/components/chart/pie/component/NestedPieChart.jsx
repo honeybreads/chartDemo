@@ -85,22 +85,7 @@ export default function NestedPieChart() {
     const { primary } = themes[colorTheme];
     const colorList = primary;
     const myTheme = themes.myThemeRule(root, colorList, theme);
-
-    // 반응형 설정
     const responsive = am5themes_Responsive.newEmpty(root);
-    responsive.addRule({
-      relevant: am5themes_Responsive.widthL,
-      applying: () => {
-        series1.labels.template.setAll({ forceHidden: true });
-        series1.ticks.template.setAll({ forceHidden: true });
-      },
-      removing: () => {
-        series1.labels.template.setAll({ forceHidden: false });
-        series1.ticks.template.setAll({ forceHidden: false });
-      },
-    });
-
-    // 테마 및 반응형 적용
     root.setThemes([am5themes_Animated.new(root), myTheme, responsive]);
 
     // PieChart 생성
@@ -147,7 +132,7 @@ export default function NestedPieChart() {
         valueField: "value",
         categoryField: "category",
         radius: am5.percent(90),
-        innerRadius: am5.percent(62),
+        innerRadius: am5.percent(60),
       })
     );
 
@@ -159,6 +144,8 @@ export default function NestedPieChart() {
 
     series1.labels.template.setAll({
       text: "{category}",
+      radius: 10,
+      textType: "adjusted",
     });
 
     // 데이터 가공
@@ -185,6 +172,20 @@ export default function NestedPieChart() {
     series0.appear(1000, 100);
     series1.appear(1000, 100);
 
+    // 반응형
+    responsive.addRule({
+      relevant: am5themes_Responsive.widthM,
+      applying: () => {
+        series1.labels.template.setAll({visible:false});
+        series1.ticks.template.setAll({visible:false})
+      },
+      removing: () => {
+        series1.labels.template.setAll({visible:true});
+        series1.ticks.template.setAll({visible:true})
+      },
+    });
+
+    // 초기화
     return () => root.dispose();
   }, [theme, colorTheme]);
 
