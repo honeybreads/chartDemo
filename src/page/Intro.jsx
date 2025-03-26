@@ -4,6 +4,7 @@ import { javascript } from "@codemirror/lang-javascript";
 import { EditorState } from "@codemirror/state";
 import { useRef, useMemo } from "react";
 import { ExternalLink } from "lucide-react";
+import Demos from "@/assets/demo.mp4";
 
 export default function Intro() {
   // 코드 미러 설정
@@ -138,11 +139,23 @@ export default function BasicBarChart() {
     );
   }, []);
 
+  const demoJsx = useMemo(() => {
+    return (
+      <>
+        <h3 className="intro-subtitle">5. 데모</h3>
+        <p className="mb-3">
+          빈 프로젝트에서 차트를 적용해보는 데모 영상입니다.
+        </p>
+        <video controls src={Demos}></video>
+      </>
+    );
+  }, []);
+
   // Ref, 문장 목록 구성
   const articleRef = useRef({});
   const list = {
-    name: ["install", "custom", "chart", "use"],
-    func: [installJsx, customJsx, chartJsx, useJsx],
+    name: ["install", "custom", "chart", "use", "demo"],
+    func: [installJsx, customJsx, chartJsx, useJsx, demoJsx],
   };
   list.name.map((item) => (articleRef[item] = null));
 
