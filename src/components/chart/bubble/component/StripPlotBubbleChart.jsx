@@ -5,7 +5,7 @@ import { useLayoutEffect } from "react";
 import * as themes from "@/assets/chartTheme";
 import { useTheme } from "@/components/Theme";
 
-// 카테고리 데이터 (SNS 플랫폼 정보)
+// 카테고리 데이터 (아이콘과 컬러 지정)
 const categories = [
   {
     category: "Like",
@@ -112,9 +112,10 @@ export default function StripPlotBubbleChart() {
         renderer: am5xy.AxisRendererX.new(root, {}),
       })
     );
-
+    xAxis.get("renderer").setAll({stroke:0})
     xAxis.get("renderer").labels.template.setAll({ forceHidden: true });
     xAxis.get("renderer").grid.template.setAll({ forceHidden: true });
+    yAxis.get("renderer").setAll({stroke:0})
     yAxis.get("renderer").grid.template.setAll({ location: 0.5 });
     yAxis.get("renderer").labels.template.setAll({
       width: 92,

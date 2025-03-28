@@ -1,4 +1,4 @@
-import { memo } from "react";
+import { memo, useRef } from "react";
 // 차트 컴포넌트
 import {
   BasicBubbleChart,
@@ -12,77 +12,67 @@ import {
   DateBasedBubbleChart,
 } from "@/components/chart/bubble/BubbleChart";
 import { Shell } from "lucide-react";
+import BoardLayout from "@/components/BoardLayout";
 
 const Bubble = memo(function Bubble() {
+  const listRef = useRef({});
+  const list = [
+    {
+      name: "basic",
+      chart: <BasicBubbleChart />,
+      style: { width: "100%", height: 420 },
+    },
+    {
+      name: "heatmap",
+      chart: <HeatmapBubbleChart />,
+      style: { width: "100%", height: 420 },
+    },
+    {
+      name: "beaswarm with d3",
+      chart: <BeaswarmBubbleChart />,
+      style: { width: "100%", height: 420 },
+    },
+    {
+      name: "strip plot",
+      chart: <StripPlotBubbleChart />,
+      style: { width: "100%", height: 420 },
+    },
+    {
+      name: "value line",
+      chart: <ValueLineBubbleChart />,
+      style: { width: "100%", height: 420 },
+    },
+    {
+      name: "data based",
+      chart: <DateBasedBubbleChart />,
+      style: { width: "100%", height: 420 },
+    },
+    {
+      name: "timeline",
+      chart: <TimelineBubbleChart />,
+      style: { width: "100%", height: 420 },
+    },
+    {
+      name: "zoomable",
+      chart: <ZoomableBubbleChart />,
+      style: { width: "100%", height: 420 },
+    },
+    {
+      name: "custom",
+      chart: <CustomBubbleChart />,
+      style: { width: "100%", height: 420 },
+    },
+  ];
+  list.map((item) => (listRef[item.name] = null));
+
   return (
-    <>
-      <h2 className="chart-title"><Shell/>버블 차트</h2>
-      <div className="chart-layout">
-        {/* 기본본 버블 차트 */}
-        <div className="chart-layout-box">
-          <p className="chart-layout-title">Basic Bubble Chart</p>
-          <div className="chart-con" style={{ width: "100%", height: 420 }}>
-            <BasicBubbleChart />
-          </div>
-        </div>
-        {/* 히트맵 버블 차트 */}
-        <div className="chart-layout-box">
-          <p className="chart-layout-title">Heatmap Bubble Chart</p>
-          <div className="chart-con" style={{ width: "100%", height: 420 }}>
-            <HeatmapBubbleChart />
-          </div>
-        </div>
-        {/* 베스웜? 버블 차트 */}
-        <div className="chart-layout-box">
-          <p className="chart-layout-title">Beaswarm Bubble Chart * with D3</p>
-          <div className="chart-con" style={{ width: "100%", height: 420 }}>
-            <BeaswarmBubbleChart />
-          </div>
-        </div>
-        {/* 스트립 플롯 버블 차트 */}
-        <div className="chart-layout-box">
-          <p className="chart-layout-title">Strip Plot Bubble Chart </p>
-          <div className="chart-con" style={{ width: "100%", height: 420 }}>
-            <StripPlotBubbleChart />
-          </div>
-        </div>
-        {/* 값 라인 버블 차트 */}
-        <div className="chart-layout-box">
-          <p className="chart-layout-title">Value Line Bubble Chart </p>
-          <div className="chart-con" style={{ width: "100%", height: 420 }}>
-            <ValueLineBubbleChart />
-          </div>
-        </div>
-        {/* 날짜 기준 버블 차트 */}
-        <div className="chart-layout-box">
-          <p className="chart-layout-title">Date Based Bubble Chart </p>
-          <div className="chart-con" style={{ width: "100%", height: 420 }}>
-            <DateBasedBubbleChart />
-          </div>
-        </div>
-        {/* 타임라인 버블 차트 */}
-        <div className="chart-layout-box">
-          <p className="chart-layout-title">Timeline Bubble Chart </p>
-          <div className="chart-con" style={{ width: "100%", height: 420 }}>
-            <TimelineBubbleChart />
-          </div>
-        </div>
-        {/* 확대축소형 버블 차트 */}
-        <div className="chart-layout-box">
-          <p className="chart-layout-title">Zoomable Bubble Chart </p>
-          <div className="chart-con" style={{ width: "100%", height: 420 }}>
-            <ZoomableBubbleChart />
-          </div>
-        </div>
-        {/* 커스텀 버블 차트 */}
-        <div className="chart-layout-box">
-          <p className="chart-layout-title">Custom Bubble Chart </p>
-          <div className="chart-con" style={{ width: "100%", height: 420 }}>
-            <CustomBubbleChart />
-          </div>
-        </div>
-      </div>
-    </>
+    <BoardLayout
+      list={list}
+      listRef={listRef}
+      title="버블 차트"
+      name="bubble chart"
+      icon={<Shell />}
+    />
   );
 });
 

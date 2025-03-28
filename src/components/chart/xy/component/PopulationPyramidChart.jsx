@@ -1128,6 +1128,7 @@ export default function PopulationPyramidChart() {
 
     // xy series 생성
     const createXySeries = (name, yAxis, valueXField) => {
+      const color = name === "Males" ? "#1C8BFF" : "#FF2B67";
       const series = chart.series.push(
         am5xy.ColumnSeries.new(root, {
           name,
@@ -1161,6 +1162,7 @@ export default function PopulationPyramidChart() {
         });
       });
 
+      series.columns.template.adapters.add("fill", () => am5.color(color));
       series.data.setAll(data);
 
       return series;
@@ -1176,7 +1178,7 @@ export default function PopulationPyramidChart() {
         panY: "none",
         wheelY: "none",
         minWidth: 280,
-        width:am5.percent(30),
+        width: am5.percent(30),
         projection: am5map.geoMercator(),
       })
     );
@@ -1251,5 +1253,7 @@ export default function PopulationPyramidChart() {
     return () => root.dispose();
   }, [theme, colorTheme]);
 
-  return <div id={id} style={{ width: "100%", height: "100%" ,minWidth:720}} />;
+  return (
+    <div id={id} style={{ width: "100%", height: "100%", minWidth: 720 }} />
+  );
 }

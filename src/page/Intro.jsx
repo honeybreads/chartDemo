@@ -5,6 +5,7 @@ import { EditorState } from "@codemirror/state";
 import { useRef, useMemo } from "react";
 import { ExternalLink } from "lucide-react";
 import Demos from "@/assets/demo.mp4";
+import Guide from "@/components/Guide";
 
 export default function Intro() {
   // 코드 미러 설정
@@ -153,16 +154,14 @@ export default function BasicBarChart() {
 
   // Ref, 문장 목록 구성
   const articleRef = useRef({});
-  const list = {
-    name: ["install", "custom", "chart", "use", "demo"],
-    func: [installJsx, customJsx, chartJsx, useJsx, demoJsx],
-  };
-  list.name.map((item) => (articleRef[item] = null));
-
-  // 스크롤 이동 함수
-  const scrollToSection = (section) => {
-    articleRef.current[section]?.scrollIntoView({ behavior: "smooth" });
-  };
+  const list = [
+    { name: "install", func: installJsx },
+    { name: "custom", func: customJsx },
+    { name: "chart", func: chartJsx },
+    { name: "use", func: useJsx },
+    { name: "demo", func: demoJsx },
+  ];
+  list.map((item) => (articleRef[item.name] = null));
 
   return (
     <div className="intro">
@@ -182,27 +181,20 @@ export default function BasicBarChart() {
           부탁드립니다.
         </p>
         {/* amCharts 5 설치 */}
-        {list.name.map((item, index) => {
+        {list.map((item, index) => {
           return (
             <article
               key={index}
               className="intro-article"
-              ref={(el) => (articleRef.current[item] = el)}
+              ref={(el) => (articleRef.current[item.name] = el)}
             >
-              {list.func[index]}
+              {item.func}
             </article>
           );
         })}
       </div>
       {/* 목차 네비게이션 */}
-      <div className="intro-guide">
-        <p className="intro-guide-title">목차</p>
-        {list.name.map((item, index) => (
-          <button onClick={() => scrollToSection(item)} key={index}>
-            {item}
-          </button>
-        ))}
-      </div>
+      <Guide listRef={articleRef} list={list} />
     </div>
   );
 }

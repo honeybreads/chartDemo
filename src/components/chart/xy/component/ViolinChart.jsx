@@ -164,7 +164,7 @@ export default function ViolinChart() {
 
       series.fills.template.setAll({ fillOpacity: 1, visible: true });
       series.data.setAll(calculateData(sourceData[category], 2));
-
+      
       yAxis.children.unshift(
         am5.Label.new(root, {
           height: 34,

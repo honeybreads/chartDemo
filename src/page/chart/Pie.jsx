@@ -1,75 +1,71 @@
-import { memo } from "react";
+import { memo, useRef } from "react";
 import {
   SemiPieChart,
   BasicPieChart,
   BrokenPieChart,
   NestedPieChart,
+  PieAndBarChart,
   TwoLevelPieChart,
   ExplodingPieChart,
   VariableRadiusPieChart,
 } from "@/components/chart/pie/PieChart";
 import { PieChart } from "lucide-react";
+import BoardLayout from "@/components/BoardLayout";
 
 const Pie = memo(function Pie() {
+  const listRef = useRef({});
+  const list = [
+    {
+      name: "basic",
+      chart: <BasicPieChart />,
+      style: { width: "100%", height: 340 },
+    },
+    {
+      name: "variable radius",
+      chart: <VariableRadiusPieChart />,
+      style: { width: "100%", height: 340 },
+    },
+    {
+      name: "semi",
+      chart: <SemiPieChart />,
+      style: { width: "100%", height: 340 },
+    },
+    {
+      name: "broken",
+      chart: <BrokenPieChart />,
+      style: { width: "100%", height: 340 },
+    },
+    {
+      name: "two level",
+      chart: <TwoLevelPieChart />,
+      style: { width: "100%", height: 340 },
+    },
+    {
+      name: "nested",
+      chart: <NestedPieChart />,
+      style: { width: "100%", height: 340 },
+    },
+    {
+      name: "exploding",
+      chart: <ExplodingPieChart />,
+      style: { width: "100%", minHeight: 340 },
+    },
+    {
+      name: "bar and",
+      chart: <PieAndBarChart />,
+      style: { width: "100%", minHeight: 340 },
+    },
+  ];
+  list.map((item) => (listRef[item.name] = null));
+
   return (
-    <>
-      <h2 className="chart-title">
-        <PieChart />
-        파이 차트
-      </h2>
-      <div className="chart-layout">
-        {/* 기본 파이 차트 */}
-        <div className="chart-layout-box">
-          <p className="chart-layout-title">Basic Pie Chart</p>
-          <div className="chart-con" style={{ width: "100%", height: 340 }}>
-            <BasicPieChart />
-          </div>
-        </div>
-        {/* 둘레가 다르 파이 차트 */}
-        <div className="chart-layout-box">
-          <p className="chart-layout-title">Variable Radius Pie Chart</p>
-          <div className="chart-con" style={{ width: "100%", height: 340 }}>
-            <VariableRadiusPieChart />
-          </div>
-        </div>
-        {/* 반쪽 파이 차트 */}
-        <div className="chart-layout-box">
-          <p className="chart-layout-title">Semi Pie Chart</p>
-          <div className="chart-con" style={{ width: "100%", height: 340 }}>
-            <SemiPieChart />
-          </div>
-        </div>
-        {/* 부서진(분할) 파이 차트 */}
-        <div className="chart-layout-box">
-          <p className="chart-layout-title">Broken Pie Chart</p>
-          <div className="chart-con" style={{ width: "100%", height: 340 }}>
-            <BrokenPieChart />
-          </div>
-        </div>
-        {/* 2단 파이 차트 */}
-        <div className="chart-layout-box">
-          <p className="chart-layout-title">Two Level Pie Chart</p>
-          <div className="chart-con" style={{ width: "100%", height: 340 }}>
-            <TwoLevelPieChart />
-          </div>
-        </div>
-        {/* 중첩 파이 차트 */}
-        <div className="chart-layout-box">
-          <p className="chart-layout-title">Nested Pie Chart</p>
-          <div className="chart-con" style={{ width: "100%", height: 340 }}>
-            <NestedPieChart />
-          </div>
-        </div>
-        {/* 폭발하는(?) 파이 차트 */}
-        {/* 넓이에 따라 높이가 변경되는 차트 */}
-        <div className="chart-layout-box">
-          <p className="chart-layout-title">Exploding Pie Chart</p>
-          <div className="chart-con" style={{ width: "100%", minHeight: 340 }}>
-            <ExplodingPieChart />
-          </div>
-        </div>
-      </div>
-    </>
+    <BoardLayout
+      list={list}
+      listRef={listRef}
+      title="파이 차트"
+      name="pie Chart"
+      icon={<PieChart />}
+    />
   );
 });
 

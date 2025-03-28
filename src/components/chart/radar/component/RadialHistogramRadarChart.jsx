@@ -9,7 +9,7 @@ import { useTheme } from "@/components/Theme";
 // 샘플 데이터
 const data = [];
 
-for (let i = 1; i < 21; i++) {
+for (let i = 1; i < 25; i++) {
   data.push({ category: i, value: Math.round(Math.random() * 100) });
 }
 
@@ -111,6 +111,10 @@ export default function RadialHistogramRadarChart() {
     // 데이터 적용
     xAxis.data.setAll(data);
     series.data.setAll(data);
+
+    // 애니메이션 적용
+    chart.appear(1000, 100);
+
     return () => root.dispose();
   }, [theme, colorTheme]);
 

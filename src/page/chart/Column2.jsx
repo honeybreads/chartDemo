@@ -1,4 +1,4 @@
-import { memo } from "react";
+import { memo, useRef } from "react";
 // 차트 컴포넌트
 import {
   StackedColumnChart,
@@ -10,63 +10,57 @@ import {
   StackedWaterfallColumnChart,
 } from "@/components/chart/column/ColumnChart";
 import { BarChart3 } from "lucide-react";
+import BoardLayout from "@/components/BoardLayout";
 
 const Column2 = memo(function Column2() {
+  const listRef = useRef({});
+  const list = [
+    {
+      name: "moving bullet",
+      chart: <MovingBulletColumnChart />,
+      style: { width: "100%", height: 340 },
+    },
+    {
+      name: "clustered",
+      chart: <ClusteredColumnChart />,
+      style: { width: "100%", height: 340 },
+    },
+    {
+      name: "stacked",
+      chart: <StackedColumnChart />,
+      style: { width: "100%", height: 340 },
+    },
+    {
+      name: "stacked clustered",
+      chart: <StackedClusteredColumnChart />,
+      style: { width: "100%", height: 340 },
+    },
+    {
+      name: "grouped stacks",
+      chart: <GroupedStacksColumnChart />,
+      style: { width: "100%", height: 340 },
+    },
+    {
+      name: "stacked waterfall",
+      chart: <StackedWaterfallColumnChart />,
+      style: { width: "100%", height: 340 },
+    },
+    {
+      name: "combine multiple",
+      chart: <CombineMultipleColumnChart />,
+      style: { width: "100%", height: 420 },
+    },
+  ];
+  list.map((item) => (listRef[item.name] = null));
+  
   return (
-    <>
-      <h2 className="chart-title"><BarChart3/>컬럼 차트2</h2>
-      <div className="chart-layout">
-        {/* 움직이는 불렛 컬럼 차트 */}
-        <div className="chart-layout-box">
-          <p className="chart-layout-title">Moving Bullet Column Chart</p>
-          <div className="chart-con" style={{width:"100%", height:340 }}>
-            <MovingBulletColumnChart />
-          </div>
-        </div>
-        {/* 무리 컬럼 차트 */}
-        <div className="chart-layout-box">
-          <p className="chart-layout-title">Clustered Column Chart</p>
-          <div className="chart-con" style={{width:"100%", height:340 }}>
-            <ClusteredColumnChart />
-          </div>
-        </div>
-        {/* 쌓는 컬럼 차트 */}
-        <div className="chart-layout-box">
-          <p className="chart-layout-title">Stacked Column Chart</p>
-          <div className="chart-con" style={{width:"100%", height:340 }}>
-            <StackedColumnChart />
-          </div>
-        </div>
-        {/* 쌓는 무리 컬럼 차트 */}
-        <div className="chart-layout-box">
-          <p className="chart-layout-title">Stacked Clustered Column Chart</p>
-          <div className="chart-con" style={{width:"100%", height:340 }}>
-            <StackedClusteredColumnChart />
-          </div>
-        </div>
-        {/* 그룹 스택 컬럼 차트 */}
-        <div className="chart-layout-box">
-          <p className="chart-layout-title">Grouped Stacks Column Chart</p>
-          <div className="chart-con" style={{width:"100%", height:340 }}>
-            <GroupedStacksColumnChart />
-          </div>
-        </div>
-        {/* 스택 폭포 컬럼 차트 */}
-        <div className="chart-layout-box">
-          <p className="chart-layout-title">Stacked Waterfall Column Chart</p>
-          <div className="chart-con" style={{width:"100%", height:340 }}>
-            <StackedWaterfallColumnChart />
-          </div>
-        </div>
-        {/* 합쳐진 다중? 컬럼 차트 */}
-        <div className="chart-layout-box">
-          <p className="chart-layout-title">Combine Multiple Column Chart</p>
-          <div className="chart-con" style={{width:"100%", height:420 }}>
-            <CombineMultipleColumnChart />
-          </div>
-        </div>
-      </div>
-    </>
+    <BoardLayout
+      list={list}
+      listRef={listRef}
+      title="컬럼 차트2"
+      name="column chart"
+      icon={<BarChart3 />}
+    />
   );
 });
 

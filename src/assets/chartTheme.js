@@ -12,6 +12,11 @@ const createTheme = (primary, lineStroke, bulletFill) => ({
   state: {
     positive: "#1C8BFF",
     negative: "#FF2B67",
+    critical: "#D64B4B",
+    major:"#FF9232",
+    minor:"#D6C14B",
+    warning:"#68BC28",
+    normal:"#388844"
   },
 });
 

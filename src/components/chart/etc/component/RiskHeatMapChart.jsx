@@ -146,7 +146,7 @@ const data = {
 // RiskHeatMapChart
 export default function RiskHeatMapChart() {
   const id = "risk-heatmap";
-  const { theme } = useTheme();
+  const { theme, colorTheme } = useTheme();
 
   useLayoutEffect(() => {
     // 값 가져오기
@@ -154,9 +154,17 @@ export default function RiskHeatMapChart() {
 
     // Root 객체 생성 및 테마 불러오기
     const root = am5.Root.new(id);
-    const colorList = ["#D64B4B", "#FF9232", "#D6C14B", "#68BC28", "#388844"];
+    const { primary, state } = themes[colorTheme];
+    const colorList = primary;
     const myTheme = themes.myThemeRule(root, colorList, theme);
     root.setThemes([am5themes_Animated.new(root), myTheme]);
+    const bgColors = [
+      state.critical,
+      state.major,
+      state.minor,
+      state.warning,
+      state.normal,
+    ];
 
     // XYChart 생성
     const chart = root.container.children.push(
@@ -274,45 +282,33 @@ export default function RiskHeatMapChart() {
     const getColor = (x, y) => {
       const colorMapping = {
         Critical: [
-          colorList[0],
-          colorList[0],
-          colorList[0],
-          colorList[1],
-          colorList[1],
+          bgColors[0],
+          bgColors[0],
+          bgColors[0],
+          bgColors[1],
+          bgColors[1],
         ],
-        Bad: [
-          colorList[0],
-          colorList[0],
-          colorList[1],
-          colorList[2],
-          colorList[3],
-        ],
+        Bad: [bgColors[0], bgColors[0], bgColors[1], bgColors[2], bgColors[3]],
         Medium: [
-          colorList[1],
-          colorList[1],
-          colorList[2],
-          colorList[3],
-          colorList[3],
+          bgColors[1],
+          bgColors[1],
+          bgColors[2],
+          bgColors[3],
+          bgColors[3],
         ],
-        Good: [
-          colorList[1],
-          colorList[2],
-          colorList[3],
-          colorList[4],
-          colorList[4],
-        ],
+        Good: [bgColors[1], bgColors[2], bgColors[3], bgColors[4], bgColors[4]],
         "Very good": [
-          colorList[2],
-          colorList[3],
-          colorList[4],
-          colorList[4],
-          colorList[4],
+          bgColors[2],
+          bgColors[3],
+          bgColors[4],
+          bgColors[4],
+          bgColors[4],
         ],
       };
       const yLevels = categorValues;
       const yIndex = yLevels.indexOf(y);
 
-      return colorMapping[x]?.[yIndex] || colorList[0];
+      return colorMapping[x]?.[yIndex] || bgColors[0];
     };
 
     // 데이터 매핑 및 컬럼 설정
@@ -331,7 +327,7 @@ export default function RiskHeatMapChart() {
     chart.appear(1000, 100);
 
     return () => root.dispose();
-  }, [theme]);
+  }, [theme, colorTheme]);
 
   return <div id={id} style={{ width: "100%", height: "100%" }} />;
 }

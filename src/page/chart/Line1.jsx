@@ -1,4 +1,4 @@
-import { memo } from "react";
+import { memo, useRef } from "react";
 import {
   BasicLineChart,
   LegendHoverLineChart,
@@ -14,104 +14,82 @@ import {
   ComparingDiffrentDateLineChart,
 } from "@/components/chart/line/LineChart";
 import { LineChart } from "lucide-react";
+import BoardLayout from "@/components/BoardLayout";
 
 const Line1 = memo(function Line1() {
-  return (
-    <>
-      <h2 className="chart-title">
-        <LineChart />
-        라인 차트
-      </h2>
-      <div className="chart-layout">
-        {/* 기본 라인 차트 */}
-        <div className="chart-layout-box">
-          <p className="chart-layout-title">Basic Line Chart</p>
-          <div className="chart-con" style={{ width: "100%", height: 340 }}>
-            <BasicLineChart />
-          </div>
-        </div>
-        {/* 값 반전 라인 차트 */}
-        <div className="chart-layout-box">
-          <p className="chart-layout-title">Reverser Value Line Chart</p>
-          <div className="chart-con" style={{ width: "100%", height: 340 }}>
-            <ReversedValueLineChart />
-          </div>
-        </div>
-        {/* 상,하 다른 컬러의 라인 차트 */}
-        <div className="chart-layout-box">
-          <p className="chart-layout-title">Different Stroke Line Chart</p>
-          <div className="chart-con" style={{ width: "100%", height: 340 }}>
-            <DifferentStrokeLineChart />
-          </div>
-        </div>
-        {/* 격자선 근처 레이블 날짜 축 라인 차트(?) */}
-        <div className="chart-layout-box">
-          <p className="chart-layout-title">Date Labels Near Grid Line Chart</p>
-          <div className="chart-con" style={{ width: "100%", height: 340 }}>
-            <DateLabelsNearGridLineChart />
-          </div>
-        </div>
-        {/* 값 조정 라인 차트 */}
-        <div className="chart-layout-box">
-          <p className="chart-layout-title">Mouse Manipulate Line Chart</p>
-          <div className="chart-con" style={{ width: "100%", height: 340 }}>
-            <MouseManipulateLineChart />
-          </div>
-        </div>
-        {/* 합쳐진 날짜가 다른 두 값의 라인 차트 */}
-        <div className="chart-layout-box">
-          <p className="chart-layout-title">
-            Comparing Diffrent Date Line Chart
-          </p>
-          <div className="chart-con" style={{ width: "100%", height: 340 }}>
-            <ComparingDiffrentDateLineChart />
-          </div>
-        </div>
+  const listRef = useRef({});
+  const list = [
+    {
+      name: "basic",
+      chart: <BasicLineChart />,
+      style: { width: "100%", height: 340 },
+    },
+    {
+      name: "reverser value",
+      chart: <ReversedValueLineChart />,
+      style: { width: "100%", height: 340 },
+    },
+    {
+      name: "different stroke",
+      chart: <DifferentStrokeLineChart />,
+      style: { width: "100%", height: 340 },
+    },
+    {
+      name: "date labels near grid",
+      chart: <DateLabelsNearGridLineChart />,
+      style: { width: "100%", height: 340 },
+    },
+    {
+      name: "mouse manipulate",
+      chart: <MouseManipulateLineChart />,
+      style: { width: "100%", height: 340 },
+    },
+    {
+      name: "comparing diffrent date",
+      chart: <ComparingDiffrentDateLineChart />,
+      style: { width: "100%", height: 340 },
+    },
+    {
+      name: "multiple date axes",
+      chart: <MultipleDateAxesLineChart />,
+      style: { width: "100%", height: 340 },
+    },
+    {
+      name: "percentage change",
+      chart: <PercentageChangeLineChart />,
+      style: { width: "100%", height: 340 },
+    },
+    {
+      name: "multiple value axes",
+      chart: <MultipleValueAxesLineChart />,
+      style: { width: "100%", height: 340 },
+    },
+    {
+      name: "evenly spaced axes",
+      chart: <EvenlySpacedAxesLineChart />,
+      style: { width: "100%", height: 340 },
+    },
+    {
+      name: "legend hover",
+      chart: <LegendHoverLineChart />,
+      style: { width: "100%", height: 500 },
+    },
+    {
+      name: "marking multiple",
+      chart: <MarkingMultipleLineChart />,
+      style: { width: "100%", height: 340 },
+    },
+  ];
+  list.map((item) => (listRef[item.name] = null));
 
-        {/* 날짜가 다른 두 값의 라인 차트 */}
-        <div className="chart-layout-box">
-          <p className="chart-layout-title">Multiple Date Axes Line Chart</p>
-          <div className="chart-con" style={{ width: "100%", height: 340 }}>
-            <MultipleDateAxesLineChart />
-          </div>
-        </div>
-        {/* 퍼센테이지..? 라인 차트 */}
-        <div className="chart-layout-box">
-          <p className="chart-layout-title">Percentage Change Line Chart</p>
-          <div className="chart-con" style={{ width: "100%", height: 340 }}>
-            <PercentageChangeLineChart />
-          </div>
-        </div>
-        {/* 다중 값 라인 차트 */}
-        <div className="chart-layout-box">
-          <p className="chart-layout-title">Multiple Value Axes Line Chart</p>
-          <div className="chart-con" style={{ width: "100%", height: 340 }}>
-            <MultipleValueAxesLineChart />
-          </div>
-        </div>
-        {/* 균등한 간격 라인 차트 */}
-        <div className="chart-layout-box">
-          <p className="chart-layout-title">Evenly Spaced Axes Line Chart</p>
-          <div className="chart-con" style={{ width: "100%", height: 340 }}>
-            <EvenlySpacedAxesLineChart />
-          </div>
-        </div>
-        {/* 범례 호거 액션 라인 차트 */}
-        <div className="chart-layout-box">
-          <p className="chart-layout-title">Legend Hover Line Chart</p>
-          <div className="chart-con" style={{ width: "100%", height: 500 }}>
-            <LegendHoverLineChart />
-          </div>
-        </div>
-        {/* 다중 마킹 라인 차트 */}
-        <div className="chart-layout-box">
-          <p className="chart-layout-title">Marking Multiple Line Chart</p>
-          <div className="chart-con" style={{ width: "100%", height: 340 }}>
-            <MarkingMultipleLineChart />
-          </div>
-        </div>
-      </div>
-    </>
+  return (
+    <BoardLayout
+      list={list}
+      listRef={listRef}
+      title="라인 차트"
+      name="line Chart"
+      icon={<LineChart />}
+    />
   );
 });
 

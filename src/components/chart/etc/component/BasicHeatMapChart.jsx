@@ -976,6 +976,9 @@ export default function BasicHeatMapChart() {
     // 데이터 적용
     series.data.setAll(data);
 
+    // 애니메이션 적용 
+    chart.appear(1000,100)
+
     return () => root.dispose();
   }, [theme]);
 

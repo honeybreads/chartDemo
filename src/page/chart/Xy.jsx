@@ -1,4 +1,4 @@
-import { memo } from "react";
+import { memo, useRef } from "react";
 import {
   ViolinChart,
   ScatterChart,
@@ -9,63 +9,57 @@ import {
   IrregularInterverChart,
 } from "@/components/chart/xy/XyChart";
 import { LucideScatterChart } from "lucide-react";
+import BoardLayout from "@/components/BoardLayout";
 
 const Xy = memo(function Xy() {
+  const listRef = useRef({});
+  const list = [
+    {
+      name: "basic mekko",
+      chart: <BasicMekkoChart />,
+      style: { width: "100%", height: 420 },
+    },
+    {
+      name: "irregular interver",
+      chart: <IrregularInterverChart />,
+      style: { width: "100%", height: 420 },
+    },
+    {
+      name: "fills to the axis",
+      chart: <FillToXyChart />,
+      style: { width: "100%", height: 420 },
+    },
+    {
+      name: "scatter",
+      chart: <ScatterChart />,
+      style: { width: "100%", height: 420 },
+    },
+    {
+      name: "violin",
+      chart: <ViolinChart />,
+      style: { width: "100%", height: 420 },
+    },
+    {
+      name: "population pyramid",
+      chart: <PopulationPyramidChart />,
+      style: { width: "100%", height: 620 },
+    },
+    {
+      name: "pictorial",
+      chart: <PictorialChart />,
+      style: { width: "100%", height: 420 },
+    },
+  ];
+  list.map((item) => (listRef[item.name] = null));
+
   return (
-    <>
-      <h2 className="chart-title"><LucideScatterChart/>XY 차트</h2>
-      <div className="chart-layout">
-        {/* 기본 메코(?) 차트 */}
-        <div className="chart-layout-box">
-          <p className="chart-layout-title">Basic Mekko Chart</p>
-          <div className="chart-con" style={{ width: "100%", height: 420 }}>
-            <BasicMekkoChart />
-          </div>
-        </div>
-        {/* 불규칙한 간격 차트 */}
-        <div className="chart-layout-box">
-          <p className="chart-layout-title">Irregular Interver Chart</p>
-          <div className="chart-con" style={{ width: "100%", height: 420 }}>
-            <IrregularInterverChart />
-          </div>
-        </div>
-        {/* 채워진 XY 차트 */}
-        <div className="chart-layout-box">
-          <p className="chart-layout-title">Fills to the Axis Chart</p>
-          <div className="chart-con" style={{ width: "100%", height: 420 }}>
-            <FillToXyChart />
-          </div>
-        </div>
-        {/* 산점도 차트 */}
-        <div className="chart-layout-box">
-          <p className="chart-layout-title">Scatter Chart</p>
-          <div className="chart-con" style={{ width: "100%", height: 420 }}>
-            <ScatterChart />
-          </div>
-        </div>
-        {/* 바이올린 차트 */}
-        <div className="chart-layout-box">
-          <p className="chart-layout-title">Violin Chart</p>
-          <div className="chart-con" style={{ width: "100%", height: 420 }}>
-            <ViolinChart />
-          </div>
-        </div>
-        {/* 인구 피라미드 차트 */}
-        <div className="chart-layout-box">
-          <p className="chart-layout-title">Population Pyramid Chart</p>
-          <div className="chart-con" style={{ width: "100%", height: 620 }}>
-            <PopulationPyramidChart />
-          </div>
-        </div>
-        {/* 픽토리얼(?) 차트 */}
-        <div className="chart-layout-box">
-          <p className="chart-layout-title">Pictorial Chart</p>
-          <div className="chart-con" style={{ width: "100%", height: 420 }}>
-            <PictorialChart />
-          </div>
-        </div>
-      </div>
-    </>
+    <BoardLayout
+      list={list}
+      listRef={listRef}
+      title="XY 차트"
+      name="Chart"
+      icon={<LucideScatterChart />}
+    />
   );
 });
 

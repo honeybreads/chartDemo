@@ -111,8 +111,8 @@ export default function RadialGradientDonutChart() {
     series.ticks.template.set("forceHidden", true);
     series.slices.template.setAll({
       fillGradient,
-      cornerRadius: 0,
       stroke: 0,
+      cornerRadius: 0,
     });
 
     // legend 생성
@@ -123,7 +123,7 @@ export default function RadialGradientDonutChart() {
       centerY: am5.percent(50),
       layout: root.verticalLayout,
     };
-    
+
     const legend = chart.children.push(
       am5.Legend.new(root, {
         ...legendOptions,
@@ -132,10 +132,7 @@ export default function RadialGradientDonutChart() {
     );
 
     legend.valueLabels.template.setAll({ textAlign: "right" });
-    legend.labels.template.setAll({
-      minWidth: 140,
-      oversizedBehavior: "wrap",
-    });
+    legend.labels.template.setAll({ minWidth: 140, oversizedBehavior: "wrap" });
 
     // 데이터 적용
     series.data.setAll(data);

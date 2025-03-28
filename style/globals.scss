@@ -16,13 +16,13 @@ html {
   flex-direction: column;
 }
 
-*{
-  &::-webkit-scrollbar{
+* {
+  &::-webkit-scrollbar {
     @apply w-3 h-2;
-    &-track{
+    &-track {
       @apply bg-border;
     }
-    &-thumb{
+    &-thumb {
       @apply cursor-grab;
       @apply rounded-lg;
       @apply bg-primary;
@@ -47,7 +47,7 @@ html {
     @apply cursor-pointer;
     @apply text-2xl font-bold;
     @apply flex items-center gap-2;
-    &>span{
+    & > span {
       @apply hidden sm:inline-block;
     }
   }
@@ -79,7 +79,7 @@ html {
       @apply bg-transparent;
       @apply text-sm capitalize;
 
-      option{
+      option {
         @apply bg-background;
       }
     }
@@ -149,7 +149,6 @@ html {
 
 /* content section */
 .section {
-  @apply p-4;
   @apply lg:mr-4;
   @apply flex-1;
   @apply overflow-auto;
@@ -157,7 +156,8 @@ html {
 
 /* chart layout */
 .chart-layout {
-  @apply gap-4;
+  @apply w-full;
+  @apply gap-4 p-4;
   @apply grid grid-cols-12;
 
   &-box {
@@ -168,6 +168,7 @@ html {
 
   &-title {
     @apply mb-2;
+    @apply capitalize;
     @apply text-sm font-bold;
   }
 }
@@ -176,6 +177,15 @@ html {
   @apply mb-4;
   @apply text-xl font-bold;
   @apply flex items-center gap-2;
+  @apply col-span-12;
+}
+
+.chart-area {
+  @apply flex items-start;
+
+  .intro-guide {
+    @apply flex-none w-[220px];
+  }
 }
 
 .chart-con {
@@ -187,17 +197,12 @@ html {
     @apply min-w-[360px];
   }
 
-  @media(max-width:640px){
+  @media (max-width: 640px) {
     @apply overflow-auto;
   }
 }
 
-
 // intro
-.section:has(.intro) {
-  @apply p-0;
-}
-
 .intro {
   @apply flex items-start;
   @apply text-sm lg:text-base break-keep;
@@ -206,7 +211,7 @@ html {
   &-content {
     @apply p-4;
     @apply flex-none;
-    @apply w-full lg:w-[calc(100%-200px)] max-w-[1020px];
+    @apply w-full lg:w-[calc(100%-220px)] max-w-[1020px];
   }
 
   &-guide {

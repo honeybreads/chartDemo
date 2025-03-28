@@ -85,7 +85,7 @@ export default function BasicWaffleChart() {
       am5.Legend.new(root, {
         centerX: am5.p50,
         x: am5.p50,
-        marginTop:8,
+        marginTop: 8,
         stateAnimationDuration: 0,
       })
     );
@@ -164,6 +164,9 @@ export default function BasicWaffleChart() {
       const series = makeSeries(item.name, index);
       series.data.setAll(item.data);
     });
+    
+    // 애니메이션 적용
+    chart.appear(1000, 100);
 
     return () => root.dispose();
   }, [theme, colorTheme]);

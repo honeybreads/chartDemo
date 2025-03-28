@@ -102,6 +102,9 @@ export default function SolidGaugeChart() {
     });
     yAxis.get("renderer").grid.template.setAll({ forceHidden: true });
     yAxis.get("renderer").adapters.add("stroke", () => false);
+    yAxis.get("renderer").labels.template.adapters.add("fill", () => {
+      return themes.chartVariables[theme].base;
+    });
 
     // RadarColumnSeries1 (빈) 생성
     const series1 = chart.series.push(

@@ -136,7 +136,7 @@ export default function ScatterChart() {
           valueYField: y,
           valueXField: x,
           tooltip: am5.Tooltip.new(root, {
-            labelText: "x: {valueX} y:{valueY}",
+            labelText: "x: {valueX}, y: {valueY}",
           }),
         })
       );

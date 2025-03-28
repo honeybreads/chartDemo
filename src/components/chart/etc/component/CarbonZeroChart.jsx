@@ -78,14 +78,16 @@ const data = [
 // CarbonZeroChart
 export default function CarbonZeroChart() {
   const id = "carbonzero-chart";
-  const { theme } = useTheme();
+  const { theme, colorTheme } = useTheme();
 
   useLayoutEffect(() => {
     // Root 객체 생성 및 테마 불러오기
     const root = am5.Root.new(id);
-    const colorList = ["#000000", "#6bc352", "#fcc034", "#c6251a"];
+    const { primary, state } = themes[colorTheme];
+    const colorList = primary;
     const myTheme = themes.myThemeRule(root, colorList, theme);
     root.setThemes([am5themes_Animated.new(root), myTheme]);
+    const bgColors = [state.normal, state.warning, state.major, state.critical];
 
     // XYChart 생성
     const chart = root.container.children.push(
@@ -125,7 +127,7 @@ export default function CarbonZeroChart() {
         renderer: am5xy.AxisRendererY.new(root, {}),
       })
     );
-    
+
     xAxis.get("renderer").adapters.add("stroke", () => false);
     xAxis.get("renderer").grid.template.set("forceHidden", true);
     xAxis.get("renderer").labels.template.set("forceHidden", true);
@@ -158,7 +160,7 @@ export default function CarbonZeroChart() {
     series.columns.template.adapters.add("fill", (c, target) => {
       const targetNum = series.columns.indexOf(target) + 1;
       const colorNum = Math.ceil(targetNum / Math.floor(data.length / 3));
-      return colorList[colorNum];
+      return bgColors[colorNum];
     });
 
     series.columns.template.adapters.add("stroke", (c, target) => {
@@ -179,7 +181,7 @@ export default function CarbonZeroChart() {
             dy: -5,
             centerX: am5.p50,
             centerY: am5.p100,
-            fill: colorList[colorNum],
+            fill: bgColors[colorNum],
             svgPath:
               "M14.5676 26.5893C21.1369 25.9332 26.2676 20.3578 26.2676 13.5769C26.2676 6.35474 20.4473 0.5 13.2676 0.5C6.08788 0.5 0.267578 6.35474 0.267578 13.5769C0.267578 20.3578 5.39826 25.9332 11.9676 26.5893V34.5H14.5676V26.5893Z",
           })
@@ -196,7 +198,7 @@ export default function CarbonZeroChart() {
             centerX: am5.p50,
             populateText: true,
             text: dataItem.get("categoryX"),
-            fill:am5.color("#000"),
+            fill: am5.color("#000"),
             background: am5.RoundedRectangle.new(root, {
               cornerRadiusTL: 20,
               cornerRadiusTR: 20,
@@ -212,7 +214,7 @@ export default function CarbonZeroChart() {
           sprite: container,
         });
       } else if (dataItem.dataContext.targetBullet) {
-        const container = am5.Container.new(root, {dx:40});
+        const container = am5.Container.new(root, { dx: 40 });
         container.children.push(
           am5.Circle.new(root, {
             radius: 50,
@@ -269,7 +271,9 @@ export default function CarbonZeroChart() {
     chart.appear(1000, 100);
 
     return () => root.dispose();
-  }, [theme]);
+  }, [theme, colorTheme]);
 
-  return <div id={id} style={{ width: "100%", height: "100%", minWidth:460 }} />;
+  return (
+    <div id={id} style={{ width: "100%", height: "100%", minWidth: 460 }} />
+  );
 }

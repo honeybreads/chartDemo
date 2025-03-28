@@ -1,4 +1,4 @@
-import { memo } from "react";
+import { memo, useRef } from "react";
 import {
   StepLineChart,
   SmoothedLineChart,
@@ -8,56 +8,52 @@ import {
   SmoothedStackedLineChart,
 } from "@/components/chart/line/LineChart";
 import { LineChart } from "lucide-react";
+import BoardLayout from "@/components/BoardLayout";
 
 const Line3 = memo(function Line3() {
+  const listRef = useRef({});
+  const list = [
+    {
+      name: "smoothed",
+      chart: <SmoothedLineChart />,
+      style: { width: "100%", height: 340 },
+    },
+    {
+      name: "smoothed stacked",
+      chart: <SmoothedStackedLineChart />,
+      style: { width: "100%", height: 340 },
+    },
+    {
+      name: "draggable range",
+      chart: <DraggableRangeLineChart />,
+      style: { width: "100%", height: 340 },
+    },
+    {
+      name: "live order book",
+      chart: <LiveOrderBookLineChart />,
+      style: { width: "100%", height: 340 },
+    },
+    {
+      name: "step",
+      chart: <StepLineChart />,
+      style: { width: "100%", height: 340 },
+    },
+    {
+      name: "no riser step",
+      chart: <NoRisersStepLineChart />,
+      style: { width: "100%", height: 340 },
+    },
+  ];
+  list.map((item) => (listRef[item.name] = null));
+
   return (
-    <>
-      <h2 className="chart-title"><LineChart/>매끄러운 / 각진 라인 차트</h2>
-      <div className="chart-layout">
-        {/* 매끄러운 라인 차트 */}
-        <div className="chart-layout-box">
-          <p className="chart-layout-title">Smoothed Line Chart</p>
-          <div className="chart-con" style={{width:"100%",height:340}}>
-            <SmoothedLineChart />
-          </div>
-        </div>
-        {/* 매끄러운 스택택 라인 차트 */}
-        <div className="chart-layout-box">
-          <p className="chart-layout-title">Smoothed Stacked Line Chart</p>
-          <div className="chart-con" style={{width:"100%",height:340}}>
-            <SmoothedStackedLineChart />
-          </div>
-        </div>
-        {/* 드래그로 범위 조절 라인 차트 */}
-        <div className="chart-layout-box">
-          <p className="chart-layout-title">Draggable Range Line Chart</p>
-          <div className="chart-con" style={{width:"100%",height:340}}>
-            <DraggableRangeLineChart />
-          </div>
-        </div>
-        {/* 주식(?) 라인 차트 */}
-        <div className="chart-layout-box">
-          <p className="chart-layout-title">Live Order Book Line Chart</p>
-          <div className="chart-con" style={{width:"100%",height:340}}>
-            <LiveOrderBookLineChart />
-          </div>
-        </div>
-        {/* 계단형 라인 차트 */}
-        <div className="chart-layout-box">
-          <p className="chart-layout-title">Step Line Chart</p>
-          <div className="chart-con" style={{width:"100%",height:340}}>
-            <StepLineChart />
-          </div>
-        </div>
-        {/* 옆이 없는 계단형 라인 차트 */}
-        <div className="chart-layout-box">
-          <p className="chart-layout-title">No Riser Step Line Chart</p>
-          <div className="chart-con" style={{width:"100%",height:340}}>
-            <NoRisersStepLineChart />
-          </div>
-        </div>
-      </div>
-    </>
+    <BoardLayout
+      list={list}
+      listRef={listRef}
+      title="매끄러운 / 각진 라인 차트"
+      name="line Chart"
+      icon={<LineChart />}
+    />
   );
 });
 
