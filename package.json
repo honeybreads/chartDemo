@@ -12,6 +12,7 @@
   "dependencies": {
     "@amcharts/amcharts5": "^5.10.10",
     "@amcharts/amcharts5-geodata": "^5.1.4",
+    "@studio-freight/lenis": "^1.0.42",
     "@uiw/codemirror-extensions-langs": "^4.23.8",
     "@uiw/codemirror-themes-all": "^4.23.8",
     "@uiw/react-codemirror": "^4.23.8",

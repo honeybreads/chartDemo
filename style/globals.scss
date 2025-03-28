@@ -113,7 +113,6 @@ html {
   @apply bg-background;
   @apply w-[240px] h-full;
   @apply absolute left-[-240px];
-  @apply border-r border-solid border-border;
   @apply lg:static;
   transition: 0.3s left;
 
@@ -122,7 +121,7 @@ html {
   }
 
   &-sub-list {
-    @apply text-gray-600 dark:text-gray-300;
+    @apply text-gray-500 dark:text-gray-400;
 
     &__item {
       @apply mt-1;
@@ -149,8 +148,8 @@ html {
 
 /* content section */
 .section {
-  @apply lg:mr-4;
   @apply flex-1;
+  @apply pb-8 lg:mr-4;
   @apply overflow-auto;
 }
 
@@ -174,7 +173,7 @@ html {
 }
 
 .chart-title {
-  @apply mb-4;
+  @apply mb-2;
   @apply text-xl font-bold;
   @apply flex items-center gap-2;
   @apply col-span-12;
@@ -182,23 +181,15 @@ html {
 
 .chart-area {
   @apply flex items-start;
-
-  .intro-guide {
-    @apply flex-none w-[220px];
-  }
 }
 
 .chart-con {
   @apply rounded-md;
   @apply bg-card p-4;
-  @apply overflow-hidden;
+  @apply overflow-auto sm:overflow-hidden;
 
   & > div {
     @apply min-w-[360px];
-  }
-
-  @media (max-width: 640px) {
-    @apply overflow-auto;
   }
 }
 
@@ -210,27 +201,32 @@ html {
 
   &-content {
     @apply p-4;
-    @apply flex-none;
-    @apply w-full lg:w-[calc(100%-220px)] max-w-[1020px];
+    @apply w-full overflow-hidden;
   }
 
   &-guide {
     @apply p-4;
     @apply flex-1;
+    @apply flex-none w-[220px];
     @apply sticky top-0;
-    @apply lg:inline-flex flex-col items-start hidden;
+    @apply xl:inline-flex flex-col items-start hidden;
 
     &-title {
-      @apply pl-2 text-lg font-bold;
+      @apply mb-2;
+      @apply text-lg font-bold;
       @apply text-gray-950 dark:text-gray-100;
     }
 
     button {
-      @apply px-2 py-0.5;
+      @apply pl-4 pr-1 py-0.5;
       @apply capitalize text-sm;
-      @apply border-l border-border;
-      &:hover {
-        @apply text-primary;
+      @apply border-l-2 border-border;
+      @apply text-gray-500 dark:text-gray-400;
+
+      &:hover,
+      &.active {
+        @apply text-foreground;
+        @apply border-foreground;
       }
     }
   }
@@ -271,6 +267,10 @@ html {
     @apply rounded-sm;
     @apply overflow-hidden;
     @apply border border-solid border-border;
+  }
+
+  .cm-editor {
+    @apply py-1;
   }
 
   .cm-content {

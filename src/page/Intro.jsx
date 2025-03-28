@@ -145,7 +145,7 @@ export default function BasicBarChart() {
       <>
         <h3 className="intro-subtitle">5. 데모</h3>
         <p className="mb-3">
-          빈 프로젝트에서 차트를 적용해보는 데모 영상입니다.
+          신규 프로젝트에서 차트를 적용해보는 데모 영상입니다.
         </p>
         <video controls src={Demos}></video>
       </>
@@ -167,7 +167,7 @@ export default function BasicBarChart() {
     <div className="intro">
       <div className="intro-content">
         <h2 className="intro-title">
-          amCharts 5 커스텀 데모{" "}
+          amCharts 5 커스텀 데모
           <a className="btn" href="https://www.amcharts.com/" target="_blank">
             <ExternalLink size={14} />
           </a>
