@@ -114,6 +114,7 @@ html {
   @apply w-[240px] h-full;
   @apply absolute left-[-240px];
   @apply lg:static;
+  @apply border-r border-solid border-border;
   transition: 0.3s left;
 
   &.active {
