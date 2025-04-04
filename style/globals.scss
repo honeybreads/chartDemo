@@ -169,7 +169,7 @@ html {
   &-title {
     @apply mb-2;
     @apply capitalize;
-    @apply text-sm font-bold;
+    @apply font-bold;
   }
 }
 
@@ -187,7 +187,9 @@ html {
 .chart-con {
   @apply rounded-md;
   @apply bg-card p-4;
+  @apply border border-solid border-border;
   @apply overflow-auto sm:overflow-hidden;
+  @apply rounded-b-none border-b-0;
 
   & > div {
     @apply min-w-[360px];
@@ -220,8 +222,8 @@ html {
 
     button {
       @apply pl-4 pr-1 py-0.5;
-      @apply capitalize text-sm;
       @apply border-l-2 border-border;
+      @apply capitalize text-sm text-left;
       @apply text-gray-500 dark:text-gray-400;
 
       &:hover,
@@ -262,24 +264,49 @@ html {
   strong {
     @apply text-primary;
   }
+}
 
-  .cm-theme {
-    @apply my-3;
+.hljs-box {
+  @apply my-3;
+  @apply text-sm;
+  @apply relative;
+  @apply rounded-sm;
+  @apply overflow-hidden;
+  @apply border border-solid  border-border;
+
+  pre code.hljs {
+    @apply p-3;
+    @apply text-xs;
+    @apply max-h-[320px];
+
+    &::-webkit-scrollbar {
+      @apply w-2;
+    }
+  }
+
+  &-tool {
+    @apply px-2;
+    @apply w-full h-8;
+    @apply text-right leading-[0];
+    @apply flex justify-between items-center;
+    @apply border-b border-solid border-border;
+  }
+
+  button {
+    @apply p-1;
     @apply rounded-sm;
-    @apply overflow-hidden;
-    @apply border border-solid border-border;
+    @apply text-white;
+    @apply bg-black/40 dark:bg-white/40;
   }
+}
 
-  .cm-editor {
-    @apply py-1;
-  }
+.chart-codeblock {
+  .hljs-box {
+    @apply mt-0;
+    @apply rounded-md rounded-t-none;
 
-  .cm-content {
-    @apply text-sm;
-  }
-
-  .cm-activeLine,
-  .cm-activeLineGutter {
-    @apply bg-transparent;
+    pre code.hljs {
+      @apply max-h-[240px];
+    }
   }
 }

@@ -1,4 +1,5 @@
 import PropTypes from "prop-types";
+import CodeBox from "@/components/CodeBox";
 
 export default function ChartList({ listRef, list, name }) {
   return list.map((item, index) => (
@@ -13,6 +14,11 @@ export default function ChartList({ listRef, list, name }) {
       <div className="chart-con" style={item.style}>
         {item.chart}
       </div>
+      {item.codeblock && (
+        <div className="chart-codeblock">
+          <CodeBox code={item.codeblock} />
+        </div>
+      )}
     </div>
   ));
 }

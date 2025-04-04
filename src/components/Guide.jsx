@@ -9,7 +9,6 @@ export default function Guide({ listRef, list }) {
     (section) => {
       if (listRef.current?.[section]) {
         listRef.current[section].scrollIntoView({
-          block: "center",
           behavior: "smooth",
         });
       }
