@@ -21,7 +21,7 @@ export default function Intro() {
   const customJsx = useMemo(() => {
     const code1 = `import * as am5 from "@amcharts/amcharts5";
 import * as am5plugins_exporting from "@amcharts/amcharts5/plugins/exporting";
-    
+
 // 컬러 설정
 // 컬러 테마 생성 함수
 const createTheme = (primary, lineStroke, bulletFill) => ({
@@ -284,7 +284,7 @@ export const createBulletSpriet = (root, fill, stroke, options) => {
 export const seriesSetMaxWidth = (target) => {
   const percent = target.dataItem?.get("valuePercentTotal");
   const baseHeight = target.parent.parent.parent._prevHeight;
-  target.set("maxWidth", (baseHeight * percent) / 36 - 8);
+  target.set("maxWidth", (baseHeight * percent) / 36 - 24);
 };
 
 // x,y axis label width 구하는 함수
@@ -308,21 +308,25 @@ export const createExportButton = (root) => {
 };
 
 // 범례 배경색 생성 함수
-export const legnedBackground = (root, theme) => {
+export const legendBackground = (root, theme) => {
   const option = {
+    marginTop:1,
+    marginLeft:1,
+    marginRight:1,
+    marginBottom:1,
     paddingTop: 6,
     paddingLeft: 4,
     paddingRight: 4,
     paddingBottom: 6,
     background: am5.RoundedRectangle.new(root, {
-      shadowBlur: 4,
       fillOpacity: 1,
+      strokeWidth:0.5,
       cornerRadiusTR: 4,
       cornerRadiusTL: 4,
       cornerRadiusBR: 4,
       cornerRadiusBL: 4,
       fill: chartVariables[theme].bg,
-      shadowColor: am5.color(chartVariables[theme].bg),
+      stroke:chartVariables[theme].grid,
     }),
   };
 
@@ -386,7 +390,7 @@ const themeCommon = (myTheme, theme) => {
         <p>
           amCharts 5의 스타일을 통일하기 위해 <code>chartTheme.js</code>에서
           공통 설정을 관리합니다. <br />
-          <code>chartTheme.js</code> 파일을 생성하고 아래 코드를 복사합니다.
+          프로젝트에 <code>chartTheme.js</code> 파일을 생성하고 아래 코드를 복사합니다.
         </p>
         <CodeBox code={code1} />
         <p>이후 차트의 폰트 스타일을 적용하기 위해 아래 설정을 수정합니다.</p>
@@ -426,24 +430,22 @@ export default function BasicBarChart() {
       <>
         <h3 className="intro-subtitle">3. 차트 생성</h3>
         <p>
-          페이지에서 원하는 차트를 확인하고 복사한 후 일부 항목을 수정합니다.
-        </p>
-        <p>
-          <strong>차트 테마</strong> 및 <strong>컬러/모드 테마</strong>를
+          페이지에서 원하는 차트를 확인하고 적용 한 뒤 <br/><strong>차트 테마</strong> 및 <strong>컬러/모드 테마</strong>를
           가져오는 경로를 프로젝트 환경에 맞게 수정해야 합니다.
         </p>
         <p className="my-3">
-          * 데모에서는 <code>useTheme</code> 훅을 활용하여 테마 설정을 관리하고
-          있으며 이부분은 프로젝트에 맞춰 변경합니다.
-          <br />
+        
           <strong>
             <code>theme</code>
           </strong>
-          : 라이트/다크 모드
+          : 라이트/다크 테마 |
           <strong>
-            <code>colorTheme</code>
+          <code> colorTheme</code>
           </strong>
           : 차트 색상 테마
+          <br />
+          * 데모에서는 <code>src/components/Theme.jsx</code> 파일에서 테마 설정을 관리하고
+          있습니다.
         </p>
         <CodeBox code={code1} copy={false} />
         <p>
@@ -464,10 +466,8 @@ export default function BasicBarChart() {
     return (
       <>
         <h3 className="intro-subtitle">4. 차트 적용</h3>
-        <p>컨테이너를 생성 후 차트를 넣어 사용합니다.</p>
-        <p>
-          차트는 컨테이너의 넓이 및 높이를 받아 사용합니다. (* 일부 차트 제외 )
-        </p>
+        <p>컨테이너를 생성 후 차트를 자식으로 사용하며 컨테이너의 넓이 및 높이를 받아 사용합니다.</p>
+        <p>* 일부 차트는 기준이 다른 경우가 있으며 자세한 내용은 각 차트를 확인 바랍니다.</p>
         <CodeBox code={code} copy={false} />
       </>
     );

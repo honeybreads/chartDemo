@@ -93,6 +93,7 @@ export default function ThemeRiverLineChart() {
     // X축 생성 (연도)
     const xAxis = chart.xAxes.push(
       am5xy.CategoryAxis.new(root, {
+        maxDeviation:0,
         endLocation: 0.5,
         startLocation: 0.5,
         categoryField: "year",
@@ -291,6 +292,7 @@ export default function ThemeRiverLineChart() {
     // X축 생성 (연도)
     const xAxis = chart.xAxes.push(
       am5xy.CategoryAxis.new(root, {
+        maxDeviation:0,
         endLocation: 0.5,
         startLocation: 0.5,
         categoryField: "year",

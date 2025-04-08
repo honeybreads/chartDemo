@@ -129,6 +129,8 @@ export default function ViolinChart() {
       multiLocation: 0.5,
     });
 
+    xAxis.get("renderer").adapters.add("stroke", () => false);
+
     // categories 설정
     let combinedValues = [];
     Object.keys(sourceData).map((category) => {
@@ -337,6 +339,8 @@ export default function ViolinChart() {
       location: 0.5,
       multiLocation: 0.5,
     });
+
+    xAxis.get("renderer").adapters.add("stroke", () => false);
 
     // categories 설정
     let combinedValues = [];

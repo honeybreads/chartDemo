@@ -263,7 +263,7 @@ export const createBulletSpriet = (root, fill, stroke, options) => {
 export const seriesSetMaxWidth = (target) => {
   const percent = target.dataItem?.get("valuePercentTotal");
   const baseHeight = target.parent.parent.parent._prevHeight;
-  target.set("maxWidth", (baseHeight * percent) / 36 - 8);
+  target.set("maxWidth", (baseHeight * percent) / 36 - 24);
 };
 
 // x,y axis label width 구하는 함수
@@ -287,21 +287,25 @@ export const createExportButton = (root) => {
 };
 
 // 범례 배경색 생성 함수
-export const legnedBackground = (root, theme) => {
+export const legendBackground = (root, theme) => {
   const option = {
+    marginTop:1,
+    marginLeft:1,
+    marginRight:1,
+    marginBottom:1,
     paddingTop: 6,
     paddingLeft: 4,
     paddingRight: 4,
     paddingBottom: 6,
     background: am5.RoundedRectangle.new(root, {
-      shadowBlur: 4,
       fillOpacity: 1,
+      strokeWidth:0.5,
       cornerRadiusTR: 4,
       cornerRadiusTL: 4,
       cornerRadiusBR: 4,
       cornerRadiusBL: 4,
       fill: chartVariables[theme].bg,
-      shadowColor: am5.color(chartVariables[theme].bg),
+      stroke:chartVariables[theme].grid,
     }),
   };
 

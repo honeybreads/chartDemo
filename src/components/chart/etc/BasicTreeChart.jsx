@@ -118,13 +118,14 @@ export default function BasicTreeChart() {
     // series 생성
     const series = zoomableContainer.contents.children.push(
       am5hierarchy.Tree.new(root, {
-        singleBranchOnly: false,
+        minWidth:500,
         downDepth: 1,
+        paddingTop: 28,
         initialDepth: 10,
         valueField: "value",
         categoryField: "name",
         childDataField: "children",
-        paddingTop: 28,
+        singleBranchOnly: false,
         tooltip: am5.Tooltip.new(root, {}),
       })
     );
@@ -142,8 +143,8 @@ export default function BasicTreeChart() {
     series.nodes.template.events.on("dataitemchanged", (e) => {
       e.target.children.push(
         am5.Rectangle.new(root, {
-          width: 50,
-          height: 25,
+          width: 35,
+          height: 20,
           centerX: am5.percent(50),
           centerY: am5.percent(50),
           fill: e.target.dataItem.get("fill"),
@@ -294,13 +295,14 @@ export default function BasicTreeChart() {
     // series 생성
     const series = zoomableContainer.contents.children.push(
       am5hierarchy.Tree.new(root, {
-        singleBranchOnly: false,
+        minWidth:500,
         downDepth: 1,
+        paddingTop: 28,
         initialDepth: 10,
         valueField: "value",
         categoryField: "name",
         childDataField: "children",
-        paddingTop: 28,
+        singleBranchOnly: false,
         tooltip: am5.Tooltip.new(root, {}),
       })
     );
@@ -318,8 +320,8 @@ export default function BasicTreeChart() {
     series.nodes.template.events.on("dataitemchanged", (e) => {
       e.target.children.push(
         am5.Rectangle.new(root, {
-          width: 50,
-          height: 25,
+          width: 35,
+          height: 20,
           centerX: am5.percent(50),
           centerY: am5.percent(50),
           fill: e.target.dataItem.get("fill"),

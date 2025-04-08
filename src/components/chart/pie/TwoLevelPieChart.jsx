@@ -79,7 +79,7 @@ export default function TwoLevelPieChart() {
     series0.slices.template.states.create("hover", { scale: 1 });
     series0.slices.template.setAll({
       cornerRadius: 0,
-      fillOpacity: 0.3,
+      fillOpacity: 0.2,
       strokeOpacity: 0,
       templateField: "settings",
       shadowBlur: 4,
@@ -219,7 +219,7 @@ export default function TwoLevelPieChart() {
     series0.slices.template.states.create("hover", { scale: 1 });
     series0.slices.template.setAll({
       cornerRadius: 0,
-      fillOpacity: 0.3,
+      fillOpacity: 0.2,
       strokeOpacity: 0,
       templateField: "settings",
       shadowBlur: 4,

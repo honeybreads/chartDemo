@@ -90,6 +90,8 @@ export default function CarbonZeroChart() {
     const myTheme = themes.myThemeRule(root, colorList, theme);
     root.setThemes([am5themes_Animated.new(root), myTheme]);
     const bgColors = [state.normal, state.warning, state.major, state.critical];
+    const baseHeight = Math.min(200,root.height());
+    const radius = baseHeight/4
 
     // XYChart 생성
     const chart = root.container.children.push(
@@ -99,7 +101,11 @@ export default function CarbonZeroChart() {
         wheelX: "none",
         wheelY: "none",
         layout: root.verticalLayout,
-        paddingRight: 80,
+        paddingRight: radius * 2,
+        y:am5.p50,
+        centerY:am5.p50,
+        paddingTop:40,
+        height:baseHeight,
       })
     );
     chart.plotContainer.get("background").set("opacity", 0);
@@ -124,7 +130,6 @@ export default function CarbonZeroChart() {
     const yAxis = chart.yAxes.push(
       am5xy.ValueAxis.new(root, {
         min: 0,
-        max: 180,
         strictMinMax: true,
         renderer: am5xy.AxisRendererY.new(root, {}),
       })
@@ -216,10 +221,10 @@ export default function CarbonZeroChart() {
           sprite: container,
         });
       } else if (dataItem.dataContext.targetBullet) {
-        const container = am5.Container.new(root, { dx: 40 });
+        const container = am5.Container.new(root, { dx: radius });
         container.children.push(
           am5.Circle.new(root, {
-            radius: 50,
+            radius: radius,
             fill: am5.color(0x11326d),
           })
         );
@@ -364,7 +369,7 @@ export default function CarbonZeroChart() {
   const { theme, colorTheme } = useTheme();
   // const theme = "light";
   // const colorTheme = "basicTheme";
-  
+
   useLayoutEffect(() => {
     // Root 객체 생성 및 테마 불러오기
     const root = am5.Root.new(id);
@@ -373,6 +378,8 @@ export default function CarbonZeroChart() {
     const myTheme = themes.myThemeRule(root, colorList, theme);
     root.setThemes([am5themes_Animated.new(root), myTheme]);
     const bgColors = [state.normal, state.warning, state.major, state.critical];
+    const baseHeight = Math.min(200,root.height());
+    const radius = baseHeight/4
 
     // XYChart 생성
     const chart = root.container.children.push(
@@ -382,7 +389,11 @@ export default function CarbonZeroChart() {
         wheelX: "none",
         wheelY: "none",
         layout: root.verticalLayout,
-        paddingRight: 80,
+        paddingRight: radius * 2,
+        y:am5.p50,
+        centerY:am5.p50,
+        paddingTop:40,
+        height:baseHeight,
       })
     );
     chart.plotContainer.get("background").set("opacity", 0);
@@ -407,7 +418,6 @@ export default function CarbonZeroChart() {
     const yAxis = chart.yAxes.push(
       am5xy.ValueAxis.new(root, {
         min: 0,
-        max: 180,
         strictMinMax: true,
         renderer: am5xy.AxisRendererY.new(root, {}),
       })
@@ -499,10 +509,10 @@ export default function CarbonZeroChart() {
           sprite: container,
         });
       } else if (dataItem.dataContext.targetBullet) {
-        const container = am5.Container.new(root, { dx: 40 });
+        const container = am5.Container.new(root, { dx: radius });
         container.children.push(
           am5.Circle.new(root, {
-            radius: 50,
+            radius: radius,
             fill: am5.color(0x11326d),
           })
         );

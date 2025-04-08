@@ -1261,7 +1261,9 @@ export default function PopulationPyramidChart() {
 }
 
 // codeblock 
-export const PopulationPyramidCodeblock = `import * as am5 from "@amcharts/amcharts5";
+export const PopulationPyramidCodeblock = `// geodata 추가 설치 필요
+// npm i @amcharts/amcharts5-geodata 
+import * as am5 from "@amcharts/amcharts5";
 import * as am5xy from "@amcharts/amcharts5/xy";
 import * as am5map from "@amcharts/amcharts5/map";
 import am5Geodata_southKoreaLow from "@amcharts/amcharts5-geodata/southKoreaLow";

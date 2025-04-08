@@ -1,7 +1,6 @@
 import * as am5 from "@amcharts/amcharts5";
 import * as am5radar from "@amcharts/amcharts5/radar";
 import * as am5xy from "@amcharts/amcharts5/xy";
-import am5themes_Animated from "@amcharts/amcharts5/themes/Animated";
 import { useLayoutEffect } from "react";
 import * as themes from "@/assets/chartTheme";
 import { useTheme } from "@/components/Theme";
@@ -33,7 +32,8 @@ export default function TwoAxesGaugeChart() {
     const { primary } = themes[colorTheme];
     const colorList = primary;
     const myTheme = themes.myThemeRule(root, colorList, theme);
-    root.setThemes([am5themes_Animated.new(root), myTheme]);
+    root.setThemes([myTheme]);
+    const containerHeight = Math.min(root.width(), root.height());
 
     // RadarChart 생성
     const chart = root.container.children.push(
@@ -44,6 +44,7 @@ export default function TwoAxesGaugeChart() {
         endAngle: 360,
         radius: am5.percent(90),
         layout: root.verticalLayout,
+        height: containerHeight,
       })
     );
     chart.plotContainer.get("background").set("visible", false);
@@ -82,7 +83,7 @@ export default function TwoAxesGaugeChart() {
       // 라벨 생성
       const label = chart.seriesContainer.children.push(
         am5.Label.new(root, {
-          y: -60,
+          y: -40,
           text: "0",
           layer: 999,
           width: 70,
@@ -132,10 +133,11 @@ export default function TwoAxesGaugeChart() {
       am5.Legend.new(root, {
         x: am5.p50,
         centerX: am5.p50,
-        marginTop:12,
-        ...themes.legnedBackground(root, theme),
+        ...themes.legendBackground(root, theme),
+        marginTop: 12,
       })
     );
+
     legend.data.setAll([axisDataItem1, axisDataItem2]);
     legend.labels.template.setAll({ textAlign: "center" });
     legend.valueLabels.template.setAll({ width: 0 });
@@ -167,11 +169,10 @@ export default function TwoAxesGaugeChart() {
   return <div id={id} style={{ width: "100%", height: "100%" }} />;
 }
 
-// codeblock 
+// codeblock
 export const TwoAxesGaugeCodeblock = `import * as am5 from "@amcharts/amcharts5";
 import * as am5radar from "@amcharts/amcharts5/radar";
 import * as am5xy from "@amcharts/amcharts5/xy";
-import am5themes_Animated from "@amcharts/amcharts5/themes/Animated";
 import { useLayoutEffect } from "react";
 import * as themes from "@/assets/chartTheme";
 import { useTheme } from "@/components/Theme";
@@ -196,14 +197,15 @@ export default function TwoAxesGaugeChart() {
   const { theme, colorTheme } = useTheme();
   // const theme = "light";
   // const colorTheme = "basicTheme";
-  
+
   useLayoutEffect(() => {
     // Root 객체 생성 및 테마 불러오기
     const root = am5.Root.new(id);
     const { primary } = themes[colorTheme];
     const colorList = primary;
     const myTheme = themes.myThemeRule(root, colorList, theme);
-    root.setThemes([am5themes_Animated.new(root), myTheme]);
+    root.setThemes([myTheme]);
+    const containerHeight = Math.min(root.width(), root.height());
 
     // RadarChart 생성
     const chart = root.container.children.push(
@@ -214,6 +216,7 @@ export default function TwoAxesGaugeChart() {
         endAngle: 360,
         radius: am5.percent(90),
         layout: root.verticalLayout,
+        height: containerHeight,
       })
     );
     chart.plotContainer.get("background").set("visible", false);
@@ -252,7 +255,7 @@ export default function TwoAxesGaugeChart() {
       // 라벨 생성
       const label = chart.seriesContainer.children.push(
         am5.Label.new(root, {
-          y: -60,
+          y: -40,
           text: "0",
           layer: 999,
           width: 70,
@@ -302,10 +305,11 @@ export default function TwoAxesGaugeChart() {
       am5.Legend.new(root, {
         x: am5.p50,
         centerX: am5.p50,
-        marginTop:12,
-        ...themes.legnedBackground(root, theme),
+        ...themes.legendBackground(root, theme),
+        marginTop: 12,
       })
     );
+
     legend.data.setAll([axisDataItem1, axisDataItem2]);
     legend.labels.template.setAll({ textAlign: "center" });
     legend.valueLabels.template.setAll({ width: 0 });
@@ -335,4 +339,4 @@ export default function TwoAxesGaugeChart() {
   }, [theme, colorTheme]);
 
   return <div id={id} style={{ width: "100%", height: "100%" }} />;
-}`
+}`;

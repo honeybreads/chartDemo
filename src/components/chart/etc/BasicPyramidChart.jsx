@@ -5,17 +5,6 @@ import { useLayoutEffect } from "react";
 import * as themes from "@/assets/chartTheme";
 import { useTheme } from "@/components/Theme";
 
-// 샘플 데이터
-const data = [
-  { value: 10, category: "One" },
-  { value: 9, category: "Two" },
-  { value: 6, category: "Tree" },
-  { value: 5, category: "Four" },
-  { value: 4, category: "Five" },
-  { value: 3, category: "Six" },
-  { value: 3, category: "Seven" },
-];
-
 // BasicPyramidChart
 export default function BasicPyramidChart() {
   const id = "basic-pyramid";
@@ -35,7 +24,7 @@ export default function BasicPyramidChart() {
     const chart = root.container.children.push(
       am5percent.SlicedChart.new(root, {
         layout: root.verticalLayout,
-        paddingBottom:0,
+        paddingBottom: 0,
       })
     );
 
@@ -45,7 +34,6 @@ export default function BasicPyramidChart() {
 
     const series = chart.series.push(
       am5percent.PyramidSeries.new(root, {
-        orientation: "vertical",
         valueField: "value",
         categoryField: "category",
       })
@@ -55,18 +43,30 @@ export default function BasicPyramidChart() {
     series.labels.template.setAll({
       width: 100,
       maxWidth: 100,
+      lineHeight:0.1,
       textAlign: "center",
       oversizedBehavior: "truncate",
     });
 
     const legend = chart.children.push(
       am5.Legend.new(root, {
-        marginTop: 12,
         x: am5.percent(50),
         centerX: am5.percent(50),
-        ...themes.legnedBackground(root,theme)
+        ...themes.legendBackground(root, theme),
+        marginTop: 12,
       })
     );
+
+    // 샘플 데이터
+    const data = [
+      { value: 10, category: "One" },
+      { value: 9, category: "Two" },
+      { value: 6, category: "Tree" },
+      { value: 5, category: "Four" },
+      { value: 4, category: "Five" },
+      { value: 3, category: "Six" },
+      { value: 3, category: "Seven" },
+    ];
 
     // 데이터 적용
     series.data.setAll(data.reverse());
@@ -82,7 +82,7 @@ export default function BasicPyramidChart() {
   return <div id={id} style={{ width: "100%", height: "100%" }} />;
 }
 
-// codeblock 
+// codeblock
 export const BasicPyramidCodeblock = `import * as am5 from "@amcharts/amcharts5";
 import * as am5percent from "@amcharts/amcharts5/percent";
 import am5themes_Animated from "@amcharts/amcharts5/themes/Animated";
@@ -90,24 +90,13 @@ import { useLayoutEffect } from "react";
 import * as themes from "@/assets/chartTheme";
 import { useTheme } from "@/components/Theme";
 
-// 샘플 데이터
-const data = [
-  { value: 10, category: "One" },
-  { value: 9, category: "Two" },
-  { value: 6, category: "Tree" },
-  { value: 5, category: "Four" },
-  { value: 4, category: "Five" },
-  { value: 3, category: "Six" },
-  { value: 3, category: "Seven" },
-];
-
 // BasicPyramidChart
 export default function BasicPyramidChart() {
   const id = "basic-pyramid";
   const { theme, colorTheme } = useTheme();
   // const theme = "light";
   // const colorTheme = "basicTheme";
-  
+
   useLayoutEffect(() => {
     // Root 객체 생성 및 테마 불러오기
     const root = am5.Root.new(id);
@@ -140,18 +129,30 @@ export default function BasicPyramidChart() {
     series.labels.template.setAll({
       width: 100,
       maxWidth: 100,
+      lineHeight:0.1,
       textAlign: "center",
       oversizedBehavior: "truncate",
     });
 
     const legend = chart.children.push(
       am5.Legend.new(root, {
-        marginTop: 12,
         x: am5.percent(50),
         centerX: am5.percent(50),
-        ...themes.legnedBackground(root,theme)
+        ...themes.legendBackground(root,theme),
+        marginTop: 12,
       })
     );
+
+    // 샘플 데이터
+    const data = [
+      { value: 10, category: "One" },
+      { value: 9, category: "Two" },
+      { value: 6, category: "Tree" },
+      { value: 5, category: "Four" },
+      { value: 4, category: "Five" },
+      { value: 3, category: "Six" },
+      { value: 3, category: "Seven" },
+    ];
 
     // 데이터 적용
     series.data.setAll(data.reverse());
@@ -165,4 +166,4 @@ export default function BasicPyramidChart() {
   }, [theme, colorTheme]);
 
   return <div id={id} style={{ width: "100%", height: "100%" }} />;
-}`
+}`;

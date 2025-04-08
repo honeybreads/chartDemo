@@ -165,6 +165,7 @@ export default function BasicTreemapChart() {
       stroke: themes.chartVariables[theme].line,
     });
 
+    series.labels.template.setAll({ oversizedBehavior: "hide" });
     series.labels.template.adapters.add("fill", (_, target) => {
       let color = am5.color("#fff");
       if (target.parent) {
@@ -188,7 +189,7 @@ export default function BasicTreemapChart() {
   return <div id={id} style={{ width: "100%", height: "100%" }} />;
 }
 
-// codeblock 
+// codeblock
 export const BasicTreemapCodeblock = `import * as am5 from "@amcharts/amcharts5";
 import * as am5hierarchy from "@amcharts/amcharts5/hierarchy";
 import am5themes_Animated from "@amcharts/amcharts5/themes/Animated";
@@ -355,7 +356,8 @@ export default function BasicTreemapChart() {
       strokeWidth: 1,
       stroke: themes.chartVariables[theme].line,
     });
-
+    
+    series.labels.template.setAll({ oversizedBehavior: "hide" });
     series.labels.template.adapters.add("fill", (_, target) => {
       let color = am5.color("#fff");
       if (target.parent) {
@@ -377,4 +379,4 @@ export default function BasicTreemapChart() {
   }, [theme, colorTheme]);
 
   return <div id={id} style={{ width: "100%", height: "100%" }} />;
-}`
+}`;

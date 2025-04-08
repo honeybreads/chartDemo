@@ -854,7 +854,6 @@ export default function BasicHeatMapChart() {
   const id = "basic-heatmap";
   const { theme } = useTheme();
   // const theme = "light";
-  // const colorTheme = "basicTheme";
 
   useLayoutEffect(() => {
     // Root 객체 생성 및 테마 불러오기
@@ -1844,7 +1843,6 @@ export default function BasicHeatMapChart() {
   const id = "basic-heatmap";
   const { theme } = useTheme();
   // const theme = "light";
-  // const colorTheme = "basicTheme";
   
   useLayoutEffect(() => {
     // Root 객체 생성 및 테마 불러오기

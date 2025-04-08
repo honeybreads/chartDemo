@@ -137,7 +137,7 @@ export default function TrendLineChart() {
     const xAxis = chart.xAxes.push(
       am5xy.DateAxis.new(root, {
         groupData: false,
-        maxDeviation: 0.5,
+        maxDeviation: 0,
         tooltip: am5.Tooltip.new(root, {}),
         baseInterval: { timeUnit: "day", count: 1 },
         renderer: am5xy.AxisRendererX.new(root, {
@@ -150,7 +150,7 @@ export default function TrendLineChart() {
 
     const yAxis = chart.yAxes.push(
       am5xy.ValueAxis.new(root, {
-        maxDeviation: 1,
+        maxDeviation: 0,
         renderer: am5xy.AxisRendererY.new(root, { pan: "zoom" }),
       })
     );
@@ -367,7 +367,7 @@ export default function TrendLineChart() {
     const xAxis = chart.xAxes.push(
       am5xy.DateAxis.new(root, {
         groupData: false,
-        maxDeviation: 0.5,
+        maxDeviation: 0,
         tooltip: am5.Tooltip.new(root, {}),
         baseInterval: { timeUnit: "day", count: 1 },
         renderer: am5xy.AxisRendererX.new(root, {
@@ -380,7 +380,7 @@ export default function TrendLineChart() {
 
     const yAxis = chart.yAxes.push(
       am5xy.ValueAxis.new(root, {
-        maxDeviation: 1,
+        maxDeviation: 0,
         renderer: am5xy.AxisRendererY.new(root, { pan: "zoom" }),
       })
     );

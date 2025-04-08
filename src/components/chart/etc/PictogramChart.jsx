@@ -62,7 +62,7 @@ export default function PictogramChart() {
     // XYChart 생성
     const chart = root.container.children.push(
       am5xy.XYChart.new(root, {
-        panX: false,
+        panX: true,
         panY: false,
         wheelX: "panX",
         wheelY: "zoomX",
@@ -80,6 +80,7 @@ export default function PictogramChart() {
 
       const axis = axes.push(
         am5xy.CategoryAxis.new(root, {
+          maxDeviation:0,
           categoryField: "cat",
           paddingTop: orient === "y" && 10,
           renderer: renderer.new(root, {}),
@@ -242,7 +243,7 @@ export default function PictogramChart() {
     // XYChart 생성
     const chart = root.container.children.push(
       am5xy.XYChart.new(root, {
-        panX: false,
+        panX: true,
         panY: false,
         wheelX: "panX",
         wheelY: "zoomX",
@@ -260,6 +261,7 @@ export default function PictogramChart() {
 
       const axis = axes.push(
         am5xy.CategoryAxis.new(root, {
+          maxDeviation:0,
           categoryField: "cat",
           paddingTop: orient === "y" && 10,
           renderer: renderer.new(root, {}),

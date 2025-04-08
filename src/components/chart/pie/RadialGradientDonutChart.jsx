@@ -129,7 +129,7 @@ export default function RadialGradientDonutChart() {
     const legend = chart.children.push(
       am5.Legend.new(root, {
         ...legendOptions,
-        ...themes.legnedBackground(root, theme),
+        ...themes.legendBackground(root, theme),
       })
     );
 
@@ -148,8 +148,14 @@ export default function RadialGradientDonutChart() {
     responsive.addRule({
       relevant: (width) => width < baseHeight * 2,
       applying: () => {
-        root.dom.style.height = baseHeight * 1.8 + "px";
-        chart.setAll({ layout: root.verticalLayout, width: baseHeight });
+        const nowSize = Math.min(root.width(), baseHeight);
+        root.dom.style.height = nowSize * 1.5 + "px";
+        chart.setAll({
+          layout: root.verticalLayout,
+          width: nowSize,
+          x: am5.p50,
+          centerX: am5.p50,
+        });
         legend.setAll({
           y: undefined,
           centerY: undefined,
@@ -171,7 +177,9 @@ export default function RadialGradientDonutChart() {
 }
 
 // codeblock 
-export const RadialGradientDonutCodeblock = `import * as am5 from "@amcharts/amcharts5";
+export const RadialGradientDonutCodeblock = `// * 해당 차트는 컨테이너의 minHeight 값을 기준으로 생성
+// * 컨테이너의 height는 auto로 작성
+import * as am5 from "@amcharts/amcharts5";
 import * as am5percent from "@amcharts/amcharts5/percent";
 import am5themes_Animated from "@amcharts/amcharts5/themes/Animated";
 import am5themes_Responsive from "@amcharts/amcharts5/themes/Responsive";
@@ -302,7 +310,7 @@ export default function RadialGradientDonutChart() {
     const legend = chart.children.push(
       am5.Legend.new(root, {
         ...legendOptions,
-        ...themes.legnedBackground(root, theme),
+        ...themes.legendBackground(root, theme),
       })
     );
 
@@ -321,8 +329,14 @@ export default function RadialGradientDonutChart() {
     responsive.addRule({
       relevant: (width) => width < baseHeight * 2,
       applying: () => {
-        root.dom.style.height = baseHeight * 1.8 + "px";
-        chart.setAll({ layout: root.verticalLayout, width: baseHeight });
+        const nowSize = Math.min(root.width(), baseHeight);
+        root.dom.style.height = nowSize * 1.5 + "px";
+        chart.setAll({
+          layout: root.verticalLayout,
+          width: nowSize,
+          x: am5.p50,
+          centerX: am5.p50,
+        });
         legend.setAll({
           y: undefined,
           centerY: undefined,

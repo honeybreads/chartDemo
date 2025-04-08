@@ -179,7 +179,7 @@ export default function LinkedDonutChart() {
       am5.Legend.new(root, {
         x: am5.percent(50),
         centerX: am5.percent(50),
-        ...themes.legnedBackground(root, theme),
+        ...themes.legendBackground(root, theme),
       })
     );
 
@@ -214,11 +214,13 @@ export default function LinkedDonutChart() {
     responsive.addRule({
       relevant: (width) => width < baseHeight * 2,
       applying: () => {
-        root.dom.style.height = baseHeight * 2 + "px";
+        const nowSize = Math.min(root.width(), baseHeight);
+        root.dom.style.height = nowSize * 2 + "px";
         chartContainer.setAll({
-          width: baseHeight,
+          width: nowSize,
           layout: root.verticalLayout,
         });
+        legend.setAll({marginBottom:10})
       },
       removing: () => {
         root.dom.style.height = baseHeight + "px";
@@ -226,6 +228,7 @@ export default function LinkedDonutChart() {
           width: baseHeight * 2,
           layout: root.horizontalLayout,
         });
+        legend.setAll({marginBottom:0})
       },
     });
 
@@ -236,7 +239,9 @@ export default function LinkedDonutChart() {
 }
 
 // codeblock 
-export const LinkedDonutCodeblock = `import * as am5 from "@amcharts/amcharts5";
+export const LinkedDonutCodeblock = `// * 해당 차트는 컨테이너의 minHeight 값을 기준으로 생성
+// * 컨테이너의 height는 auto로 작성
+import * as am5 from "@amcharts/amcharts5";
 import * as am5percent from "@amcharts/amcharts5/percent";
 import am5themes_Animated from "@amcharts/amcharts5/themes/Animated";
 import am5themes_Responsive from "@amcharts/amcharts5/themes/Responsive";
@@ -417,7 +422,7 @@ export default function LinkedDonutChart() {
       am5.Legend.new(root, {
         x: am5.percent(50),
         centerX: am5.percent(50),
-        ...themes.legnedBackground(root, theme),
+        ...themes.legendBackground(root, theme),
       })
     );
 
@@ -452,11 +457,13 @@ export default function LinkedDonutChart() {
     responsive.addRule({
       relevant: (width) => width < baseHeight * 2,
       applying: () => {
-        root.dom.style.height = baseHeight * 2 + "px";
+        const nowSize = Math.min(root.width(), baseHeight);
+        root.dom.style.height = nowSize * 2 + "px";
         chartContainer.setAll({
-          width: baseHeight,
+          width: nowSize,
           layout: root.verticalLayout,
         });
+        legend.setAll({marginBottom:10})
       },
       removing: () => {
         root.dom.style.height = baseHeight + "px";
@@ -464,6 +471,7 @@ export default function LinkedDonutChart() {
           width: baseHeight * 2,
           layout: root.horizontalLayout,
         });
+        legend.setAll({marginBottom:0})
       },
     });
 

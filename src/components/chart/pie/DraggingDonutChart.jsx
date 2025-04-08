@@ -255,10 +255,11 @@ export default function DraggingDonutChart() {
       relevant: (width) => width < baseHeight * 2,
       applying: () => {
         mobileCheck = true;
-        root.dom.style.height = baseHeight * 2.2 + "px";
+        const nowSize = Math.min(root.width(), baseHeight);
+        root.dom.style.height = nowSize * 2 + "px";
         label.setAll({ rotation: 0 });
         line.setAll({ width: am5.percent(60), height: 0 });
-        container.setAll({ layout: root.verticalLayout, width: baseHeight });
+        container.setAll({ layout: root.verticalLayout, width: nowSize });
       },
       removing: () => {
         mobileCheck = false;
@@ -279,7 +280,9 @@ export default function DraggingDonutChart() {
 }
 
 // codeblock 
-export const DraggingDonutCodeblock = `import * as am5 from "@amcharts/amcharts5";
+export const DraggingDonutCodeblock = `// * 해당 차트는 컨테이너의 minHeight 값을 기준으로 생성
+// * 컨테이너의 height는 auto로 작성
+import * as am5 from "@amcharts/amcharts5";
 import * as am5percent from "@amcharts/amcharts5/percent";
 import am5themes_Animated from "@amcharts/amcharts5/themes/Animated";
 import am5themes_Responsive from "@amcharts/amcharts5/themes/Responsive";
@@ -536,10 +539,11 @@ export default function DragginDonutChart() {
       relevant: (width) => width < baseHeight * 2,
       applying: () => {
         mobileCheck = true;
-        root.dom.style.height = baseHeight * 2.2 + "px";
+        const nowSize = Math.min(root.width(), baseHeight);
+        root.dom.style.height = nowSize * 2 + "px";
         label.setAll({ rotation: 0 });
         line.setAll({ width: am5.percent(60), height: 0 });
-        container.setAll({ layout: root.verticalLayout, width: baseHeight });
+        container.setAll({ layout: root.verticalLayout, width: nowSize });
       },
       removing: () => {
         mobileCheck = false;

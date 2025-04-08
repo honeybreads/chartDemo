@@ -143,14 +143,22 @@ export default function IrregularInterverChart() {
       .adapters.add("fill", () => am5.color("#000"));
 
     // x axis 간격별 그리드, 라벨 생성
+    const maxValue = Math.max(...data.map((item) => item.x));
     for (let i = 0; i < data.length; i++) {
       const value = data[i].x;
+      const nextValue = data[i + 1] ? data[i + 1].x : 0;
       const rangeDataItem = xAxis.makeDataItem({ value: value });
+      const range = nextValue ? nextValue - value : value;
+      const percent = range / maxValue;
+      const maxWidth = xAxis.width() * percent;
+
       xAxis.createAxisRange(rangeDataItem);
 
       rangeDataItem.get("label").setAll({
+        maxWidth,
         text: value + "km",
         forceHidden: false,
+        oversizedBehavior: "hide",
       });
 
       rangeDataItem.get("grid").setAll({
@@ -327,14 +335,22 @@ export default function IrregularInterverChart() {
       .adapters.add("fill", () => am5.color("#000"));
 
     // x axis 간격별 그리드, 라벨 생성
+    const maxValue = Math.max(...data.map((item) => item.x));
     for (let i = 0; i < data.length; i++) {
       const value = data[i].x;
+      const nextValue = data[i + 1] ? data[i + 1].x : 0;
       const rangeDataItem = xAxis.makeDataItem({ value: value });
+      const range = nextValue ? nextValue - value : value;
+      const percent = range / maxValue;
+      const maxWidth = xAxis.width() * percent;
+
       xAxis.createAxisRange(rangeDataItem);
 
       rangeDataItem.get("label").setAll({
+        maxWidth,
         text: value + "km",
         forceHidden: false,
+        oversizedBehavior: "hide",
       });
 
       rangeDataItem.get("grid").setAll({

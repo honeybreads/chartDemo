@@ -61,7 +61,7 @@ export default function DrawingSeriesLineChart() {
     // X,Y축 생성
     const xAxis = chart.xAxes.push(
       am5xy.DateAxis.new(root, {
-        maxDeviation: 0.3,
+        maxDeviation: 0.1,
         tooltip: am5.Tooltip.new(root, {}),
         baseInterval: { timeUnit: "day", count: 1 },
         renderer: am5xy.AxisRendererX.new(root, {
@@ -73,7 +73,7 @@ export default function DrawingSeriesLineChart() {
 
     const yAxis = chart.yAxes.push(
       am5xy.ValueAxis.new(root, {
-        maxDeviation: 0.3,
+        maxDeviation: 0.1,
         renderer: am5xy.AxisRendererY.new(root, {}),
       })
     );
@@ -242,7 +242,7 @@ export default function DrawingSeriesLineChart() {
     // X,Y축 생성
     const xAxis = chart.xAxes.push(
       am5xy.DateAxis.new(root, {
-        maxDeviation: 0.3,
+        maxDeviation: 0.1,
         tooltip: am5.Tooltip.new(root, {}),
         baseInterval: { timeUnit: "day", count: 1 },
         renderer: am5xy.AxisRendererX.new(root, {
@@ -254,7 +254,7 @@ export default function DrawingSeriesLineChart() {
 
     const yAxis = chart.yAxes.push(
       am5xy.ValueAxis.new(root, {
-        maxDeviation: 0.3,
+        maxDeviation: 0.1,
         renderer: am5xy.AxisRendererY.new(root, {}),
       })
     );

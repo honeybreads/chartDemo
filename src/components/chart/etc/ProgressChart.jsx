@@ -114,8 +114,9 @@ export default function ProgressChart() {
 
     series.columns.template.adapters.add("fill", (_, target) => {
       const index = series.columns.indexOf(target);
-      let color = chart.get("colors").getIndex(index);
-      !data[index].achieved && target.setAll({ saturate: 0.1 });
+      const color = !data[index].achieved
+        ? themes.chartVariables[theme].disabled
+        : chart.get("colors").getIndex(index);
       return color;
     });
 
@@ -130,10 +131,16 @@ export default function ProgressChart() {
         strokeOpacity: 0.2,
       });
 
+      const percent = (data[index].to - data[index].from) / 100;
+      const maxWidth = xAxis.width() * percent;
+
       rangeDataItem.get("label").setAll({
+        maxWidth,
         centerX: am5.p0,
         forceHidden: false,
         text: data[index].from + "%",
+        oversizedBehavior: "hide",
+        opacity: data[index].achieved ? 1:0.3
       });
     });
 
@@ -292,8 +299,9 @@ export default function ProgressChart() {
 
     series.columns.template.adapters.add("fill", (_, target) => {
       const index = series.columns.indexOf(target);
-      let color = chart.get("colors").getIndex(index);
-      !data[index].achieved && target.setAll({ saturate: 0.1 });
+      const color = !data[index].achieved
+        ? themes.chartVariables[theme].disabled
+        : chart.get("colors").getIndex(index);
       return color;
     });
 
@@ -308,10 +316,16 @@ export default function ProgressChart() {
         strokeOpacity: 0.2,
       });
 
+      const percent = (data[index].to - data[index].from) / 100;
+      const maxWidth = xAxis.width() * percent;
+
       rangeDataItem.get("label").setAll({
+        maxWidth,
         centerX: am5.p0,
         forceHidden: false,
         text: data[index].from + "%",
+        oversizedBehavior: "hide",
+        opacity: data[index].achieved ? 1:0.3
       });
     });
 

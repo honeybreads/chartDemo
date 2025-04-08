@@ -206,7 +206,6 @@ export default function PieAndBarChart() {
         }),
       })
     );
-
     yAxis.get("renderer").grid.template.setAll({ location: 1 });
 
     // series 생성성
@@ -291,7 +290,8 @@ export default function PieAndBarChart() {
     responsive.addRule({
       relevant: (width) => width < baseHeight * 2,
       applying: () => {
-        root.dom.style.height = baseHeight * 1.8 + "px";
+        const nowSize = Math.min(root.width(), baseHeight);
+        root.dom.style.height = nowSize * 1.5 + "px";
         container.setAll({ layout: root.verticalLayout });
         pieChart.setAll({ width: am5.p100 });
         columnChart.setAll({ width: am5.p100 });
@@ -311,7 +311,9 @@ export default function PieAndBarChart() {
 }
 
 // codeblock
-export const PieAndBarCodeblock = `import * as am5 from "@amcharts/amcharts5";
+export const PieAndBarCodeblock = `// * 해당 차트는 컨테이너의 minHeight 값을 기준으로 생성
+// * 컨테이너의 height는 auto로 작성
+import * as am5 from "@amcharts/amcharts5";
 import * as am5percent from "@amcharts/amcharts5/percent";
 import * as am5xy from "@amcharts/amcharts5/xy";
 import am5themes_Animated from "@amcharts/amcharts5/themes/Animated";
@@ -604,7 +606,8 @@ export default function PieAndBarChart() {
     responsive.addRule({
       relevant: (width) => width < baseHeight * 2,
       applying: () => {
-        root.dom.style.height = baseHeight * 1.8 + "px";
+        const nowSize = Math.min(root.width(), baseHeight);
+        root.dom.style.height = nowSize * 1.5 + "px";
         container.setAll({ layout: root.verticalLayout });
         pieChart.setAll({ width: am5.p100 });
         columnChart.setAll({ width: am5.p100 });

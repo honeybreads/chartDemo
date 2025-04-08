@@ -41,6 +41,7 @@ export default function SankeyDiagramChart() {
     // Series 생성
     const series = root.container.children.push(
       am5flow.Sankey.new(root, {
+        paddingLeft:0,
         valueField: "value",
         targetIdField: "to",
         sourceIdField: "from",
@@ -112,6 +113,7 @@ export default function SankeyDiagramChart() {
     // Series 생성
     const series = root.container.children.push(
       am5flow.Sankey.new(root, {
+        paddingLeft:0,
         valueField: "value",
         targetIdField: "to",
         sourceIdField: "from",

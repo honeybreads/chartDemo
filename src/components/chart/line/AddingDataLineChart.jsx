@@ -73,7 +73,7 @@ export default function AddingDataLineChart() {
         extraMax: 0.1,
         extraMin: -0.1,
         groupData: false,
-        maxDeviation: 0.5,
+        maxDeviation: 0,
         tooltip: am5.Tooltip.new(root, {}),
         baseInterval: { timeUnit: "second", count: 5 },
         renderer: am5xy.AxisRendererX.new(root, {
@@ -284,7 +284,7 @@ export default function AddingDataLineChart() {
         extraMax: 0.1,
         extraMin: -0.1,
         groupData: false,
-        maxDeviation: 0.5,
+        maxDeviation: 0,
         tooltip: am5.Tooltip.new(root, {}),
         baseInterval: { timeUnit: "second", count: 5 },
         renderer: am5xy.AxisRendererX.new(root, {

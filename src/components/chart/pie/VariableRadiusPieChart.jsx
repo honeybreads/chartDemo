@@ -100,7 +100,7 @@ export default function VariableRadiusPieChart() {
     // legend 생성
     const legend = chart.children.push(
       am5.Legend.new(root, {
-        ...themes.legnedBackground(root, theme),
+        ...themes.legendBackground(root, theme),
         x: am5.percent(50),
         centerX: am5.percent(50),
       })
@@ -223,7 +223,7 @@ export default function VariableRadiusPieChart() {
     // legend 생성
     const legend = chart.children.push(
       am5.Legend.new(root, {
-        ...themes.legnedBackground(root, theme),
+        ...themes.legendBackground(root, theme),
         x: am5.percent(50),
         centerX: am5.percent(50),
       })

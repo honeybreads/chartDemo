@@ -234,7 +234,7 @@ export default function ExplodingPieChart() {
     };
 
     series.labels.template.adapters.add("width", (_, target) => {
-      return themes.seriesSetMaxWidth( target);
+      return themes.seriesSetMaxWidth(target);
     });
 
     // series 클릭 이벤트
@@ -259,8 +259,10 @@ export default function ExplodingPieChart() {
       relevant: (width) => width < baseHeight * 2,
       applying: () => {
         mobileCheck = true;
-        root.dom.style.height = baseHeight * 2 + "px";
+        const nowSize = Math.min(root.width(), baseHeight);
+        root.dom.style.height = nowSize * 1.8 + "px";
         container.setAll({ layout: root.verticalLayout });
+        subChart.setAll({marginBottom:-nowSize/5})
         selectSlice(series.slices.getIndex(0));
       },
       removing: () => {
@@ -277,8 +279,10 @@ export default function ExplodingPieChart() {
   return <div id={id} style={{ width: "100%", minHeight: "100%" }} />;
 }
 
-// codeblock 
-export const ExplodingPieCodeblock = `import * as am5 from "@amcharts/amcharts5";
+// codeblock
+export const ExplodingPieCodeblock = `// * 해당 차트는 컨테이너의 minHeight 값을 기준으로 생성
+// * 컨테이너의 height는 auto로 작성
+import * as am5 from "@amcharts/amcharts5";
 import * as am5percent from "@amcharts/amcharts5/percent";
 import am5themes_Animated from "@amcharts/amcharts5/themes/Animated";
 import am5themes_Responsive from "@amcharts/amcharts5/themes/Responsive";
@@ -347,7 +351,7 @@ export default function ExplodingPieChart() {
   const { theme, colorTheme } = useTheme();
   // const theme = "light";
   // const colorTheme = "basicTheme";
-  
+
   useLayoutEffect(() => {
     // 서브데이터 생성
     const subData = data.reduce(
@@ -514,7 +518,7 @@ export default function ExplodingPieChart() {
     };
 
     series.labels.template.adapters.add("width", (_, target) => {
-      return themes.seriesSetMaxWidth( target);
+      return themes.seriesSetMaxWidth(target);
     });
 
     // series 클릭 이벤트
@@ -539,8 +543,10 @@ export default function ExplodingPieChart() {
       relevant: (width) => width < baseHeight * 2,
       applying: () => {
         mobileCheck = true;
-        root.dom.style.height = baseHeight * 2 + "px";
+        const nowSize = Math.min(root.width(), baseHeight);
+        root.dom.style.height = nowSize * 1.8 + "px";
         container.setAll({ layout: root.verticalLayout });
+        subChart.setAll({marginBottom:-nowSize/5})
         selectSlice(series.slices.getIndex(0));
       },
       removing: () => {
@@ -555,4 +561,4 @@ export default function ExplodingPieChart() {
   }, [theme, colorTheme]);
 
   return <div id={id} style={{ width: "100%", minHeight: "100%" }} />;
-}`
+}`;

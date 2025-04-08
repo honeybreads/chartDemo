@@ -485,7 +485,7 @@ export default function HoneycombChart() {
       container.children.push(label);
 
       const bullet = am5.Bullet.new(root, { sprite: container });
-      bullet.get("sprite").states.create("hover", { scale: 1.1 });
+      bullet.get("sprite").states.create("hover", { scale: 1.1, layer: 9 });
       bullet.get("sprite").events.on("pointerover", (ev) => {
         ev.target.toFront();
       });
@@ -1011,7 +1011,7 @@ export default function HoneycombChart() {
       container.children.push(label);
 
       const bullet = am5.Bullet.new(root, { sprite: container });
-      bullet.get("sprite").states.create("hover", { scale: 1.1 });
+      bullet.get("sprite").states.create("hover", { scale: 1.1, layer: 9 });
       bullet.get("sprite").events.on("pointerover", (ev) => {
         ev.target.toFront();
       });

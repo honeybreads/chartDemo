@@ -13,6 +13,7 @@ export default function Nav({ navToggle, setNavToggle }) {
         return (
           <ul className="nav-list" key={index}>
             <li>
+              <p className="nav-list-title">{item.title}</p>
               <ul className="nav-sub-list">
                 {item.children.map((sub, index) => {
                   const path = `/${item.href}/${sub.href}`;

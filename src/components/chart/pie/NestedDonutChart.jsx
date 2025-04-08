@@ -126,7 +126,7 @@ export default function NestedDonutChart() {
         x: am5.p50,
         marginTop: 8,
         visible: false,
-        ...themes.legnedBackground(root, theme),
+        ...themes.legendBackground(root, theme),
       })
     );
     legend.data.setAll(series1.dataItems);
@@ -282,7 +282,7 @@ export default function NestedDonutChart() {
         x: am5.p50,
         marginTop: 8,
         visible: false,
-        ...themes.legnedBackground(root, theme),
+        ...themes.legendBackground(root, theme),
       })
     );
     legend.data.setAll(series1.dataItems);

@@ -104,7 +104,7 @@ export default function BasicRadarChart() {
         valueYField: "litres",
         categoryXField: "country",
         tooltip: am5.Tooltip.new(root, {
-          labelText: "{valueY}",
+          labelText: "{categoryX} : {valueY}",
         }),
       })
     );
@@ -245,7 +245,7 @@ export default function BasicRadarChart() {
         valueYField: "litres",
         categoryXField: "country",
         tooltip: am5.Tooltip.new(root, {
-          labelText: "{valueY}",
+          labelText: "{categoryX} : {valueY}",
         }),
       })
     );

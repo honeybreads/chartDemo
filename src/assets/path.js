@@ -26,7 +26,9 @@ import {
   AreaChartIcon,
   LucideScatterChart,
   Guitar,
+  PanelsLeftBottom,
 } from "lucide-react";
+import Demo1 from "@/components/demo/Demo1";
 
 // pageList
 export const page = [
@@ -51,5 +53,10 @@ export const page = [
       { href: "etc1", component: Etc1, icon: Guitar },
       { href: "etc2", component: Etc2, icon: Guitar },
     ],
+  },
+  {
+    title: "Demo",
+    href: "demo",
+    children: [{ href: "demo1", component: Demo1, icon: PanelsLeftBottom }],
   },
 ];

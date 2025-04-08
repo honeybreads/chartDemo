@@ -134,15 +134,28 @@ export default function SolidGaugeChart() {
         clustered: false,
         valueXField: "value",
         categoryYField: "category",
+        tooltip: am5.Tooltip.new(root, {
+          labelText: "{category}: {valueX}%",
+          stateAnimationDuration: false,
+        }),
       })
     );
+
+    series2
+      .get("tooltip")
+      .get("background")
+      .adapters.add("fill", (fill) => {
+        series2
+          .get("tooltip")
+          .label.setAll({ fill: themes.createAlternative(fill) });
+        return fill;
+      });
 
     series2.columns.template.setAll({
       width: am5.p100,
       strokeOpacity: 0,
       cornerRadius: 20,
       templateField: "columnSettings",
-      tooltipText: "{category}: {valueX}%",
     });
 
     // 데이터 적용
@@ -161,7 +174,7 @@ export default function SolidGaugeChart() {
   return <div id={id} style={{ width: "100%", height: "100%" }} />;
 }
 
-// codeblock 
+// codeblock
 export const SolidGaugeCodeblock = `import * as am5 from "@amcharts/amcharts5";
 import * as am5radar from "@amcharts/amcharts5/radar";
 import * as am5xy from "@amcharts/amcharts5/xy";
@@ -298,8 +311,22 @@ export default function SolidGaugeChart() {
         clustered: false,
         valueXField: "value",
         categoryYField: "category",
+        tooltip: am5.Tooltip.new(root, {
+          labelText: "{category}: {valueX}%",
+          stateAnimationDuration: false,
+        }),
       })
     );
+
+    series2
+      .get("tooltip")
+      .get("background")
+      .adapters.add("fill", (fill) => {
+        series2
+          .get("tooltip")
+          .label.setAll({ fill: themes.createAlternative(fill) });
+        return fill;
+      });
 
     series2.columns.template.setAll({
       width: am5.p100,
@@ -323,4 +350,4 @@ export default function SolidGaugeChart() {
   }, [theme, colorTheme]);
 
   return <div id={id} style={{ width: "100%", height: "100%" }} />;
-}`
+}`;

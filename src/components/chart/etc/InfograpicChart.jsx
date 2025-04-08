@@ -74,7 +74,7 @@ export default function InfograpicChart() {
     // XYChart 생성
     const chart = root.container.children.push(
       am5xy.XYChart.new(root, {
-        panX: false,
+        panX: true,
         panY: false,
         wheelX: "panX",
         wheelY: "zoomX",
@@ -91,11 +91,11 @@ export default function InfograpicChart() {
 
     // legend 생성
     const legendOptions = {
-      ...themes.legnedBackground(root,theme),
+      ...themes.legendBackground(root,theme),
       x: false,
-      y: am5.p50,
+      y: 20,
       centerX: false,
-      centerY: am5.p50,
+      centerY: 0,
       marginTop:0,
       marginLeft: 12,
       paddingLeft:0,
@@ -315,7 +315,7 @@ export default function InfograpicChart() {
     // XYChart 생성
     const chart = root.container.children.push(
       am5xy.XYChart.new(root, {
-        panX: false,
+        panX: true,
         panY: false,
         wheelX: "panX",
         wheelY: "zoomX",
@@ -332,11 +332,11 @@ export default function InfograpicChart() {
 
     // legend 생성
     const legendOptions = {
-      ...themes.legnedBackground(root,theme),
+      ...themes.legendBackground(root,theme),
+      y: 20,
       x: false,
-      y: am5.p50,
+      centerY: 0,
       centerX: false,
-      centerY: am5.p50,
       marginTop:0,
       marginLeft: 12,
       paddingLeft:0,

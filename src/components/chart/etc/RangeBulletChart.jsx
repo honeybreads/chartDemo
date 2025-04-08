@@ -145,12 +145,12 @@ export default function RangeBulletChart() {
     // Add legend
     const legend = chart.children.push(
       am5.Legend.new(root, {
-        marginTop: 8,
         x: am5.p50,
         centerX: am5.p50,
         clickTarget: "none",
         layout: root.horizontalLayout,
-        ...themes.legnedBackground(root, theme),
+        ...themes.legendBackground(root, theme),
+        marginTop: 12,
       })
     );
     legend.valueLabels.template.set("width", 0);
@@ -245,6 +245,7 @@ export default function RangeBulletChart() {
     yAxis.get("renderer").adapters.add("stroke", () => false);
     xAxis.get("renderer").adapters.add("stroke", () => false);
     xAxis.get("renderer").grid.template.set("visible", false);
+    yAxis.get("renderer").labels.template.setAll({ paddingRight: 12 });
 
     // rangeSeries 생성
     const rangeSeries = chart.series.push(
@@ -319,12 +320,12 @@ export default function RangeBulletChart() {
     // Add legend
     const legend = chart.children.push(
       am5.Legend.new(root, {
-        marginTop: 8,
         x: am5.p50,
         centerX: am5.p50,
         clickTarget: "none",
         layout: root.horizontalLayout,
-        ...themes.legnedBackground(root, theme),
+        ...themes.legendBackground(root, theme),
+        marginTop: 12,
       })
     );
     legend.valueLabels.template.set("width", 0);

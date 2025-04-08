@@ -67,7 +67,7 @@ export default function PictorialChart() {
     // XYChart 생성
     const chart = root.container.children.push(
       am5xy.XYChart.new(root, {
-        panX: false,
+        panX: true,
         panY: false,
         wheelX: "panX",
         wheelY: "zoomX",
@@ -96,8 +96,8 @@ export default function PictorialChart() {
     // X,Y축 생성
     const xAxis = chart.xAxes.push(
       am5xy.CategoryAxis.new(root, {
+        maxDeviation:0,
         categoryField: "category",
-        tooltip: am5.Tooltip.new(root, {}),
         renderer: am5xy.AxisRendererX.new(root, { inside: true }),
       })
     );
@@ -110,12 +110,15 @@ export default function PictorialChart() {
       })
     );
 
+    const maxWidth = xAxis.width()/data.length - 10;
     xAxis.get("renderer").grid.template.set("forceHidden", true);
     xAxis.get("renderer").labels.template.setAll({
-      maxWidth: "auto",
+      maxWidth,
       fill: am5.color(0xffffff),
+      oversizedBehavior:"truncate"
     });
     xAxis.get("renderer").adapters.add("stroke", () => false);
+    
     yAxis.get("renderer").grid.template.setAll({
       strokeOpacity: 0.5,
       strokeDasharray: [4, 4],
@@ -138,6 +141,7 @@ export default function PictorialChart() {
       fillOpacity: 0,
       strokeOpacity: 0,
       width: am5.percent(100),
+      tooltipText:"{categoryX}\n{valueY} meter"
     });
 
     // series img 적용
@@ -168,7 +172,7 @@ export default function PictorialChart() {
           centerX: am5.p50,
           centerY: am5.p100,
           populateText: true,
-          text: "{height} metres",
+          text: "{height} meter",
           fill: am5.color("#fff"),
         }),
       });
@@ -188,7 +192,7 @@ export default function PictorialChart() {
   return <div id={id} style={{ width: "100%", height: "100%" }} />;
 }
 
-// codeblock 
+// codeblock
 export const PictorialCodeblock = `import * as am5 from "@amcharts/amcharts5";
 import * as am5xy from "@amcharts/amcharts5/xy";
 import am5themes_Animated from "@amcharts/amcharts5/themes/Animated";
@@ -246,7 +250,7 @@ export default function PictorialChart() {
   const { theme, colorTheme } = useTheme();
   // const theme = "light";
   // const colorTheme = "basicTheme";
-  
+
   useLayoutEffect(() => {
     // Root 객체 생성 및 테마 불러오기
     const root = am5.Root.new(id);
@@ -258,7 +262,7 @@ export default function PictorialChart() {
     // XYChart 생성
     const chart = root.container.children.push(
       am5xy.XYChart.new(root, {
-        panX: false,
+        panX: true,
         panY: false,
         wheelX: "panX",
         wheelY: "zoomX",
@@ -287,8 +291,8 @@ export default function PictorialChart() {
     // X,Y축 생성
     const xAxis = chart.xAxes.push(
       am5xy.CategoryAxis.new(root, {
+        maxDeviation:0,
         categoryField: "category",
-        tooltip: am5.Tooltip.new(root, {}),
         renderer: am5xy.AxisRendererX.new(root, { inside: true }),
       })
     );
@@ -301,12 +305,15 @@ export default function PictorialChart() {
       })
     );
 
+    const maxWidth = xAxis.width()/data.length - 10;
     xAxis.get("renderer").grid.template.set("forceHidden", true);
     xAxis.get("renderer").labels.template.setAll({
-      maxWidth: "auto",
+      maxWidth,
       fill: am5.color(0xffffff),
+      oversizedBehavior:"truncate"
     });
     xAxis.get("renderer").adapters.add("stroke", () => false);
+    
     yAxis.get("renderer").grid.template.setAll({
       strokeOpacity: 0.5,
       strokeDasharray: [4, 4],
@@ -329,6 +336,7 @@ export default function PictorialChart() {
       fillOpacity: 0,
       strokeOpacity: 0,
       width: am5.percent(100),
+      tooltipText:"{categoryX}\\n{valueY} meter"
     });
 
     // series img 적용
@@ -359,7 +367,7 @@ export default function PictorialChart() {
           centerX: am5.p50,
           centerY: am5.p100,
           populateText: true,
-          text: "{height} metres",
+          text: "{height} meter",
           fill: am5.color("#fff"),
         }),
       });

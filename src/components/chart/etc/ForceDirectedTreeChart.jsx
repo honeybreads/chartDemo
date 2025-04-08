@@ -114,6 +114,11 @@ export default function ForceDirectedTreeChart() {
         categoryField: "name",
         childDataField: "children",
         tooltip: am5.Tooltip.new(root, {}),
+        scale:1.5,
+        y:am5.p50,
+        x:am5.p50,
+        centerY:am5.p50,
+        centerX:am5.p50,
       })
     );
 
@@ -262,6 +267,11 @@ export default function ForceDirectedTreeChart() {
         categoryField: "name",
         childDataField: "children",
         tooltip: am5.Tooltip.new(root, {}),
+        scale:1.5,
+        y:am5.p50,
+        x:am5.p50,
+        centerY:am5.p50,
+        centerX:am5.p50,
       })
     );
 
