@@ -25,7 +25,7 @@ html {
     &-thumb {
       @apply cursor-grab;
       @apply rounded-lg;
-      @apply bg-primary;
+      @apply bg-foreground;
     }
   }
 }
@@ -47,6 +47,9 @@ html {
     @apply cursor-pointer;
     @apply text-2xl font-bold;
     @apply flex items-center gap-2;
+    &>svg{
+      @apply text-primary;
+    }
     & > span {
       @apply hidden sm:inline-block;
     }
@@ -156,7 +159,7 @@ html {
       &.active {
         @apply text-foreground;
         & > a > svg {
-          @apply bg-foreground text-background;
+          @apply bg-primary text-white;
         }
       }
     }
@@ -183,9 +186,10 @@ html {
   }
 
   &-title {
-    @apply mb-2;
+    @apply mb-2 pb-1;
     @apply capitalize;
-    @apply font-bold;
+    @apply text-lg font-bold;
+    @apply border-b border-solid border-border;
   }
 }
 
@@ -201,11 +205,9 @@ html {
 }
 
 .chart-con {
-  @apply rounded-md;
-  @apply bg-card p-4;
-  @apply border border-solid border-border;
+  @apply pb-8;
   @apply overflow-auto sm:overflow-hidden;
-  @apply rounded-b-none border-b-0;
+
 
   & > div {
     @apply min-w-[360px];
@@ -258,7 +260,7 @@ html {
     .btn {
       @apply p-1;
       @apply rounded;
-      @apply bg-primary;
+      @apply bg-foreground;
       @apply text-background;
       @apply inline-block;
 
@@ -278,7 +280,7 @@ html {
   }
 
   strong {
-    @apply text-primary;
+    @apply text-foreground;
   }
 }
 

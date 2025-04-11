@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 import { createContext, useContext, useEffect, useState } from "react";
-
+import * as themes from "@/assets/chartTheme";
 const initialState = {
   theme: "system",
   setTheme: () => null,
@@ -51,6 +51,7 @@ export function ThemeProvider({
       setColorTheme(colorTheme);
     }
   };
+  document.documentElement.style.setProperty('--primary', themes[value.colorTheme].primary[0]);
 
   return (
     <ThemeProviderContext.Provider {...props} value={value}>

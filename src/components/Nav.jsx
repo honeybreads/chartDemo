@@ -3,9 +3,10 @@ import { Link } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import PropTypes from "prop-types";
 
+
 export default function Nav({ navToggle, setNavToggle }) {
   const segment = useLocation();
-
+  
   return (
     <nav className={`nav ${navToggle ? "active" : ""}`}>
       <h2 className="hidden">nav</h2>

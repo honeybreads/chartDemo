@@ -3,6 +3,7 @@ import * as am5xy from "@amcharts/amcharts5/xy";
 import * as am5map from "@amcharts/amcharts5/map";
 import am5Geodata_southKoreaLow from "@amcharts/amcharts5-geodata/southKoreaLow";
 import am5themes_Animated from "@amcharts/amcharts5/themes/Animated";
+import am5themes_Responsive from "@amcharts/amcharts5/themes/Responsive";
 import { useLayoutEffect } from "react";
 import * as themes from "@/assets/chartTheme";
 import { useTheme } from "@/components/Theme";
@@ -1074,7 +1075,13 @@ export default function PopulationPyramidChart() {
     const { primary } = themes[colorTheme];
     const colorList = primary;
     const myTheme = themes.myThemeRule(root, colorList, theme);
-    root.setThemes([am5themes_Animated.new(root), myTheme]);
+    const responsive = am5themes_Responsive.newEmpty(root);
+    root.setThemes([am5themes_Animated.new(root), myTheme, responsive]);
+
+    // height 설정
+    const minHeight = root.dom.parentElement.style.minHeight;
+    const baseHeight = Number(minHeight.split("px")[0]);
+    root.dom.style.height = baseHeight + "px";
 
     // Root 숫자 형식 설정
     root.numberFormatter.setAll({ numberFormat: "#.##as" });
@@ -1085,6 +1092,42 @@ export default function PopulationPyramidChart() {
         layout: root.horizontalLayout,
         width: am5.p100,
         height: am5.p100,
+      })
+    );
+
+    // map Container 생성
+    const mapContainer = container.children.push(
+      am5.Container.new(root, {
+        height: am5.p100,
+        width: am5.percent(30),
+        minWidth: baseHeight / 2,
+        layout: root.verticalLayout,
+      })
+    );
+
+    // map Title 생성
+    const title = mapContainer.children.push(
+      am5.Label.new(root, {
+        text: "South Korea",
+        fontSize: 16,
+        marginBottom: 10,
+        marginTop: 20,
+        x: am5.percent(50),
+        centerX: am5.percent(50),
+      })
+    );
+
+    // map Chart 생성
+    const map = mapContainer.children.push(
+      am5map.MapChart.new(root, {
+        panX: "none",
+        panY: "none",
+        wheelY: "none",
+        width: am5.p100,
+        marginBottom: 20,
+        x: am5.percent(50),
+        centerX: am5.percent(50),
+        projection: am5map.geoMercator(),
       })
     );
 
@@ -1147,9 +1190,9 @@ export default function PopulationPyramidChart() {
           "{name}, age {categoryY}: {male} ({valueX.formatNumber('#.0s')}%)",
         tooltipX: am5.p100,
         cornerRadiusBL: 0,
-        cornerRadiusBR: 0,
         cornerRadiusTL: 0,
-        cornerRadiusTR: 0,
+        cornerRadiusBR: themes.chartVariables.default.barRadius,
+        cornerRadiusTR: themes.chartVariables.default.barRadius,
       });
 
       series.bullets.push(() => {
@@ -1173,62 +1216,38 @@ export default function PopulationPyramidChart() {
     const maleSeries = createXySeries("Males", yAxis1, "malePercent");
     const femaleSeries = createXySeries("FeMales", yAxis2, "femalePercent");
 
-    // map Chart 생성
-    const map = container.children.push(
-      am5map.MapChart.new(root, {
-        panX: "none",
-        panY: "none",
-        wheelY: "none",
-        minWidth: 280,
-        width: am5.percent(30),
-        projection: am5map.geoMercator(),
-      })
-    );
-
-    // Title 생성
-    const title = map.children.push(
-      am5.Label.new(root, {
-        text: "South Korea",
-        fontSize: 20,
-        y: 20,
-        x: am5.percent(50),
-        centerX: am5.percent(50),
-      })
-    );
-
-    // map series size 설정
-    map.seriesContainer.setAll({
-      scale: 0.8,
-      x: am5.percent(10),
-      y: am5.percent(15),
-      centerX: am5.percent(10),
-      centerY: am5.percent(15),
-    });
-
     // map Series 생성
     const polygonSeries = map.series.push(
       am5map.MapPolygonSeries.new(root, {
         geoJSON: am5Geodata_southKoreaLow,
+        tooltip: am5.Tooltip.new(root, {
+          labelText: "{name}",
+        }),
       })
     );
+
+    polygonSeries.get("tooltip").label.adapters.add("fill", () => {
+      return themes.createAlternative(
+        chart.get("colors").getIndex(0),
+        am5.color("#fff"),
+        am5.color("#fff")
+      );
+    });
 
     polygonSeries.mapPolygons.template.setAll({
       fill: am5.color("#ccc"),
       stroke: am5.color("#fff"),
       strokeWidth: 2,
+      tooltipText: "none",
+      stateAnimationDuration:false
     });
 
     polygonSeries.mapPolygons.template.states.create("hover", {
-      fill: chart.get("colors").getIndex(1),
+      fill: chart.get("colors").getIndex(0),
     });
 
     polygonSeries.mapPolygons.template.states.create("active", {
-      fill: chart.get("colors").getIndex(2),
-    });
-
-    polygonSeries.mapPolygons.template.setAll({
-      tooltipText: "{name}",
-      interactive: true,
+      fill: chart.get("colors").getIndex(0),
     });
 
     // active 이벤트
@@ -1252,15 +1271,32 @@ export default function PopulationPyramidChart() {
     // 애니메이션 적용
     container.appear(1000, 100);
 
+    // 반응형 설정
+    responsive.addRule({
+      relevant: (width) => width < 700,
+      applying: () => {
+        root.dom.style.height = baseHeight * 1.5 + "px";
+        container.setAll({ layout: root.verticalLayout });
+        chart.setAll({ width: am5.p100 });
+        mapContainer.setAll({ width: am5.p100 });
+      },
+      removing: () => {
+        root.dom.style.height = baseHeight + "px";
+        container.setAll({ layout: root.horizontalLayout });
+        chart.setAll({ width: am5.percent(70) });
+        mapContainer.setAll({ width: am5.percent(30) });
+      },
+    });
+
     return () => root.dispose();
   }, [theme, colorTheme]);
 
   return (
-    <div id={id} style={{ width: "100%", height: "100%", minWidth: 720 }} />
+    <div id={id} style={{ width: "100%", height: "100%", minWidth: 400 }} />
   );
 }
 
-// codeblock 
+// codeblock
 export const PopulationPyramidCodeblock = `// geodata 추가 설치 필요
 // npm i @amcharts/amcharts5-geodata 
 import * as am5 from "@amcharts/amcharts5";
@@ -1268,6 +1304,7 @@ import * as am5xy from "@amcharts/amcharts5/xy";
 import * as am5map from "@amcharts/amcharts5/map";
 import am5Geodata_southKoreaLow from "@amcharts/amcharts5-geodata/southKoreaLow";
 import am5themes_Animated from "@amcharts/amcharts5/themes/Animated";
+import am5themes_Responsive from "@amcharts/amcharts5/themes/Responsive";
 import { useLayoutEffect } from "react";
 import * as themes from "@/assets/chartTheme";
 import { useTheme } from "@/components/Theme";
@@ -2332,14 +2369,20 @@ export default function PopulationPyramidChart() {
   const { theme, colorTheme } = useTheme();
   // const theme = "light";
   // const colorTheme = "basicTheme";
-  
+
   useLayoutEffect(() => {
     // Root 객체 생성 및 테마 불러오기
     const root = am5.Root.new(id);
     const { primary } = themes[colorTheme];
     const colorList = primary;
     const myTheme = themes.myThemeRule(root, colorList, theme);
-    root.setThemes([am5themes_Animated.new(root), myTheme]);
+    const responsive = am5themes_Responsive.newEmpty(root);
+    root.setThemes([am5themes_Animated.new(root), myTheme, responsive]);
+
+    // height 설정
+    const minHeight = root.dom.parentElement.style.minHeight;
+    const baseHeight = Number(minHeight.split("px")[0]);
+    root.dom.style.height = baseHeight + "px";
 
     // Root 숫자 형식 설정
     root.numberFormatter.setAll({ numberFormat: "#.##as" });
@@ -2350,6 +2393,42 @@ export default function PopulationPyramidChart() {
         layout: root.horizontalLayout,
         width: am5.p100,
         height: am5.p100,
+      })
+    );
+
+    // map Container 생성
+    const mapContainer = container.children.push(
+      am5.Container.new(root, {
+        height: am5.p100,
+        width: am5.percent(30),
+        minWidth: baseHeight / 2,
+        layout: root.verticalLayout,
+      })
+    );
+
+    // map Title 생성
+    const title = mapContainer.children.push(
+      am5.Label.new(root, {
+        text: "South Korea",
+        fontSize: 16,
+        marginBottom: 10,
+        marginTop: 20,
+        x: am5.percent(50),
+        centerX: am5.percent(50),
+      })
+    );
+
+    // map Chart 생성
+    const map = mapContainer.children.push(
+      am5map.MapChart.new(root, {
+        panX: "none",
+        panY: "none",
+        wheelY: "none",
+        width: am5.p100,
+        marginBottom: 20,
+        x: am5.percent(50),
+        centerX: am5.percent(50),
+        projection: am5map.geoMercator(),
       })
     );
 
@@ -2412,9 +2491,9 @@ export default function PopulationPyramidChart() {
           "{name}, age {categoryY}: {male} ({valueX.formatNumber('#.0s')}%)",
         tooltipX: am5.p100,
         cornerRadiusBL: 0,
-        cornerRadiusBR: 0,
         cornerRadiusTL: 0,
-        cornerRadiusTR: 0,
+        cornerRadiusBR: themes.chartVariables.default.barRadius,
+        cornerRadiusTR: themes.chartVariables.default.barRadius,
       });
 
       series.bullets.push(() => {
@@ -2438,62 +2517,38 @@ export default function PopulationPyramidChart() {
     const maleSeries = createXySeries("Males", yAxis1, "malePercent");
     const femaleSeries = createXySeries("FeMales", yAxis2, "femalePercent");
 
-    // map Chart 생성
-    const map = container.children.push(
-      am5map.MapChart.new(root, {
-        panX: "none",
-        panY: "none",
-        wheelY: "none",
-        minWidth: 280,
-        width: am5.percent(30),
-        projection: am5map.geoMercator(),
-      })
-    );
-
-    // Title 생성
-    const title = map.children.push(
-      am5.Label.new(root, {
-        text: "South Korea",
-        fontSize: 20,
-        y: 20,
-        x: am5.percent(50),
-        centerX: am5.percent(50),
-      })
-    );
-
-    // map series size 설정
-    map.seriesContainer.setAll({
-      scale: 0.8,
-      x: am5.percent(10),
-      y: am5.percent(15),
-      centerX: am5.percent(10),
-      centerY: am5.percent(15),
-    });
-
     // map Series 생성
     const polygonSeries = map.series.push(
       am5map.MapPolygonSeries.new(root, {
         geoJSON: am5Geodata_southKoreaLow,
+        tooltip: am5.Tooltip.new(root, {
+          labelText: "{name}",
+        }),
       })
     );
+
+    polygonSeries.get("tooltip").label.adapters.add("fill", () => {
+      return themes.createAlternative(
+        chart.get("colors").getIndex(0),
+        am5.color("#fff"),
+        am5.color("#fff")
+      );
+    });
 
     polygonSeries.mapPolygons.template.setAll({
       fill: am5.color("#ccc"),
       stroke: am5.color("#fff"),
       strokeWidth: 2,
+      tooltipText: "none",
+      stateAnimationDuration:false
     });
 
     polygonSeries.mapPolygons.template.states.create("hover", {
-      fill: chart.get("colors").getIndex(1),
+      fill: chart.get("colors").getIndex(0),
     });
 
     polygonSeries.mapPolygons.template.states.create("active", {
-      fill: chart.get("colors").getIndex(2),
-    });
-
-    polygonSeries.mapPolygons.template.setAll({
-      tooltipText: "{name}",
-      interactive: true,
+      fill: chart.get("colors").getIndex(0),
     });
 
     // active 이벤트
@@ -2517,10 +2572,27 @@ export default function PopulationPyramidChart() {
     // 애니메이션 적용
     container.appear(1000, 100);
 
+    // 반응형 설정
+    responsive.addRule({
+      relevant: (width) => width < 700,
+      applying: () => {
+        root.dom.style.height = baseHeight * 1.5 + "px";
+        container.setAll({ layout: root.verticalLayout });
+        chart.setAll({ width: am5.p100 });
+        mapContainer.setAll({ width: am5.p100 });
+      },
+      removing: () => {
+        root.dom.style.height = baseHeight + "px";
+        container.setAll({ layout: root.horizontalLayout });
+        chart.setAll({ width: am5.percent(70) });
+        mapContainer.setAll({ width: am5.percent(30) });
+      },
+    });
+
     return () => root.dispose();
   }, [theme, colorTheme]);
 
   return (
-    <div id={id} style={{ width: "100%", height: "100%", minWidth: 720 }} />
+    <div id={id} style={{ width: "100%", height: "100%", minWidth: 400 }} />
   );
-}`
+}`;

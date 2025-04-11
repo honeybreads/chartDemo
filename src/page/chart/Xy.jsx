@@ -61,7 +61,7 @@ const Xy = memo(function Xy() {
     {
       name: "population pyramid",
       chart: <PopulationPyramidChart />,
-      style: { width: "100%", height: 620 },
+      style: { width: "100%", minHeight: 620 },
       codeblock: PopulationPyramidCodeblock,
     },
     {

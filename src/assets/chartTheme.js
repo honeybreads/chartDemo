@@ -109,7 +109,7 @@ export const chartVariables = {
   light: {
     base: "#222",
     line: "#fff",
-    grid: "#D1DBE1",
+    grid: "#EEE",
     bg: "#FFF",
     shadow: "#ccc",
     disabled: "#ccc",
@@ -119,7 +119,7 @@ export const chartVariables = {
   dark: {
     base: "#ccc",
     line: "#333",
-    grid: "#666",
+    grid: "#3A3A3A",
     bg: "#222",
     shadow: "#222",
     disabled: "#444",
@@ -289,7 +289,7 @@ export const createExportButton = (root) => {
 // 범례 배경색 생성 함수
 export const legendBackground = (root, theme) => {
   const option = {
-    marginTop:1,
+    marginTop:12,
     marginLeft:1,
     marginRight:1,
     marginBottom:1,

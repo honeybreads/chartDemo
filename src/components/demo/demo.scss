@@ -1,0 +1,248 @@
+.section:has(.demo) {
+  @apply pb-0;
+}
+.demo {
+  @apply p-4;
+  @apply bg-gray-100 dark:bg-neutral-900;
+
+  &-title {
+    @apply text-2xl font-bold;
+  }
+}
+
+.demo-head {
+  @apply pb-4;
+  @apply flex items-center justify-between;
+}
+
+.demo-breadcrumb {
+  @apply flex items-center;
+  & > li {
+    @apply text-sm;
+    @apply inline-flex items-center;
+
+    &:not(:last-of-type) {
+      @apply text-gray-400;
+      &::after {
+        content: ">";
+        @apply px-1;
+        @apply text-xs;
+        @apply inline-block;
+      }
+    }
+  }
+}
+
+.demo-input {
+  @apply px-2 py-1;
+  @apply border border-solid border-border;
+  @apply rounded;
+  
+}
+
+.demo-btn {
+  @apply px-2 py-1;
+  @apply cursor-pointer;
+  @apply rounded bg-background;
+  @apply border border-border border-solid;
+
+  &:hover,
+  &.active {
+    @apply bg-card;
+  }
+
+  &.dark{
+    @apply border-transparent;
+    @apply bg-gray-700 text-white;
+
+    &:hover,
+    &.active {
+      @apply bg-gray-600;
+    }
+  }
+}
+
+.demo-radio {
+  @apply text-sm;
+  @apply flex items-center gap-2;
+
+  & > input[type="radio"] {
+    @apply hidden;
+
+    &:checked + label {
+      &::before {
+        @apply border-4 border-foreground;
+        @apply bg-background;
+      }
+      &.demo-btn {
+        @apply bg-card;
+      }
+    }
+  }
+
+  & > label:not(.demo-btn) {
+    @apply cursor-pointer;
+    @apply flex items-center gap-1;
+
+    &::before {
+      content: "";
+      @apply border;
+      @apply w-4 h-4;
+      @apply rounded-full;
+      @apply inline-block;
+      @apply bg-border;
+    }
+  }
+}
+
+.demo-grid {
+  @apply grid;
+  @apply grid-cols-6;
+  @apply gap-4;
+
+  &-item {
+    @apply relative;
+    @apply col-span-2;
+    @apply rounded-md;
+    @apply bg-background;
+    @apply flex flex-col;
+    @apply overflow-hidden;
+    @apply border border-solid border-border;
+
+    @media (max-width: 1024px) {
+      @apply col-span-6;
+    }
+
+    &.md {
+      @apply col-span-3;
+      @media (max-width: 1024px) {
+        @apply col-span-6;
+      }
+    }
+
+    &.half {
+      @apply col-span-4;
+      @media (max-width: 1024px) {
+        @apply col-span-6;
+      }
+    }
+
+    &.full {
+      @apply col-span-6;
+    }
+
+    &-head {
+      @apply p-4;
+      @apply flex items-center justify-between;
+    }
+
+    &-title {
+      @apply font-semibold;
+    }
+
+    &-box {
+      @apply border-t border-solid border-border;
+      @apply p-4;
+    }
+
+    select {
+      @apply py-1.5 pl-0.5;
+      @apply bg-transparent;
+      @apply border;
+      @apply text-sm;
+      @apply rounded-sm;
+    }
+
+    .demo-btn {
+      @apply text-sm;
+    }
+  }
+
+  &-chart {
+    @apply my-auto;
+    @apply flex-none;
+    @apply pt-0 pb-4 px-2;
+  }
+}
+
+.demo-table {
+  @apply w-full;
+  @apply overflow-hidden;
+
+  th,
+  td {
+    @apply p-1;
+    @apply text-sm text-center;
+    @apply border border-solid border-border;
+  }
+
+  th {
+    @apply bg-card;
+  }
+}
+
+.demo-grid-item:has(.demo-some-box) {
+  @apply border-0;
+  @apply p-4;
+}
+
+.demo-some-box {
+  @apply p-4;
+  @apply rounded-md;
+  @apply bg-background;
+  @apply border border-solid border-border;
+  @apply flex flex-1 flex-wrap items-center;
+
+  & > div {
+    @apply w-1/2;
+    @apply text-center;
+    @apply flex flex-col;
+
+    & > p:first-of-type {
+      @apply text-sm text-gray-400;
+    }
+    & > p:last-of-type {
+      @apply text-lg font-bold;
+    }
+  }
+}
+
+.demo-some-box2 {
+  @apply relative;
+  @apply p-4 gap-4;
+  @apply flex-1 grid grid-cols-2;
+
+  & > div {
+    @apply p-4;
+    @apply mt-auto;
+    @apply rounded-md;
+    @apply relative z-10;
+    @apply bg-background;
+    @apply flex justify-end flex-col;
+
+    & > span:first-of-type {
+      @apply text-sm text-gray-400;
+    }
+    & > p:last-of-type {
+      @apply text-lg font-bold;
+    }
+  }
+
+  &::after{
+    content: "";
+    @apply w-full h-4/5;
+    @apply rounded-t-3xl;
+    @apply bg-slate-600;
+    @apply absolute bottom-0;
+  }
+}
+
+*.glass {
+  @apply border-0;
+  @apply backdrop-blur-md;
+  @apply bg-white/70 dark:bg-black/70;
+
+  &:hover {
+    @apply bg-white/80 dark:bg-black/80;
+  }
+}

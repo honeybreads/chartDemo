@@ -29,6 +29,8 @@ import {
   PanelsLeftBottom,
 } from "lucide-react";
 import Demo1 from "@/components/demo/Demo1";
+import Demo2 from "@/components/demo/Demo2";
+import Demo3 from "@/components/demo/Demo3";
 
 // pageList
 export const page = [
@@ -57,6 +59,10 @@ export const page = [
   {
     title: "Demo",
     href: "demo",
-    children: [{ href: "demo1", component: Demo1, icon: PanelsLeftBottom }],
+    children: [
+      { href: "demo1", component: Demo1, icon: PanelsLeftBottom },
+      { href: "demo2", component: Demo2, icon: PanelsLeftBottom },
+      { href: "demo3", component: Demo3, icon: PanelsLeftBottom }
+    ],
   },
 ];
